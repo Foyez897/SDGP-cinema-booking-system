@@ -3,14 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manager Dashboard</title>
+    <title>Manager Dashboard - Horizon Cinemas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
-    <h2>Welcome, {{ username }} (Manager)</h2>
-    <ul>
-        <li><a href="#">Add Cinema</a></li>
-        <li><a href="#">Manage Films</a></li>
-    </ul>
-    <a href="/logout">Logout</a>
+
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">🎬 Horizon Cinemas</a>
+            <a href="/logout" class="btn btn-outline-light">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2 class="text-center">Manager Dashboard</h2>
+
+        <h3>📊 Booking Summary</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Cinema</th>
+                    <th>Bookings</th>
+                    <th>Total Revenue (£)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in booking_summary %}
+                <tr>
+                    <td>{{ data.cinema }}</td>
+                    <td>{{ data.total_bookings }}</td>
+                    <td>£{{ data.total_revenue }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h3>📅 Bookings by Showtimes</h3>
+        <img src="{{ url_for('static', filename='charts/showtime_bookings.png') }}" class="img-fluid" alt="Showtime Bookings Chart">
+
+        <h3>🏙 Bookings by City</h3>
+        <img src="{{ url_for('static', filename='charts/city_bookings.png') }}" class="img-fluid" alt="City Bookings Chart">
+
+        <h3>📈 AI-Predicted Future Bookings</h3>
+        <img src="{{ url_for('static', filename='charts/predicted_bookings.png') }}" class="img-fluid" alt="Predicted Bookings">
+
+    </div>
+
+    <footer class="text-center bg-dark text-white py-3">
+        <p>© 2024 Horizon Cinemas. All Rights Reserved.</p>
+    </footer>
+
 </body>
 </html>

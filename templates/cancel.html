@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cancel Booking - Horizon Cinemas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script>
+        function checkCancellation() {
+            let bookingRef = document.getElementById("booking_ref").value;
+            if (!bookingRef) {
+                alert("Please enter a booking reference.");
+                return;
+            }
+            fetch(`/check_cancellation/${bookingRef}`)
+                .then(response => response.json())
+                .then(data => {
+                    let messageBox = document.getElementById("cancellation_message");
+                    if (data.error) {
+                        messageBox.innerHTML = `<p class="text-danger">${data.error}</p>`;
+                    } else {
+                        messageBox.innerHTML = `<p class="text-success">${data.message} Refund: £${data.refund_amount}</p>`;
+                        document.getElementById("confirm_cancel").style.display = "block";
+                    }
+                });
+        }
+    </script>
+</head>
+<body>
+
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">🎬 Horizon Cinemas</a>
+            <a href="/logout" class="btn btn-outline-light">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2 class="text-center">Cancel Booking</h2>
+
+        <form id="cancellation_form" action="/cancel_booking" method="post">
+            <div class="mb-3">
+                <label for="booking_ref" class="form-label">Enter Booking Reference</label>
+                <input type="text" id="booking_ref" name="booking_reference" class="form-control" required>
+            </div>
+            
+            <button type="button" class="btn btn-warning" onclick="checkCancellation()">Check Eligibility</button>
+            <div id="cancellation_message" class="mt-3"></div>
+
+            <button type="submit" id="confirm_cancel" class="btn btn-danger mt-3" style="display:none;">Confirm Cancellation</button>
+        </form>
+    </div>
+
+    <footer class="text-center bg-dark text-white py-3">
+        <p>© 2024 Horizon Cinemas. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>
