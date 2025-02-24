@@ -1,10 +1,27 @@
-from flask import Flask
+import sqlite3
+import bcrypt
 
-app = Flask(__name__)
+def test_login(username, password):
+    conn = sqlite3.connect("horizon_cinemas.db")
+    cursor = conn.cursor()
 
-@app.route('/')
-def home():
-    return "Flask is working!"
+    # Fetch stored hashed password
+    cursor.execute("SELECT password FROM users WHERE username = ?", (username,))
+    user = cursor.fetchone()
+    
+    if not user:
+        print("❌ User not found!")
+        return False
 
-if __name__ == '__main__':
-    app.run(debug=True)
+    hashed_password = user[0]
+
+    # Compare input password with hashed password
+    if bcrypt.checkpw(password.encode(), hashed_password.encode()):
+        print("✅ Login successful!")
+        return True
+    else:
+        print("❌ Incorrect password!")
+        return False
+
+# Test login
+test_login("manager1", "Manager@123")  # Replace with actual password

@@ -1,21 +1,31 @@
-from flask import Flask, request, jsonify, render_template, redirect, url_for, flash
+from flask import Flask, request, jsonify, render_template, redirect, url_for, flash, make_response
 from flask_bcrypt import Bcrypt
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, set_access_cookies
 import traceback
 from datetime import datetime, timedelta
 from database_setup import get_db_connection
 import uuid
+import numpy as np
+from sklearn.linear_model import LinearRegression
 import sqlite3
-
-
+import re
+from flask_jwt_extended import get_jwt
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
 bcrypt = Bcrypt(app)
 
 # 🔹 Configure JWT
-app.config["JWT_SECRET_KEY"] = "supersecurejwtkey"  # Change this to a secure key
+# ✅ Enforce HTTPS for JWT
+app.config["JWT_COOKIE_SECURE"] = True  # Requires HTTPS
+app.config["SESSION_COOKIE_SECURE"] = True
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+
+# ✅ Set JWT Expiry to 30 minutes for testing
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=30)
 jwt = JWTManager(app)
+
 # ===============================
 # 🔹 Serve the Home Page
 # ===============================
@@ -31,158 +41,177 @@ def home():
             GROUP BY films.id
         """)
         films = cursor.fetchall()
-
     return render_template("index.html", films=films)
 
-@app.route('/login', methods=['POST'])
-def login():
-    data = request.get_json()
-    username = data.get("username")
-    password = data.get("password")
+# ===============================
+# 🔹 Admin Login
+# ===============================
 
-    with get_db_connection() as conn:
-        cursor = conn.cursor()
-        cursor.execute("SELECT id, password, role FROM users WHERE LOWER(username) = LOWER(?)", (username,))
-        user = cursor.fetchone()
+def is_strong_password(password):
+    """Ensure password is strong: At least 8 chars, contains numbers & symbols."""
+    return bool(re.match(r"^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$", password))
+
+@app.route('/admin_login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'POST':
+        data = request.form if not request.is_json else request.get_json()
+        username = data.get("username")
+        password = data.get("password")
+
+        # ✅ Validate Password
+        if not is_strong_password(password):
+            flash("❌ Password must be at least 8 characters, include numbers & symbols.", "danger")
+            return redirect(url_for('admin_login'))
+
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT id, password FROM users WHERE LOWER(username) = LOWER(?)", (username,))
+            user = cursor.fetchone()
 
         if not user or not bcrypt.check_password_hash(user["password"], password):
-            return jsonify({"error": "Invalid username or password"}), 401
+            flash("Invalid username or password", "danger")
+            return redirect(url_for('admin_login'))
 
-        access_token = create_access_token(identity={"username": username, "role": user["role"]})
-        return jsonify({"message": "✅ Login successful", "access_token": access_token})
-# ===============================
-# 🔹 Film Listings (NEW)
-# ===============================
-@app.route('/films', methods=['GET'])
-def get_films():
-    with get_db_connection() as conn:
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM films")
-        films = cursor.fetchall()
+        # ✅ Generate JWT token
+        access_token = create_access_token(identity=str(user["id"]))
 
-    film_list = [dict(film) for film in films]
-    return jsonify(film_list)
+        # ✅ Create response and set JWT in **httpOnly cookie**
+        response = make_response(redirect(url_for('admin_dashboard')))
+        set_access_cookies(response, access_token)
+
+        flash("✅ Login successful!", "success")
+        return response
+
+    return render_template('admin_login.html')
 
 # ===============================
-# 🔹 Admin: Add New Film (NEW)
+# 🔹 Admin Dashboard
 # ===============================
-@app.route('/admin/add_film', methods=['POST'])
-def add_film():
-    data = request.get_json()
-    title = data.get("title")
-    genre = data.get("genre")
-    age_rating = data.get("age_rating")
-    description = data.get("description")
-    actors = data.get("actors")
-
-    with get_db_connection() as conn:
-        cursor = conn.cursor()
-        cursor.execute("INSERT INTO films (title, genre, age_rating, description, actors) VALUES (?, ?, ?, ?, ?)",
-                       (title, genre, age_rating, description, actors))
-        conn.commit()
-
-    return jsonify({"message": "✅ Film added successfully!"}), 201
-
 @app.route('/admin_dashboard', methods=['GET'])
-@jwt_required()
+@jwt_required(locations=["headers", "cookies"])
 def admin_dashboard():
-    current_user = get_jwt_identity()
-    if current_user["role"] != "admin":
+    user_id = get_jwt_identity()
+    
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT role FROM users WHERE id = ?", (user_id,))
+        user = cursor.fetchone()
+
+    if not user or user["role"] != "admin":
         return jsonify({"error": "Unauthorized access"}), 403
 
-    return jsonify({"message": f"Welcome, {current_user['username']}! This is the Admin Dashboard."})
+    # 🔹 Auto-logout if session expired
+    exp_timestamp = get_jwt()["exp"]
+    if datetime.fromtimestamp(exp_timestamp) < datetime.utcnow():
+        return jsonify({"error": "Session expired, please log in again."}), 401
 
+    return jsonify({"message": f"Welcome, Admin {user_id}!"})
 
+# ===============================
+# 🔹 Manager Login
+# ===============================
+def is_strong_password(password):
+    """Ensure password is strong: At least 8 chars, contains numbers & symbols."""
+    return bool(re.match(r"^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$", password))
+
+@app.route('/manager_login', methods=['GET', 'POST'])
+def manager_login():
+    if request.method == 'POST':
+        data = request.form if not request.is_json else request.get_json()
+        username = data.get("username")
+        password = data.get("password")
+
+        # ✅ Validate Password
+        if not is_strong_password(password):
+            flash("❌ Password must be at least 8 characters, include numbers & symbols.", "danger")
+            return redirect(url_for('manager_login'))
+
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT id, password FROM users WHERE LOWER(username) = LOWER(?)", (username,))
+            user = cursor.fetchone()
+
+        if not user or not bcrypt.check_password_hash(user["password"], password):
+            flash("Invalid username or password", "danger")
+            return redirect(url_for('manager_login'))
+
+        # ✅ Generate JWT token
+        access_token = create_access_token(identity=str(user["id"]))
+
+        # ✅ Create response and set JWT in **httpOnly cookie**
+        response = make_response(redirect(url_for('manager_dashboard')))
+        set_access_cookies(response, access_token)
+
+        flash("✅ Manager Login successful!", "success")
+        return response
+
+    return render_template('manager_login.html')
+# ===============================
+# 🔹 Manager Dashboard
+# ===============================
 @app.route('/manager_dashboard', methods=['GET'])
-@jwt_required()
+@jwt_required(locations=["headers", "cookies"])
 def manager_dashboard():
-    current_user = get_jwt_identity()
-    if current_user["role"] not in ["manager", "admin"]:  # Managers & Admins can access
+    user_id = get_jwt_identity()
+
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT role FROM users WHERE id = ?", (user_id,))
+        user = cursor.fetchone()
+
+    if not user or user["role"] not in ["manager", "admin"]:
         return jsonify({"error": "Unauthorized access"}), 403
 
-    return jsonify({"message": f"Welcome, {current_user['username']}! This is the Manager Dashboard."})
+    cursor.execute("""
+        SELECT cinemas.city, COUNT(bookings.id) AS total_bookings, SUM(bookings.total_price) AS total_revenue
+        FROM bookings
+        JOIN showtimes ON bookings.showtime_id = showtimes.id
+        JOIN cinemas ON showtimes.cinema_id = cinemas.id
+        GROUP BY cinemas.city
+    """)
 
-@app.route('/manager_dashboard')
-def manager_dashboard():
-    with get_db_connection() as conn:
-        cursor = conn.cursor()
+    # ✅ Convert each Row object to a dictionary
+    booking_summary = [dict(row) for row in cursor.fetchall()]
 
-        # Fetch booking summary per cinema
-        cursor.execute("""
-            SELECT cinemas.city, COUNT(bookings.id) AS total_bookings, SUM(bookings.total_price) AS total_revenue
-            FROM bookings
-            JOIN showtimes ON bookings.showtime_id = showtimes.id
-            JOIN cinemas ON showtimes.cinema_id = cinemas.id
-            GROUP BY cinemas.city
-        """)
-        booking_summary = cursor.fetchall()
-
-    return render_template("manager_dashboard.html", booking_summary=booking_summary)
+    return jsonify({
+        "message": f"Welcome, {user['role']}!",
+        "booking_summary": booking_summary
+    })
 
 # ===============================
-# 🔹 Get Available Seats
-# ===============================
-@app.route('/seats/<int:showtime_id>', methods=['GET'])
-def get_available_seats(showtime_id):
-    with get_db_connection() as conn:
-        cursor = conn.cursor()
-        cursor.execute("SELECT id, seat_number, seat_type, price FROM seats WHERE showtime_id = ? AND is_booked = 0", (showtime_id,))
-        seats = cursor.fetchall()
-
-    return jsonify([dict(seat) for seat in seats])
-
-# ===============================
-# 🔹 Calculate Pricing Based on City & Seat Type (NEW)
-# ===============================
-def calculate_price(city, seat_type, base_price):
-    city_prices = {
-        "Birmingham": [5, 6, 7],
-        "Bristol": [6, 7, 8],
-        "Cardiff": [5, 6, 7],
-        "London": [10, 11, 12]
-    }
-
-    # Apply price based on city
-    time_now = datetime.now().hour
-    if 8 <= time_now < 12:
-        price = city_prices[city][0]
-    elif 12 <= time_now < 17:
-        price = city_prices[city][1]
-    else:
-        price = city_prices[city][2]
-
-    # Apply seat type pricing
-    if seat_type == "upper_gallery":
-        price *= 1.2
-    elif seat_type == "vip":
-        price = (price + (price * 0.2)) * 1.2
-
-    return round(price, 2)
-
-# ===============================
-# 🔹 Book a Seat
+# 🔹 Booking: Check Booking Validity (Max 7 Days in Advance)
 # ===============================
 @app.route('/book', methods=['POST'])
 @jwt_required()
 def book_ticket():
-    current_user = get_jwt_identity()
-    if current_user["role"] not in ["admin", "manager", "booking_staff"]:
-        return jsonify({"error": "Unauthorized!"}), 403
-
+    user_id = get_jwt_identity()
     data = request.get_json()
+
+    showtime_id = data.get("showtime_id")
     customer_name = data.get("customer_name")
     customer_email = data.get("customer_email")
     customer_phone = data.get("customer_phone")
-    showtime_id = data.get("showtime_id")
     seat_ids = data.get("seat_ids")
 
-    if not seat_ids:
-        return jsonify({"error": "Please select at least one seat."}), 400
+    if not all([customer_name, customer_email, customer_phone, showtime_id, seat_ids]):
+        return jsonify({"error": "Missing required booking details."}), 400
 
     with get_db_connection() as conn:
         cursor = conn.cursor()
 
-        # Check seat availability
+        # Get showtime date
+        cursor.execute("SELECT show_time FROM showtimes WHERE id = ?", (showtime_id,))
+        showtime_data = cursor.fetchone()
+        if not showtime_data:
+            return jsonify({"error": "Invalid Showtime!"}), 400
+
+        showtime_date = datetime.strptime(showtime_data["show_time"], "%Y-%m-%d %H:%M:%S")
+
+        # ✅ Check if booking is within 7 days
+        if showtime_date > datetime.now() + timedelta(days=7):
+            return jsonify({"error": "❌ Tickets can only be booked 7 days in advance!"}), 400
+
+        # ✅ Process each seat
         placeholders = ",".join("?" * len(seat_ids))
         cursor.execute(f"SELECT id FROM seats WHERE id IN ({placeholders}) AND is_booked = 0", seat_ids)
         available_seats = cursor.fetchall()
@@ -190,96 +219,90 @@ def book_ticket():
         if len(available_seats) != len(seat_ids):
             return jsonify({"error": "One or more selected seats are already booked!"}), 400
 
-        # Calculate total price
-        cursor.execute("SELECT price FROM showtimes WHERE id = ?", (showtime_id,))
-        price_per_ticket = cursor.fetchone()["price"]
-        total_price = len(seat_ids) * price_per_ticket
+        total_price = 0  # Initialize total price
 
-        # Generate booking reference
-        booking_reference = str(uuid.uuid4())[:8]
-
-        # Insert booking records
         for seat_id in seat_ids:
+            seat_reference = str(uuid.uuid4())[:8]
+
+            cursor.execute("SELECT price FROM seats WHERE id = ?", (seat_id,))
+            seat_price = cursor.fetchone()["price"]
+            total_price += seat_price
+
             cursor.execute("""
-                INSERT INTO bookings (customer_name, customer_email, customer_phone, showtime_id, seat_id, booking_reference, total_price)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-            """, (customer_name, customer_email, customer_phone, showtime_id, seat_id, booking_reference, total_price))
+                INSERT INTO bookings (customer_name, customer_email, customer_phone, showtime_id, seat_id, 
+                                      booking_reference, total_price, booking_staff_id, booking_date)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (customer_name, customer_email, customer_phone, showtime_id, seat_id,
+                  seat_reference, seat_price, user_id, datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+
             cursor.execute("UPDATE seats SET is_booked = 1 WHERE id = ?", (seat_id,))
 
         conn.commit()
 
-    return jsonify({"message": "✅ Booking successful!", "booking_reference": booking_reference, "total_price": total_price}), 201
+    return jsonify({
+        "message": "✅ Booking successful!",
+        "total_price": total_price
+    }), 201
 
-@app.route('/check_cancellation/<booking_reference>', methods=['GET'])
-def check_cancellation(booking_reference):
-    with get_db_connection() as conn:
-        cursor = conn.cursor()
-
-        # Fetch booking details
-        cursor.execute("SELECT id, showtime_id, total_price FROM bookings WHERE booking_reference = ?", (booking_reference,))
-        booking = cursor.fetchone()
-
-        if not booking:
-            return jsonify({"error": "Invalid booking reference!"}), 400
-
-        # Get the showtime date
-        cursor.execute("SELECT show_time FROM showtimes WHERE id = ?", (booking["showtime_id"],))
-        showtime = cursor.fetchone()
-
-        if not showtime:
-            return jsonify({"error": "Showtime not found!"}), 400
-
-        showtime_date = datetime.strptime(showtime["show_time"], '%Y-%m-%d %H:%M:%S')
-
-        # Check cancellation rules
-        today = datetime.now()
-        if showtime_date.date() == today.date():
-            return jsonify({"error": "Cancellation is not allowed on the day of the show!"}), 400
-
-        refund_amount = round(booking["total_price"] * 0.5, 2)  # 50% refund
-        return jsonify({"message": "Cancellation allowed.", "refund_amount": refund_amount})
-@app.route('/cancel_booking', methods=['POST'])
-
-
+# ===============================
+# 🔹 Cancellation Policy: 50% Refund (At Least 1 Day Before Show)
+# ===============================
 @app.route('/cancel_booking', methods=['POST'])
 @jwt_required()
 def cancel_booking():
-    current_user = get_jwt_identity()
-    booking_reference = request.json.get("booking_reference")
+    user_id = get_jwt_identity()
+    booking_reference = request.json["booking_reference"]
 
     with get_db_connection() as conn:
         cursor = conn.cursor()
-
-        # Fetch booking
-        cursor.execute("SELECT id, showtime_id, total_price FROM bookings WHERE booking_reference = ?", (booking_reference,))
+        cursor.execute("SELECT id, showtime_id, total_price FROM bookings WHERE booking_reference = ?", 
+                       (booking_reference,))
         booking = cursor.fetchone()
 
         if not booking:
             return jsonify({"error": "Invalid booking reference!"}), 400
 
-        # Get the showtime date
+        # Get showtime date
         cursor.execute("SELECT show_time FROM showtimes WHERE id = ?", (booking["showtime_id"],))
-        showtime = cursor.fetchone()
-        showtime_date = datetime.strptime(showtime["show_time"], '%Y-%m-%d %H:%M:%S')
+        showtime_date = datetime.strptime(cursor.fetchone()["show_time"], "%Y-%m-%d %H:%M:%S")
 
-        # Check cancellation rules
-        today = datetime.now()
-        if showtime_date.date() == today.date():
-            return jsonify({"error": "Cancellation is not allowed on the day of the show!"}), 400
+        if (showtime_date - datetime.now()).days < 1:
+            return jsonify({"error": "❌ Cannot cancel on the day of the show!"}), 403
 
-        refund_amount = round(booking["total_price"] * 0.5, 2)  # 50% refund
+        refund_amount = booking["total_price"] * 0.5  # 50% refund
 
-        # Insert cancellation record
-        cursor.execute("INSERT INTO cancellations (booking_id, cancellation_date, refund_amount) VALUES (?, ?, ?)",
-                       (booking["id"], today.strftime('%Y-%m-%d'), refund_amount))
-        
-        # Delete booking
         cursor.execute("DELETE FROM bookings WHERE id = ?", (booking["id"],))
-        cursor.execute("UPDATE seats SET is_booked = 0 WHERE id = (SELECT seat_id FROM bookings WHERE id = ?)", (booking["id"],))
-
         conn.commit()
 
-    return jsonify({"message": "✅ Booking cancelled successfully!", "refund_amount": refund_amount}), 200
+    return jsonify({"message": f"✅ Booking cancelled! Refund Amount: £{refund_amount:.2f}"}), 200
+
+# ===============================
+# 🔹 AI Model: Predict Future Booking Demand
+# ===============================
+@app.route('/predict_bookings', methods=['GET'])
+def predict_bookings():
+    # Example dataset (replace with real booking history)
+    time_slots = np.array([10, 14, 18, 21]).reshape(-1, 1)
+    bookings = np.array([50, 80, 120, 100])  # Example number of bookings
+
+    model = LinearRegression()
+    model.fit(time_slots, bookings)
+
+    # Predict bookings for 8 PM (20:00)
+    predicted_bookings = model.predict(np.array([[20]]))
+
+    return jsonify({"predicted_bookings_for_8PM": int(predicted_bookings[0])})
+
+
+from flask_jwt_extended import unset_jwt_cookies
+
+@app.route('/logout', methods=['POST'])
+@jwt_required()
+def logout():
+    response = make_response(jsonify({"message": "✅ Logged out successfully!"}))
+    unset_jwt_cookies(response)  # Remove JWT from cookies
+    return response
+
 # ===============================
 # 🔹 Run Flask App
 # ===============================
