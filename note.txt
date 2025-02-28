@@ -14,10 +14,10 @@
             <div>
                 <a href="/admin_login" class="btn btn-outline-light">Admin Login</a>
                 <a href="/manager_login" class="btn btn-outline-light">Manager Login</a>
-                <a href="/staff_login" class="btn btn-outline-light">Booking Staff Login</a>  <!-- ✅ Added -->
             </div>
         </div>
     </nav>
+
     <div class="container mt-4">
         <h2 class="text-center">Now Showing</h2>
         <div class="row">
@@ -43,4 +43,4 @@
     </footer>
 
 </body>
-</html>
+</html> add booking staff login page link as like admin and manger
