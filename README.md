@@ -1,41 +1,53 @@
-# 🎬 Cinema Booking System
+# 🎬 Horizon Cinemas Booking System
 
-A collaborative **Cinema Booking System** built with **Flask** and **SQLite**. This system allows **admins and managers** to manage cinemas, films, and bookings efficiently.
+A Flask-powered Cinema Booking System with JWT Authentication, SQLite Database, and Gunicorn Deployment. This system allows Admins, Managers, and Booking Staff to manage cinemas, films, and bookings securely and efficiently.
 
-## 🚀 Features
-✅ **User Authentication** (Admin & Manager Login)  
-✅ **Manage Films** (Add, Update, Delete)  
-✅ **Manage Cinemas** (Add Cinema Locations)  
-✅ **Booking System** (Users can book movie tickets)  
-✅ **SQLite Database** for storing information  
-✅ **Flask Web Framework** for handling backend logic  
-✅ **Secure Password Storage** with `bcrypt`  
-✅ **Bootstrap-based UI** for a clean interface  
+## 🚀 Key Features
+
+✅ JWT Authentication with flask_jwt_extended (Admin, Manager, Booking Staff)
+✅ Secure Password Hashing with bcrypt
+✅ Role-Based Access Control (RBAC)
+✅ Cinema & Film Management (Add, Update, Delete)
+✅ Ticket Booking System (Staff Can Book for Customers)
+✅ Real-Time Seat Availability Check
+✅ Booking Restrictions (No bookings beyond 7 days)
+✅ AI-Powered Booking Predictions using sklearn
+✅ Admin & Manager Dashboards
+✅ Graphical Booking Insights (Matplotlib charts)
+✅ RESTful API Support for Booking and Reports
+✅ Production-Ready Deployment with Gunicorn 
 
 ---
 
 ## 📂 **Project Structure**
 
-cinema-booking-system/
+horizon-cinemas/
 │── app.py                 # Main Flask application
-│── database_setup.py       # Script to setup database
+│── database_setup.py       # Database setup script
 │── requirements.txt        # Project dependencies
-│── .gitignore              # Ignored files (e.g., virtual environment)
+│── .gitignore              # Ignore virtual env, cache files, etc.
+│── Procfile                # Deployment instructions for Heroku/Gunicorn
 │── README.md               # Project documentation
 │
-├── static/                 # Static files (CSS, JavaScript, Images)
+├── static/                 # Static assets (CSS, JS, Charts)
 │   ├── css/                # Stylesheets
 │   ├── js/                 # JavaScript files
-│   ├── images/             # Images
+│   ├── images/             # UI Images
+│   ├── charts/             # Generated Reports (PNG)
 │
-└── templates/              # HTML templates for Flask
-├── index.html          # Homepage / Login selection
-├── admin_login.html    # Admin Login Page
-├── manager_login.html  # Manager Login Page
-├── admin_dashboard.html # Admin Dashboard
-├── manager_dashboard.html # Manager Dashboard
-
----
+├── templates/              # Flask HTML templates
+│   ├── index.html          # Homepage
+│   ├── admin_login.html    # Admin Login Page
+│   ├── manager_login.html  # Manager Login Page
+│   ├── staff_login.html    # Booking Staff Login
+│   ├── admin_dashboard.html # Admin Dashboard
+│   ├── manager_dashboard.html # Manager Dashboard
+│   ├── booking.html        # Booking Interface
+│   ├── report.html         # Reports & AI Predictions
+│   ├── add_film.html       # Add New Films
+│   ├── update_film.html    # Update Existing Films
+│
+└── instance/               # SQLite database storage
 
 ## 🛠 **Setup & Installation**
 
@@ -58,15 +70,42 @@ python database_setup.py
 5️⃣ Run the Application
 python app.py
 
-Now, open http://127.0.0.1:5000/ in your browser.
+Now, open http://127.0.0.1:5003/ & http://localhost. in your browser.
 
 🎭 User Roles & Login Credentials
 Role	Username	    Password
-Admin	Foyez	        123
-Manager	ManagerFoyez	123
+Staff   staff1          Staff!Pass789
+Admin	admin1	        Admin123Pass_
+Manager	manager1	    anager@Pass456
+
+### 🚀 Deploying to Production
+### ••1️⃣ Run Gunicorn Locally••
+'''sh
+gunicorn app:app --bind 0.0.0.0:5003 --workers 4
+
+## 🛠 API Endpoints
+
+🔹 Authentication
+
+ • POST /staff_login → Logs in Booking Staff
+ • POST /admin_login → Logs in Admin
+ • POST /manager_login → Logs in Manager
+
+🔹 Booking & Management
+
+ • POST /book → Book a ticket (Requires JWT)
+ • GET /booking → Booking page (Requires JWT)
+ • GET /admin_dashboard → Admin panel (Requires JWT)
+ • GET /manager_dashboard → Manager panel (Requires JWT)
+
+🔹 Reports & Predictions
+
+ • GET /report/bookings_per_film → View Bookings per Film
+ • GET /predict_bookings → AI Predictions for Future Bookings
 
 
-🏗 How to Contribute
+
+## 🏗 How to Contribute
 We welcome contributions! Follow these steps:
 	1.	Fork the repository on GitHub.
 	2.	Clone your forked repo:git clone https://github.com/your-username/cinema-booking-system.git

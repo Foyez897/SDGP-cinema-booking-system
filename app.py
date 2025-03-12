@@ -14,6 +14,7 @@ import numpy as np
 from sklearn.linear_model import LinearRegression
 import re
 import logging
+from flask_bcrypt import check_password_hash
 
 # 🔹 Initialize Flask App
 app = Flask(__name__)
@@ -217,38 +218,66 @@ def predict_bookings():
     return jsonify({"predicted_bookings_for_8PM": int(predicted_bookings[0])})
 
 # ===============================
+# 🔹 Admin Login 
+# ===============================
+@app.route('/admin_login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'POST':
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT id, password, role FROM users WHERE username = ?", (username,))
+            user = cursor.fetchone()
+
+        if user and check_password_hash(user["password"], password):
+            if user["role"] not in ["admin", "manager"]:
+                flash("❌ Unauthorized access!", "danger")
+                return redirect(url_for('admin_login'))
+
+            access_token = create_access_token(identity=str(user["id"]))  # ✅ Convert user ID to string
+            resp = make_response(redirect(url_for("admin_dashboard")))
+            set_access_cookies(resp, access_token)  # ✅ This ensures JWT is stored correctly
+            return resp
+
+        flash("❌ Invalid username or password!", "danger")
+
+    return render_template("admin_login.html")
+
+# ===============================
 # 🔹 Admin Dashboard (Now Renders admin_dashboard.html)
 # ===============================
 @app.route('/admin_dashboard', methods=['GET'])
-@jwt_required(locations=["headers", "cookies"])
+@jwt_required(locations=["cookies"])  # ✅ Ensure JWT is read from cookies
 def admin_dashboard():
     user_id = get_jwt_identity()
+    print(f"DEBUG: Admin Dashboard Access - User ID: {user_id}")  # Debugging
 
     with get_db_connection() as conn:
         cursor = conn.cursor()
-
         cursor.execute("SELECT role FROM users WHERE id = ?", (user_id,))
         user = cursor.fetchone()
-        
-        if not user or user["role"] not in ["admin", "manager"]:
-            flash("❌ Unauthorized access!", "danger")
-            return redirect(url_for('admin_login'))  # Redirect unauthorized users
 
-        # Fetch films for management
+        if not user:
+            flash("❌ Please log in first!", "danger")
+            return redirect(url_for('admin_login'))
+
+        if user["role"] not in ["admin", "manager"]:
+            flash("❌ Unauthorized access!", "danger")
+            return redirect(url_for('home'))  # Redirect to home instead of login
+
+        # Fetch films for admin management
         cursor.execute("""
             SELECT films.id, films.title, films.genre, films.age_rating,
-                   GROUP_CONCAT(showtimes.show_time) AS showtimes
+                   GROUP_CONCAT(DISTINCT showtimes.show_time) AS showtimes
             FROM films
             LEFT JOIN showtimes ON films.id = showtimes.film_id
             GROUP BY films.id
         """)
         films = cursor.fetchall()
 
-    return render_template(
-        "admin_dashboard.html", 
-        admin_id=user_id, 
-        films=films
-    )
+    return render_template("admin_dashboard.html", admin_id=user_id, films=films)
 # ===============================
 # 🔹 Add Film Route
 # ===============================
