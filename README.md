@@ -24,16 +24,24 @@ A Flask-powered Cinema Booking System with JWT Authentication, SQLite Database, 
 horizon-cinemas/
 │── app.py                 # Main Flask application
 │── database_setup.py       # Database setup script
-│── requirements.txt        # Project dependencies
-│── .gitignore              # Ignore virtual env, cache files, etc.
+│── predict_bookings.py     # AI Prediction script
+│── generate_charts.py      # Script to generate reports/charts
+│── jwt_Authentication.py   # JWT Authentication handling
+│── create_admin.py         # Script to create admin users
 │── Procfile                # Deployment instructions for Heroku/Gunicorn
 │── README.md               # Project documentation
+│── requirements.txt        # Project dependencies
+│── .gitignore              # Ignore virtual env, cache files, etc.
+│── horizon_cinemas.db      # Main SQLite database
 │
-├── static/                 # Static assets (CSS, JS, Charts)
-│   ├── css/                # Stylesheets
-│   ├── js/                 # JavaScript files
-│   ├── images/             # UI Images
+├── static/                 # Static assets (CSS, JS, Charts, Images)
 │   ├── charts/             # Generated Reports (PNG)
+│   │   ├── city_bookings.png
+│   │   ├── predicted_bookings.png
+│   │   ├── showtime_bookings.png
+│   ├── images/             # UI Images
+│   ├── js/                 # JavaScript files
+│   ├── style.css           # Global CSS file
 │
 ├── templates/              # Flask HTML templates
 │   ├── index.html          # Homepage
@@ -43,11 +51,24 @@ horizon-cinemas/
 │   ├── admin_dashboard.html # Admin Dashboard
 │   ├── manager_dashboard.html # Manager Dashboard
 │   ├── booking.html        # Booking Interface
+│   ├── cancel.html         # Ticket Cancellation Page
 │   ├── report.html         # Reports & AI Predictions
 │   ├── add_film.html       # Add New Films
 │   ├── update_film.html    # Update Existing Films
 │
-└── instance/               # SQLite database storage
+└── logs/                   # Log Files (Optional)
+    ├── gunicorn.log
+    ├── gunicorn_error.log
+│
+└── backup/                 # Backup Folder (Optional)
+    ├── bckup_APP.py
+    ├── bckup_horizon_database.db
+│
+└── instance/               # SQLite database storage (Optional)
+    ├── horizon_cinemas.db
+│
+└── testing/                # Test files (Optional)
+    ├── testing.txt
 
 ## 🛠 **Setup & Installation**
 
