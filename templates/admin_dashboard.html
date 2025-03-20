@@ -11,13 +11,13 @@
     <nav class="navbar navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="/">🎬 Horizon Cinemas</a>
-            <a href="/logout" class="btn btn-outline-light">Logout</a>
+            <a href="/" class="btn btn-outline-light">Logout</a>
         </div>
     </nav>
 
     <div class="container mt-4">
         <h2 class="text-center">Admin Dashboard</h2>
-
+        <td><a href="/booking" class="btn btn-primary">➕ Add Booking</a></td>
         <h3>Manage Films</h3>
         <table class="table table-striped">
             <thead>
@@ -52,6 +52,34 @@
             <input type="text" name="showtimes" placeholder="Showtimes (comma-separated)" required class="form-control mb-2">
             <button type="submit" class="btn btn-success">Add Film</button>
         </form>
+
+        <h3>📊 Admin Reports</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Report</th>
+                    <th>View</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Number of Bookings for Each Film</td>
+                    <td><a href="/report/bookings_per_film" class="btn btn-primary">📄 View</a></td>
+                </tr>
+                <tr>
+                    <td>Total Monthly Revenue for Each Cinema</td>
+                    <td><a href="/report/monthly_revenue" class="btn btn-primary">📄 View</a></td>
+                </tr>
+                <tr>
+                    <td>Top Revenue-Generating Film</td>
+                    <td><a href="/report/top_film" class="btn btn-primary">📄 View</a></td>
+                </tr>
+                <tr>
+                    <td>Monthly List of Staff with Bookings (Sorted)</td>
+                    <td><a href="/report/staff_bookings" class="btn btn-primary">📄 View</a></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
     <footer class="text-center bg-dark text-white py-3">
