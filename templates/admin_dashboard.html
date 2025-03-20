@@ -35,8 +35,8 @@
                     <td>{{ film.genre }}</td>
                     <td>{{ film.showtimes }}</td>
                     <td>
-                        <a href="/admin/edit_film/{{ film.id }}" class="btn btn-warning btn-sm">Edit</a>
-                        <a href="/admin/delete_film/{{ film.id }}" class="btn btn-danger btn-sm">Delete</a>
+                        <a href="{{ url_for('update_film', film_id=film.id) }}" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="{{ url_for('delete_film', film_id=film.id) }}" class="btn btn-danger btn-sm">Delete</a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -44,7 +44,7 @@
         </table>
 
         <h3>Add New Film</h3>
-        <form action="/admin/add_film" method="post">
+        <form action="{{ url_for('add_film') }}" method="post">
             <input type="text" name="title" placeholder="Film Title" required class="form-control mb-2">
             <input type="text" name="genre" placeholder="Genre" required class="form-control mb-2">
             <input type="text" name="age_rating" placeholder="Age Rating" required class="form-control mb-2">

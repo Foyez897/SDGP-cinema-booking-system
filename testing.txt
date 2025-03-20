@@ -1,0 +1,27 @@
+### Test your booking system using 
+
+http://127.0.0.1 or
+http://localhost.
+
+### List of users with new secure passwords
+
+users = [
+    ("admin1", "Admin123Pass_"),
+    ("manager1", "Manager@Pass456"),
+    ("staff1", "Staff!Pass789")
+]
+
+# ./test_dashboards.sh
+
+echo "Checking Admin Dashboard..."
+curl -X GET http://127.0.0.1:5003/admin_dashboard -b cookies_admin.txt
+echo -e "\n"
+
+echo "Checking Manager Dashboard..."
+curl -X GET http://127.0.0.1:5003/manager_dashboard -b cookies_manager.txt
+echo -e "\n"
+
+echo "Checking Staff Dashboard..."
+curl -X GET http://127.0.0.1:5003/staff_dashboard -b cookies_staff.txt
+echo -e "\n"
+
