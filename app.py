@@ -344,15 +344,119 @@ def bookings_per_film():
     with get_db_connection() as conn:
         cursor = conn.cursor()
         cursor.execute("""
-            SELECT films.title, COUNT(bookings.id) AS total_bookings
-            FROM bookings
-            JOIN showtimes ON bookings.showtime_id = showtimes.id
-            JOIN films ON showtimes.film_id = films.id
-            GROUP BY films.title
+            SELECT films.title, COUNT(bookings.id) AS total_bookings 
+            FROM films 
+            LEFT JOIN showtimes ON films.id = showtimes.film_id 
+            LEFT JOIN bookings ON showtimes.id = bookings.showtime_id 
+            GROUP BY films.title 
+            ORDER BY total_bookings DESC;
         """)
         report = cursor.fetchall()
     return render_template("report.html", report=report, title="Bookings Per Film")
 
+@app.route('/report/monthly_revenue')
+@jwt_required()
+def monthly_revenue():
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        
+        # Extract month and year from booking_date and sum total_price
+        cursor.execute("""
+            SELECT 
+                strftime('%Y-%m', booking_date) AS month,
+                SUM(total_price) AS total_revenue
+            FROM bookings
+            GROUP BY strftime('%Y-%m', booking_date)
+            ORDER BY month DESC
+        """)
+        
+        report = cursor.fetchall()
+        
+        # Define columns for the report
+        columns = [
+            {"key": "month", "display_name": "Month", "format": "text"},
+            {"key": "total_revenue", "display_name": "Total Revenue", "format": "currency"}
+        ]
+        
+    return render_template(
+        "generic_report.html", 
+        report=report, 
+        columns=columns,
+        title="Monthly Revenue Report"
+    )
+
+@app.route('/report/top_film')
+@jwt_required()
+def top_film():
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        
+        cursor.execute("""
+            SELECT 
+                f.title, 
+                SUM(b.total_price) AS total_revenue,
+                COUNT(b.id) AS booking_count,
+                f.genre,
+                f.age_rating
+            FROM bookings b
+            JOIN showtimes s ON b.showtime_id = s.id
+            JOIN films f ON s.film_id = f.id
+            GROUP BY f.title, f.genre, f.age_rating
+            ORDER BY total_revenue DESC
+        """)
+        
+        report = cursor.fetchall()
+        
+        # Define columns for the report
+        columns = [
+            {"key": "title", "display_name": "Film Title", "format": "text"},
+            {"key": "total_revenue", "display_name": "Total Revenue", "format": "currency"},
+            {"key": "booking_count", "display_name": "Number of Bookings", "format": "integer"},
+            {"key": "genre", "display_name": "Genre", "format": "text"},
+            {"key": "age_rating", "display_name": "Age Rating", "format": "text"}
+        ]
+        
+    return render_template(
+        "generic_report.html", 
+        report=report, 
+        columns=columns,
+        title="Top Revenue-Generating Films"
+    )
+
+@app.route('/report/staff_bookings')
+@jwt_required()
+def staff_bookings():
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        
+        cursor.execute("""
+            SELECT 
+                strftime('%Y-%m', b.booking_date) AS month,
+                u.username AS staff_name,
+                COUNT(b.id) AS booking_count,
+                SUM(b.total_price) AS total_revenue
+            FROM bookings b
+            JOIN users u ON b.booking_staff_id = u.id
+            GROUP BY month, u.username
+            ORDER BY month DESC, booking_count DESC
+        """)
+        
+        report = cursor.fetchall()
+        
+        # Define columns for the report
+        columns = [
+            {"key": "month", "display_name": "Month", "format": "text"},
+            {"key": "staff_name", "display_name": "Staff Member", "format": "text"},
+            {"key": "booking_count", "display_name": "Number of Bookings", "format": "integer"},
+            {"key": "total_revenue", "display_name": "Total Revenue", "format": "currency"}
+        ]
+        
+    return render_template(
+        "generic_report.html", 
+        report=report, 
+        columns=columns,
+        title="Monthly Staff Booking Performance"
+    )
 # ===============================
 # 🔹 Predict Bookings
 # ===============================

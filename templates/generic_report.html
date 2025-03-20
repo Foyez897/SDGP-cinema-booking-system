@@ -22,15 +22,29 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Film Title</th>
-                    <th>Total Bookings</th>
+                    {% for column in columns %}
+                    <th>{{ column.display_name }}</th>
+                    {% endfor %}
                 </tr>
             </thead>
             <tbody>
                 {% for row in report %}
                 <tr>
-                    <td>{{ row['title'] }}</td>  <!-- Access by column name -->
-                    <td>{{ row['total_bookings'] }}</td>  <!-- Access by column name -->
+                    {% for column in columns %}
+                        <td>
+                            {% if column.format == 'currency' %}
+                                £{{ "%.2f"|format(row[column.key]) }}
+                            {% elif column.format == 'integer' %}
+                                {{ row[column.key]|int }}
+                            {% elif column.format == 'date' %}
+                                {{ row[column.key]|date }}
+                            {% elif column.format == 'percentage' %}
+                                {{ "%.2f"|format(row[column.key]) }}%
+                            {% else %}
+                                {{ row[column.key] }}
+                            {% endif %}
+                        </td>
+                    {% endfor %}
                 </tr>
                 {% endfor %}
             </tbody>
@@ -43,3 +57,4 @@
 
 </body>
 </html>
+
