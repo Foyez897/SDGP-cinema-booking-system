@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Cinemas - Horizon Cinemas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        .cinema-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="/">🎬 Horizon Cinemas</a>
+    <a href="/manager_dashboard" class="btn btn-outline-light">Back to Dashboard</a>
+  </div>
+</nav>
+
+<div class="container mt-5">
+  <h2 class="text-center mb-4">🏙️ Manage Existing Cinemas</h2>
+  <div class="list-group">
+    {% for cinema in cinemas %}
+      <div class="list-group-item">
+        <div class="cinema-actions">
+          <div>
+            <h5>{{ cinema.city }} - {{ cinema.location }}</h5>
+            <p>Screens: {{ cinema.num_of_screens }}</p>
+          </div>
+          <div class="btn-group">
+            <a href="/edit_screens/{{ cinema.id }}" class="btn btn-outline-primary btn-sm">🎬 Edit Screens</a>
+            <a href="/manage_film_listing/{{ cinema.id }}" class="btn btn-outline-info btn-sm">🎞️ Manage Film Listing</a>
+            <form method="POST" action="/delete_cinema/{{ cinema.id }}" onsubmit="return confirm('Are you sure you want to delete this cinema?');">
+              <button type="submit" class="btn btn-outline-danger btn-sm">🗑️ Remove</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<footer class="text-center bg-dark text-white py-3 mt-5">
+  <p>© 2025 Horizon Cinemas. All Rights Reserved.</p>
+</footer>
+</body>
+</html>

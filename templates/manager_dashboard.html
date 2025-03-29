@@ -12,43 +12,25 @@
     <nav class="navbar navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="/">🎬 Horizon Cinemas</a>
-            <a href="/logout" class="btn btn-outline-light">Logout</a>
+            <form action="/logout" method="POST" style="display:inline;">
+                <button type="submit" class="btn btn-outline-light">Logout</button>
+            </form>
         </div>
     </nav>
 
     <div class="container mt-4">
-        <h2 class="text-center">Admin Dashboard</h2>
+        <h2 class="text-center">Manager Dashboard</h2>
 
-        <h3>🎞️ Manage Film Listings</h3>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Film Title</th>
-                    <th>Genre</th>
-                    <th>Age Rating</th>
-                    <th>Showtimes</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for film in films %}
-                <tr>
-                    <td>{{ film.title }}</td>
-                    <td>{{ film.genre }}</td>
-                    <td>{{ film.age_rating }}</td>
-                    <td>{{ film.showtimes }}</td>
-                    <td>
-                        <a href="/update_film/{{ film.id }}" class="btn btn-sm btn-warning">Edit</a>
-                        <a href="/delete_film/{{ film.id }}" class="btn btn-sm btn-danger">Remove</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <a href="/add_film" class="btn btn-success">➕ Add New Film</a>
+         <h3>🏢 Manage Cinemas</h3>
+        <a href="/add_cinema" class="btn btn-success">➕ Add New Cinema</a>
+        <a href="/manage_cinemas" class="btn btn-info">🏙️ Manage Existing Cinemas</a>
 
-        <h3>🕒 Manage Showtimes</h3>
-        <a href="/manage_showtimes" class="btn btn-info">📅 Manage Showtimes</a>
+        <h3>🛠 Admin Controls</h3>
+        <a href="/admin_dashboard?from_manager=true" class="btn btn-warning mb-3">🔑 Access Admin Dashboard</a>
+
+        <h3> 🎫 Booking Menu</h3>
+        <a href="/booking?from_manager=true" class="btn btn-secondary mb-3">🎟️ Book Ticket</a>
+        <a href="/refund?from_manager=true" class="btn btn-secondary mb-3">💸 Refund Ticket</a>
 
         <h3>📊 Admin Reports</h3>
         <table class="table table-bordered">
@@ -81,7 +63,7 @@
     </div>
 
     <footer class="text-center bg-dark text-white py-3">
-        <p>© 2024 Horizon Cinemas. All Rights Reserved.</p>
+        <p>© 2025 Horizon Cinemas. All Rights Reserved.</p>
     </footer>
 
 </body>

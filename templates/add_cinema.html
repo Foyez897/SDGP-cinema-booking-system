@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add New Cinema - Horizon Cinemas</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <style>
+    .seat-preview {
+      display: flex;
+      flex-wrap: wrap;
+      max-width: 300px;
+    }
+    .seat-box {
+      width: 20px;
+      height: 20px;
+      margin: 2px;
+      border-radius: 3px;
+    }
+    .lower-hall { background-color: #0d6efd; }
+    .upper-gallery { background-color: #198754; }
+    .vip { background-color: #a020f0; }
+    .slider-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    input[type=range] {
+      width: 200px;
+    }
+    .slider-value {
+      font-weight: bold;
+      min-width: 40px;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="/">🎬 Horizon Cinemas</a>
+    <a href="/manager_dashboard" class="btn btn-outline-light">Back to Dashboard</a>
+  </div>
+</nav>
+
+<div class="container mt-5">
+  <h2 class="text-center">➕ Add New Cinema</h2>
+  <form action="/add_cinema" method="POST" class="mt-4">
+    <div class="mb-3">
+      <label for="cinema_name" class="form-label">Cinema Name</label>
+      <input type="text" class="form-control" id="cinema_name" name="cinema_name" required>
+    </div>
+    <div class="mb-3">
+      <label for="city" class="form-label">City</label>
+      <input type="text" class="form-control" id="city" name="city" required>
+    </div>
+    <div class="mb-3">
+      <label for="address" class="form-label">Address</label>
+      <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
+    </div>
+
+    <!-- Number of Screens -->
+    <div class="mb-3">
+      <label class="form-label">Number of Screens</label>
+      <div class="input-group">
+        <button type="button" class="btn btn-outline-primary" onclick="toggleScreensDropdown()">
+          🎬 Select Number of Screens
+        </button>
+        <select class="form-select ms-2" id="num_of_screens" name="num_of_screens" style="display: none; max-width: 150px;" required>
+          <option value="">-- Choose --</option>
+          {% for i in range(1, 7) %}
+            <option value="{{ i }}">{{ i }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-text">Maximum allowed: 6 screens</div>
+    </div>
+
+    <!-- Seat Configuration Mode -->
+    <div class="mb-3">
+      <label class="form-label">Seat Configuration</label>
+      <div>
+        <input type="radio" name="seat_config" value="all" checked onclick="toggleSeatConfig()"> Apply to All Screens
+        <input type="radio" name="seat_config" value="individual" onclick="toggleSeatConfig()"> Customize Each Screen
+      </div>
+      <small class="form-text text-muted mt-1">30% will be Lower Hall (blue), 70% Upper Gallery (green), optional VIP (purple, max 10)</small>
+    </div>
+
+    <!-- Dynamic Seat Input + Preview -->
+    <div id="seat-config-container" class="mt-3"></div>
+
+    <button type="submit" class="btn btn-success mt-4">Add Cinema</button>
+  </form>
+</div>
+
+<footer class="text-center bg-dark text-white py-3 mt-5">
+  <p>© 2024 Horizon Cinemas. All Rights Reserved.</p>
+</footer>
+
+<!-- 👇 This part is INSIDE <head> already -->
+  <script>
+    const vipCounts = {};
+  
+    function toggleScreensDropdown() {
+      const dropdown = document.getElementById('num_of_screens');
+      dropdown.style.display = dropdown.style.display === 'none' ? 'inline-block' : 'none';
+      toggleSeatConfig();
+    }
+  
+    document.getElementById('num_of_screens').addEventListener('change', toggleSeatConfig);
+  
+    function toggleSeatConfig() {
+      const screenCount = parseInt(document.getElementById('num_of_screens').value);
+      const configType = document.querySelector('input[name="seat_config"]:checked').value;
+      const container = document.getElementById("seat-config-container");
+      container.innerHTML = "";
+  
+      if (!screenCount || screenCount < 1) return;
+  
+      if (configType === "all") {
+        vipCounts['all'] = 0;
+        container.innerHTML = `
+          <label class="form-label">Total Seats for All Screens</label>
+          <div class="slider-container mb-2">
+            <input type="range" min="50" max="120" value="50" class="form-range" id="total_seats_all" name="total_seats_all"
+              oninput="renderSeatPreview('all', false, this.value)" 
+              onchange="renderSeatPreview('all', true, this.value)">
+            <span class="slider-value" id="value_all">50</span>
+          </div>
+          <div class="mb-2">
+            <button type="button" class="btn btn-sm btn-outline-success me-2" onclick="adjustVIP('all', 1)">+ VIP</button>
+            <button type="button" class="btn btn-sm btn-outline-danger" onclick="adjustVIP('all', -1)">- VIP</button>
+          </div>
+          <div id="seat_preview_all" class="seat-preview mb-2"></div>
+          <div id="seat_counts_all" class="text-muted mb-4"></div>
+        `;
+        renderSeatPreview('all', false, 50);
+      } else {
+        for (let i = 1; i <= screenCount; i++) {
+          vipCounts[i] = 0;
+          container.innerHTML += `
+            <label class="form-label">Screen ${i} - Total Seats</label>
+            <div class="slider-container mb-2">
+              <input type="range" min="50" max="120" value="50" class="form-range" id="total_seats_${i}" name="total_seats_${i}"
+                oninput="renderSeatPreview(${i}, false, this.value)" 
+                onchange="renderSeatPreview(${i}, true, this.value)">
+              <span class="slider-value" id="value_${i}">50</span>
+            </div>
+            <div class="mb-2">
+              <button type="button" class="btn btn-sm btn-outline-success me-2" onclick="adjustVIP(${i}, 1)">+ VIP</button>
+              <button type="button" class="btn btn-sm btn-outline-danger" onclick="adjustVIP(${i}, -1)">- VIP</button>
+            </div>
+            <div id="seat_preview_${i}" class="seat-preview mb-2"></div>
+            <div id="seat_counts_${i}" class="text-muted mb-4"></div>
+          `;
+          renderSeatPreview(i, false, 50);
+        }
+      }
+    }
+  
+    function adjustVIP(screenId, change) {
+      const current = vipCounts[screenId] || 0;
+      const newValue = current + change;
+      if (newValue < 0 || newValue > 10) return;
+  
+      const totalSeats = parseInt(document.getElementById(
+        screenId === 'all' ? 'total_seats_all' : `total_seats_${screenId}`
+      ).value);
+  
+      if (newValue > Math.round(totalSeats * 0.7)) return;
+  
+      vipCounts[screenId] = newValue;
+      renderSeatPreview(screenId, true, totalSeats);
+    }
+  
+    function renderSeatPreview(screenId, isFinal = false, valueOverride = null) {
+      const inputId = screenId === 'all' ? 'total_seats_all' : `total_seats_${screenId}`;
+      const valueLabelId = screenId === 'all' ? 'value_all' : `value_${screenId}`;
+      const previewId = screenId === 'all' ? 'seat_preview_all' : `seat_preview_${screenId}`;
+      const countId = screenId === 'all' ? 'seat_counts_all' : `seat_counts_${screenId}`;
+  
+      const seatCount = parseInt(valueOverride);
+      document.getElementById(valueLabelId).innerText = seatCount;
+  
+      const vip = vipCounts[screenId] || 0;
+      const lowerCount = Math.round(seatCount * 0.3);
+      let upperCount = seatCount - lowerCount - vip;
+  
+      if (upperCount < 0) upperCount = 0;
+  
+      const previewContainer = document.getElementById(previewId);
+      const countContainer = document.getElementById(countId);
+  
+      previewContainer.innerHTML = "";
+  
+      for (let i = 0; i < lowerCount; i++) {
+        const seat = document.createElement("div");
+        seat.classList.add("seat-box", "lower-hall");
+        previewContainer.appendChild(seat);
+      }
+  
+      for (let i = 0; i < upperCount; i++) {
+        const seat = document.createElement("div");
+        seat.classList.add("seat-box", "upper-gallery");
+        previewContainer.appendChild(seat);
+      }
+  
+      for (let i = 0; i < vip; i++) {
+        const seat = document.createElement("div");
+        seat.classList.add("seat-box", "vip");
+        previewContainer.appendChild(seat);
+      }
+  
+      countContainer.innerText = `Lower Hall: ${lowerCount} | Upper Gallery: ${upperCount} | VIP: ${vip}`;
+  
+      // ✅ Add or update hidden VIP input so Flask can access it
+      const vipInputId = screenId === 'all' ? 'vip_count_all' : `vip_count_${screenId}`;
+      let vipInput = document.getElementById(vipInputId);
+      if (!vipInput) {
+        vipInput = document.createElement('input');
+        vipInput.type = 'hidden';
+        vipInput.name = vipInputId;
+        vipInput.id = vipInputId;
+        document.querySelector('form').appendChild(vipInput);
+      }
+      vipInput.value = vip;
+    }
+  </script>
+</body>
+</html>

@@ -1,74 +1,60 @@
-# 🎬 Horizon Cinemas Booking System
+# 🎬 Horizon Cinemas Booking System (HCBS)
 
-A Flask-powered Cinema Booking System with JWT Authentication, SQLite Database, and Gunicorn Deployment. This system allows Admins, Managers, and Booking Staff to manage cinemas, films, and bookings securely and efficiently.
+A robust, modular cinema booking system built using **Flask**, with secure role-based access, dynamic showtime management, and reporting dashboards. Designed for Admins, Managers, and Booking Staff.
+
 
 ## 🚀 Key Features
 
-✅ JWT Authentication with flask_jwt_extended (Admin, Manager, Booking Staff)
-✅ Secure Password Hashing with bcrypt
-✅ Role-Based Access Control (RBAC)
-✅ Cinema & Film Management (Add, Update, Delete)
-✅ Ticket Booking System (Staff Can Book for Customers)
-✅ Real-Time Seat Availability Check
-✅ Booking Restrictions (No bookings beyond 7 days)
-✅ AI-Powered Booking Predictions using sklearn
-✅ Admin & Manager Dashboards
-✅ Graphical Booking Insights (Matplotlib charts)
-✅ RESTful API Support for Booking and Reports
-✅ Production-Ready Deployment with Gunicorn 
+🔑 Role-Based Access Control (RBAC)
+System behavior and views are based on user roles (Admin, Manager, Staff).
+🔌 RESTful API Endpoints
+APIs available for ticket booking, report generation, and seat availability queries.
+🧩 Modular Codebase with Blueprints
+Scalable and clean architecture using Flask Blueprints.
+🛡️ Secure Password Hashing
+User passwords are hashed using bcrypt before storage.
+🎬 Cinema & Film Management
+Admins can add, update, delete films and assign showtimes to multiple cinemas and screens.
+🎟️ Ticket Booking System
+Staff can book tickets for customers with real-time seat availability checks.
+📅 Date Restrictions
+Booking allowed only within a 7-day window from the current date.
+🤖 AI-Powered Booking Predictions
+Integrated scikit-learn models to forecast showtime demand using historical data.
+📊 Graphical Insights
+Matplotlib-based charts provide visual reports for revenue, bookings per film, staff activity, etc.
+🧾 Reports & Admin Tools
+Includes top-performing films, monthly revenue per cinema, and staff performance reports.
 
----
 
-## 📂 **Project Structure**
+## 📁 Project Structure
 
-horizon-cinemas/
-│── app.py                 # Main Flask application
-│── database_setup.py       # Database setup script
-│── predict_bookings.py     # AI Prediction script
-│── generate_charts.py      # Script to generate reports/charts
-│── jwt_Authentication.py   # JWT Authentication handling
-│── create_admin.py         # Script to create admin users
-│── Procfile                # Deployment instructions for Heroku/Gunicorn
-│── README.md               # Project documentation
-│── requirements.txt        # Project dependencies
-│── .gitignore              # Ignore virtual env, cache files, etc.
-│── horizon_cinemas.db      # Main SQLite database
-│
-├── static/                 # Static assets (CSS, JS, Charts, Images)
-│   ├── charts/             # Generated Reports (PNG)
-│   │   ├── city_bookings.png
-│   │   ├── predicted_bookings.png
-│   │   ├── showtime_bookings.png
-│   ├── images/             # UI Images
-│   ├── js/                 # JavaScript files
-│   ├── style.css           # Global CSS file
-│
-├── templates/              # Flask HTML templates
-│   ├── index.html          # Homepage
-│   ├── admin_login.html    # Admin Login Page
-│   ├── manager_login.html  # Manager Login Page
-│   ├── staff_login.html    # Booking Staff Login
-│   ├── admin_dashboard.html # Admin Dashboard
-│   ├── manager_dashboard.html # Manager Dashboard
-│   ├── booking.html        # Booking Interface
-│   ├── cancel.html         # Ticket Cancellation Page
-│   ├── report.html         # Reports & AI Predictions
-│   ├── add_film.html       # Add New Films
-│   ├── update_film.html    # Update Existing Films
-│
-└── logs/                   # Log Files (Optional)
-    ├── gunicorn.log
-    ├── gunicorn_error.log
-│
-└── backup/                 # Backup Folder (Optional)
-    ├── bckup_APP.py
-    ├── bckup_horizon_database.db
-│
-└── instance/               # SQLite database storage (Optional)
-    ├── horizon_cinemas.db
-│
-└── testing/                # Test files (Optional)
-    ├── testing.txt
+.
+├── run.py                    # Flask entry point
+├── requirements.txt
+├── Procfile                  # For deployment (e.g., Heroku/Gunicorn)
+├── extensions.py             # Global extensions (Bcrypt, JWT manager)
+├── app/
+│   └── __init__.py           # Flask app factory
+├── blueprints/
+│   ├── admin_routes.py       # Admin functionality
+│   ├── booking_routes.py     # Booking operations
+│   └── manager_routes.py     # Manager reports
+├── database/
+│   ├── database_setup.py     # SQLite schema setup
+│   ├── horizon_cinemas.db    # Main SQLite database
+│   ├── all_data.txt          # Sample exported data
+│   └── export_all_data.py    # Export script
+├── static/
+│   ├── charts/               # Report chart images
+│   ├── style.css             # Custom styling
+├── templates/
+│   ├── admin_dashboard.html
+│   ├── manage_film.html
+│   ├── booking.html
+│   ├── select_cinema.html
+│   ├── ...
+
 
 ## 🛠 **Setup & Installation**
 
@@ -82,16 +68,20 @@ python3 -m venv .venv
 source .venv/bin/activate  # macOS/Linux
 .venv\Scripts\activate     # Windows
 
-3️⃣ Install Dependencies
-pip install -r requirements.txt
 
-4️⃣ Setup the Database
-python database_setup.py
+## 🚀 Running the Application
 
-5️⃣ Run the Application
-python app.py
+1. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-Now, open http://127.0.0.1:5003/ & http://localhost. in your browser.
+2. **Start the Flask server**
+   ```bash
+   python run.py
+   ```
+Now, open http://127.0.0.1:5000
+
 
 🎭 User Roles & Login Credentials
 Role	Username	    Password
@@ -99,31 +89,75 @@ Staff   staff1          Staff!Pass789
 Admin	admin1	        Admin123Pass_
 Manager	manager1	    anager@Pass456
 
-### 🚀 Deploying to Production
-### ••1️⃣ Run Gunicorn Locally••
-'''sh
-gunicorn app:app --bind 0.0.0.0:5003 --workers 4
 
-## 🛠 API Endpoints
+## 🔐 Security Features
 
-🔹 Authentication
+- **JWT Authentication (via Secure Cookies):**
+  - Tokens created using `flask-jwt-extended`
+  - Stored in HTTP-only cookies for enhanced security
+  - Role-checked access to admin, manager, and staff views
 
- • POST /staff_login → Logs in Booking Staff
- • POST /admin_login → Logs in Admin
- • POST /manager_login → Logs in Manager
+- **Password Hashing:**
+  - All user passwords are hashed with **Flask-Bcrypt**
+  - Plain passwords are never stored
 
-🔹 Booking & Management
+## 🧱 Blueprint-Based Modular Design
 
- • POST /book → Book a ticket (Requires JWT)
- • GET /booking → Booking page (Requires JWT)
- • GET /admin_dashboard → Admin panel (Requires JWT)
- • GET /manager_dashboard → Manager panel (Requires JWT)
+The project uses Flask **Blueprints** to separate business logic:
 
-🔹 Reports & Predictions
+| Module           | Responsibility                          |
+|------------------|------------------------------------------|
+| `admin_routes.py` | Film/showtime management, reports       |
+| `booking_routes.py` | Ticket booking, cancellations          |
+| `manager_routes.py` | Analytics, dashboards, monthly insights |
 
- • GET /report/bookings_per_film → View Bookings per Film
- • GET /predict_bookings → AI Predictions for Future Bookings
 
+## 🎟️ API: Booking Endpoint
+
+The system also supports **programmatic access** to the booking flow:
+
+### 🔸 `POST /book`
+
+**Headers:**
+```
+Content-Type: application/json
+Authorization: Bearer <JWT_TOKEN>
+```
+
+**Request JSON:**
+```json
+{
+  "film_id": 3,
+  "cinema_id": 1,
+  "screen_number": 2,
+  "showtime": "2025-04-01 19:00",
+  "seats": ["A1", "A2"],
+  "booking_user_id": 5
+}
+
+
+**Response:**
+```json
+{
+  "status": "success",
+  "message": "Booking confirmed.",
+  "booking_reference": "BK235711"
+}
+
+
+> 🔐 Requires valid login and JWT token
+
+
+## 📊 Admin/Manager Features
+
+- ✅ Add/Edit/Delete films and showtimes
+- 📅 View cinema timetables
+- 📉 Real-time reports:
+  - Bookings per film
+  - Monthly revenue by cinema
+  - Top-performing films
+  - Staff booking activity
+- 🧠 AI-based booking suggestions (where applicable)
 
 
 ## 🏗 How to Contribute
@@ -146,9 +180,5 @@ We welcome contributions! Follow these steps:
 📜 License
 This project is open-source and available under the MIT License.
 
-    
-✨ Future Improvements
-🚀 User Registration & Authentication System
-🚀 Online Payment Integration for Bookings
-🚀 Movie Rating & Reviews
-🚀 Automated Testing with GitHub Actions
+
+© 2025 Horizon Cinemas — All Rights Reserved.

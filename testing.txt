@@ -1,9 +1,11 @@
-### Test your booking system using 
 
-http://127.0.0.1 or
-http://localhost.
+### Run Horizon Cinemas booking system
+python run.py
 
-### List of users with new secure passwords
+### Test Horizon Cinemas booking system 
+http://127.0.0.1:5000 
+
+## List of users with new secure passwords
 
 users = [
     ("admin1", "Admin123Pass_"),
@@ -11,17 +13,18 @@ users = [
     ("staff1", "Staff!Pass789")
 ]
 
-# ./test_dashboards.sh
 
-echo "Checking Admin Dashboard..."
-curl -X GET http://127.0.0.1:5003/admin_dashboard -b cookies_admin.txt
-echo -e "\n"
+### database check: horizon_cinemas.db
+sqlite3 database/horizon_cinemas.db
 
-echo "Checking Manager Dashboard..."
-curl -X GET http://127.0.0.1:5003/manager_dashboard -b cookies_manager.txt
-echo -e "\n"
+.headers ON
+.mode column
+SELECT * FROM bookings;
+SELECT * FROM films;
+SELECT * FROM cinemas;
+SELECT * FROM seats;
+...
 
-echo "Checking Staff Dashboard..."
-curl -X GET http://127.0.0.1:5003/staff_dashboard -b cookies_staff.txt
-echo -e "\n"
 
+### update all_data.txt
+python export_all_data.py

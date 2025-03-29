@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Select Showtime - {{ cinema.city }} ({{ cinema.location }})</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <style>
+    td, th { text-align: center; vertical-align: middle; }
+    .cell-clickable { cursor: pointer; background-color: #f8f9fa; }
+    .cell-clickable:hover { background-color: #e2e6ea; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="/">🎬 Horizon Cinemas</a>
+    <form action="/logout" method="POST" style="display:inline;">
+      <button type="submit" class="btn btn-outline-light">Logout</button>
+  </form>
+  </div>
+</nav>
+
+<div class="container mt-4">
+  <h2 class="text-center mb-4">🎞️ Showtime Timetable - {{ cinema.city }} ({{ cinema.location }})</h2>
+
+  <!-- Date Picker Form -->
+  <form method="get" class="row mb-4">
+    <input type="hidden" name="cinema_id" value="{{ request.args.get('cinema_id') }}">
+    <div class="col-md-4 offset-md-4">
+      <label for="date" class="form-label text-center w-100">Select Date:</label>
+      <input type="date" id="date" name="date" class="form-control text-center" value="{{ selected_date }}" onchange="this.form.submit()">
+    </div>
+  </form>
+
+  <table class="table table-bordered">
+    <thead class="table-dark">
+      <tr>
+        <th>Screen</th>
+        {% for time in time_slots %}
+          <th>{{ time }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for screen in screens %}
+      <tr>
+        <td><strong>Screen {{ screen }}</strong></td>
+        {% for time in time_slots %}
+          {% set key = (screen, time) %}
+          {% if showtime_map.get(key) %}
+            <td class="cell-clickable" onclick="window.location.href='/view_showtime/{{ showtime_map[key].id }}'">
+              🎬 {{ showtime_map[key].title }}<br>
+              🕓 {{ showtime_map[key].show_time[11:16] }}
+            </td>
+          {% else %}
+            <td><span class="text-muted">N/A</span></td>
+          {% endif %}
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<footer class="text-center bg-dark text-white py-3 mt-auto">
+  <p>© 2025 Horizon Cinemas. All Rights Reserved.</p>
+</footer>
+
+</body>
+</html>

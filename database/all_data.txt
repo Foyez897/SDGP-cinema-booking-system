@@ -1,0 +1,2614 @@
+
+
+-- Table: sqlite_sequence
+
+-- Schema:
+name ()
+seq ()
+
+name	seq
+--------------------------------------------------
+showtimes	37
+cinemas	15
+users	4
+films	11
+screens	45
+pricing	12
+seats	4584
+bookings	43
+
+
+-- Table: cinemas
+
+-- Schema:
+id (INTEGER)
+city (TEXT)
+location (TEXT)
+num_of_screens (INTEGER)
+
+id	city	location	num_of_screens
+--------------------------------------------------
+1	London	Central London	5
+2	Birmingham	Downtown	5
+3	Birmingham	Westside	4
+4	Bristol	City Center	6
+5	Bristol	North Bristol	5
+6	Cardiff	Central	5
+7	Cardiff	Bay Area	3
+9	London	West End	5
+10	Bristol	Frenchay Campus	5
+15	YorK	Deangate, York YO1 7HH	4
+
+
+-- Table: films
+
+-- Schema:
+id (INTEGER)
+title (TEXT)
+genre (TEXT)
+age_rating (TEXT)
+description (TEXT)
+actors (TEXT)
+
+id	title	genre	age_rating	description	actors
+--------------------------------------------------
+2	Titanic	Romance	PG-13	A love story set on the doomed Titanic ship	None
+5	Operation London Bridge 	Suspension	20-50	None	None
+6	Squid Game 	Thriller	20-50	None	None
+8	Away	Animation, Action, Comedy	PG	None	None
+9	Big Hero	Family/action	PG	None	None
+
+
+-- Table: cancellations
+
+-- Schema:
+id (INTEGER)
+booking_id (INTEGER)
+cancellation_date (TEXT)
+refund_amount (REAL)
+
+id	booking_id	cancellation_date	refund_amount
+--------------------------------------------------
+
+
+-- Table: showtimes
+
+-- Schema:
+id (INTEGER)
+film_id (INTEGER)
+cinema_id (INTEGER)
+screen_number (INTEGER)
+show_time (TEXT)
+price (INTEGER)
+
+id	film_id	cinema_id	screen_number	show_time	price
+--------------------------------------------------
+1	1	1	1	2025-02-12 18:00:00	15
+2	1	1	1	2025-02-12 10:00:00	10
+3	1	1	2	2025-02-12 14:00:00	12
+4	2	1	1	2025-02-12 18:00:00	15
+5	3	1	3	2025-02-12 21:00:00	18
+6	1	1	1	2025-02-15 18:00:00	12
+7	1	1	1	2025-02-25 18:00:00	15
+8	2	1	1	2025-03-24 16:00:00	0
+9	2	1	2	2025-03-24 14:00:00	0
+10	5	1	1	2025-03-24 14:00:00	0
+11	6	10	1	2025-03-24 12:00:00	0
+12	6	10	1	2025-03-24 18:00:00	0
+13	2	10	1	2025-03-24 10:00:00	0
+14	2	10	1	2025-03-24 14:00:00	0
+15	5	10	1	2025-03-24 16:00:00	0
+16	5	10	1	2025-03-24 20:00:00	0
+17	6	1	2	2025-03-24 18:00:00	0
+18	5	1	3	2025-03-24 14:00:00	0
+19	2	1	1	2025-03-24 20:00:00	0
+20	6	1	1	2025-03-28 16:00:00	0
+21	2	1	3	2025-03-28 12:00:00	0
+22	5	1	4	2025-03-28 20:00:00	0
+23	5	10	2	2025-03-24 16:00:00	0
+24	2	10	2	2025-03-24 18:00:00	0
+25	5	2	1	2025-03-24 12:00:00	0
+26	2	2	1	2025-03-24 18:00:00	0
+27	6	2	1	2025-03-24 20:00:00	0
+28	2	2	1	2025-03-24 14:00:00	0
+29	5	2	1	2025-03-24 16:00:00	0
+30	6	2	1	2025-03-24 10:00:00	0
+31	5	1	4	2025-03-26 14:00:00	0
+32	6	1	5	2025-03-24 18:00:00	0
+33	5	1	4	2025-03-24 16:00:00	0
+34	2	1	1	2025-03-26 10:00:00	0
+35	8	4	1	2025-04-06T18:00	10
+36	9	4	1	2025-04-05 18:00:00	8.5
+37	8	4	1	2025-04-03 16:00:00	12.5
+
+
+-- Table: screens
+
+-- Schema:
+id (INTEGER)
+cinema_id (INTEGER)
+screen_number (INTEGER)
+total_seats (INTEGER)
+
+id	cinema_id	screen_number	total_seats
+--------------------------------------------------
+19	1	1	120
+20	2	1	110
+21	3	1	50
+22	3	2	100
+23	1	2	100
+24	1	3	106
+25	4	1	80
+26	5	1	100
+27	6	1	68
+28	6	2	110
+29	7	1	80
+30	9	1	120
+31	9	2	80
+32	10	1	120
+33	10	2	110
+34	10	3	120
+35	1	4	94
+36	1	5	80
+37	14	1	80
+38	14	2	80
+39	14	3	80
+40	14	4	80
+41	14	5	80
+42	15	1	50
+43	15	2	50
+44	15	3	50
+45	15	4	50
+
+
+-- Table: users
+
+-- Schema:
+id (INTEGER)
+username (TEXT)
+password (TEXT)
+role (TEXT)
+
+id	username	password	role
+--------------------------------------------------
+1	admin1	$2b$12$itK7kvBlOlsch3crN6ao6.HddjCT59SL1QcslstbUXOb4v4gd42UG	admin
+2	manager1	$2b$12$lZ5kp2L7Q4H/G71GIZcz6.z2UbGGiFTHdgY.1tEZQKOoQBsUpLMWG	manager
+3	staff1	$2b$12$Hm36/Xlxo6tTUIoNwTISEuV2Ih5Zg3HYHGrXvTvJQv27jIgLdQR9.	booking_staff
+4	admin	$2b$12$WUAIvIc1J.d64ejJn.WxZux5l6F2WVhpUjRlQTu8aWwTByQv2EhA.	admin
+
+
+-- Table: pricing
+
+-- Schema:
+id (INTEGER)
+city (TEXT)
+time_slot (TEXT)
+lower_hall_price (REAL)
+
+id	city	time_slot	lower_hall_price
+--------------------------------------------------
+1	Birmingham	morning	5.0
+2	Birmingham	afternoon	6.0
+3	Birmingham	evening	7.0
+4	Bristol	morning	6.0
+5	Bristol	afternoon	7.0
+6	Bristol	evening	8.0
+7	Cardiff	morning	5.0
+8	Cardiff	afternoon	6.0
+9	Cardiff	evening	7.0
+10	London	morning	10.0
+11	London	afternoon	11.0
+12	London	evening	12.0
+
+
+-- Table: seats
+
+-- Schema:
+id (INTEGER)
+screen_id (INTEGER)
+seat_number (INTEGER)
+seat_type (TEXT)
+is_booked (INTEGER)
+
+id	screen_id	seat_number	seat_type	is_booked
+--------------------------------------------------
+1471	19	1	Lower Hall	0
+1472	19	2	Lower Hall	0
+1473	19	3	Lower Hall	0
+1474	19	4	Lower Hall	0
+1475	19	5	Lower Hall	0
+1476	19	6	Lower Hall	0
+1477	19	7	Lower Hall	0
+1478	19	8	Lower Hall	0
+1479	19	9	Lower Hall	0
+1480	19	10	Lower Hall	0
+1481	19	11	Lower Hall	0
+1482	19	12	Lower Hall	0
+1483	19	13	Lower Hall	0
+1484	19	14	Lower Hall	0
+1485	19	15	Lower Hall	0
+1486	19	16	Lower Hall	0
+1487	19	17	Lower Hall	0
+1488	19	18	Lower Hall	0
+1489	19	19	Lower Hall	0
+1490	19	20	Lower Hall	0
+1491	19	21	Lower Hall	1
+1492	19	22	Lower Hall	1
+1493	19	23	Lower Hall	1
+1494	19	24	Lower Hall	1
+1495	19	25	Lower Hall	0
+1496	19	26	Lower Hall	0
+1497	19	27	Lower Hall	0
+1498	19	28	Lower Hall	0
+1499	19	29	Lower Hall	0
+1500	19	30	Lower Hall	0
+1501	19	31	Lower Hall	0
+1502	19	32	Lower Hall	1
+1503	19	33	Lower Hall	1
+1504	19	34	Lower Hall	0
+1505	19	35	Lower Hall	0
+1506	19	36	Lower Hall	0
+1507	19	37	Upper Gallery	0
+1508	19	38	Upper Gallery	0
+1509	19	39	Upper Gallery	0
+1510	19	40	Upper Gallery	0
+1511	19	41	Upper Gallery	0
+1512	19	42	Upper Gallery	0
+1513	19	43	Upper Gallery	0
+1514	19	44	Upper Gallery	0
+1515	19	45	Upper Gallery	0
+1516	19	46	Upper Gallery	0
+1517	19	47	Upper Gallery	0
+1518	19	48	Upper Gallery	0
+1519	19	49	Upper Gallery	0
+1520	19	50	Upper Gallery	0
+1521	19	51	Upper Gallery	0
+1522	19	52	Upper Gallery	0
+1523	19	53	Upper Gallery	0
+1524	19	54	Upper Gallery	0
+1525	19	55	Upper Gallery	0
+1526	19	56	Upper Gallery	0
+1527	19	57	Upper Gallery	0
+1528	19	58	Upper Gallery	0
+1529	19	59	Upper Gallery	0
+1530	19	60	Upper Gallery	0
+1531	19	61	Upper Gallery	0
+1532	19	62	Upper Gallery	0
+1533	19	63	Upper Gallery	0
+1534	19	64	Upper Gallery	0
+1535	19	65	Upper Gallery	0
+1536	19	66	Upper Gallery	0
+1537	19	67	Upper Gallery	0
+1538	19	68	Upper Gallery	0
+1539	19	69	Upper Gallery	0
+1540	19	70	Upper Gallery	0
+1541	19	71	Upper Gallery	0
+1542	19	72	Upper Gallery	0
+1543	19	73	Upper Gallery	0
+1544	19	74	Upper Gallery	0
+1545	19	75	Upper Gallery	0
+1546	19	76	Upper Gallery	0
+1547	19	77	Upper Gallery	0
+1548	19	78	Upper Gallery	0
+1549	19	79	Upper Gallery	0
+1550	19	80	Upper Gallery	0
+1551	19	81	Upper Gallery	0
+1552	19	82	Upper Gallery	0
+1553	19	83	Upper Gallery	0
+1554	19	84	Upper Gallery	0
+1555	19	85	Upper Gallery	0
+1556	19	86	Upper Gallery	0
+1557	19	87	Upper Gallery	0
+1558	19	88	Upper Gallery	0
+1559	19	89	Upper Gallery	0
+1560	19	90	Upper Gallery	0
+1561	19	91	Upper Gallery	0
+1562	19	92	Upper Gallery	0
+1563	19	93	Upper Gallery	0
+1564	19	94	Upper Gallery	1
+1565	19	95	Upper Gallery	1
+1566	19	96	Upper Gallery	1
+1567	19	97	Upper Gallery	1
+1568	19	98	Upper Gallery	1
+1569	19	99	Upper Gallery	0
+1570	19	100	Upper Gallery	0
+1571	19	101	Upper Gallery	0
+1572	19	102	Upper Gallery	0
+1573	19	103	Upper Gallery	0
+1574	19	104	Upper Gallery	0
+1575	19	105	Upper Gallery	0
+1576	19	106	Upper Gallery	0
+1577	19	107	Upper Gallery	1
+1578	19	108	Upper Gallery	0
+1579	19	109	Upper Gallery	0
+1580	19	110	Upper Gallery	0
+1581	19	111	VIP	0
+1582	19	112	VIP	0
+1583	19	113	VIP	0
+1584	19	114	VIP	0
+1585	19	115	VIP	0
+1586	19	116	VIP	0
+1587	19	117	VIP	0
+1588	19	118	VIP	1
+1589	19	119	VIP	1
+1590	19	120	VIP	1
+1701	20	1	Lower Hall	0
+1702	20	2	Lower Hall	0
+1703	20	3	Lower Hall	0
+1704	20	4	Lower Hall	0
+1705	20	5	Lower Hall	0
+1706	20	6	Lower Hall	0
+1707	20	7	Lower Hall	0
+1708	20	8	Lower Hall	0
+1709	20	9	Lower Hall	0
+1710	20	10	Lower Hall	0
+1711	20	11	Lower Hall	0
+1712	20	12	Lower Hall	0
+1713	20	13	Lower Hall	0
+1714	20	14	Lower Hall	0
+1715	20	15	Lower Hall	0
+1716	20	16	Lower Hall	0
+1717	20	17	Lower Hall	0
+1718	20	18	Lower Hall	0
+1719	20	19	Lower Hall	0
+1720	20	20	Lower Hall	0
+1721	20	21	Lower Hall	0
+1722	20	22	Lower Hall	0
+1723	20	23	Lower Hall	0
+1724	20	24	Lower Hall	0
+1725	20	25	Lower Hall	0
+1726	20	26	Lower Hall	0
+1727	20	27	Lower Hall	0
+1728	20	28	Lower Hall	0
+1729	20	29	Lower Hall	0
+1730	20	30	Lower Hall	0
+1731	20	31	Lower Hall	0
+1732	20	32	Lower Hall	0
+1733	20	33	Lower Hall	0
+1734	20	34	Upper Gallery	0
+1735	20	35	Upper Gallery	0
+1736	20	36	Upper Gallery	0
+1737	20	37	Upper Gallery	0
+1738	20	38	Upper Gallery	0
+1739	20	39	Upper Gallery	0
+1740	20	40	Upper Gallery	0
+1741	20	41	Upper Gallery	0
+1742	20	42	Upper Gallery	0
+1743	20	43	Upper Gallery	0
+1744	20	44	Upper Gallery	0
+1745	20	45	Upper Gallery	0
+1746	20	46	Upper Gallery	0
+1747	20	47	Upper Gallery	0
+1748	20	48	Upper Gallery	0
+1749	20	49	Upper Gallery	0
+1750	20	50	Upper Gallery	0
+1751	20	51	Upper Gallery	0
+1752	20	52	Upper Gallery	0
+1753	20	53	Upper Gallery	0
+1754	20	54	Upper Gallery	0
+1755	20	55	Upper Gallery	0
+1756	20	56	Upper Gallery	0
+1757	20	57	Upper Gallery	0
+1758	20	58	Upper Gallery	0
+1759	20	59	Upper Gallery	0
+1760	20	60	Upper Gallery	0
+1761	20	61	Upper Gallery	0
+1762	20	62	Upper Gallery	0
+1763	20	63	Upper Gallery	0
+1764	20	64	Upper Gallery	0
+1765	20	65	Upper Gallery	0
+1766	20	66	Upper Gallery	0
+1767	20	67	Upper Gallery	0
+1768	20	68	Upper Gallery	0
+1769	20	69	Upper Gallery	0
+1770	20	70	Upper Gallery	0
+1771	20	71	Upper Gallery	0
+1772	20	72	Upper Gallery	0
+1773	20	73	Upper Gallery	0
+1774	20	74	Upper Gallery	0
+1775	20	75	Upper Gallery	0
+1776	20	76	Upper Gallery	0
+1777	20	77	Upper Gallery	0
+1778	20	78	Upper Gallery	0
+1779	20	79	Upper Gallery	0
+1780	20	80	Upper Gallery	0
+1781	20	81	Upper Gallery	0
+1782	20	82	Upper Gallery	0
+1783	20	83	Upper Gallery	0
+1784	20	84	Upper Gallery	0
+1785	20	85	Upper Gallery	0
+1786	20	86	Upper Gallery	0
+1787	20	87	Upper Gallery	0
+1788	20	88	Upper Gallery	0
+1789	20	89	Upper Gallery	0
+1790	20	90	Upper Gallery	0
+1791	20	91	Upper Gallery	0
+1792	20	92	Upper Gallery	0
+1793	20	93	Upper Gallery	0
+1794	20	94	Upper Gallery	0
+1795	20	95	Upper Gallery	0
+1796	20	96	Upper Gallery	0
+1797	20	97	Upper Gallery	0
+1798	20	98	Upper Gallery	0
+1799	20	99	Upper Gallery	0
+1800	20	100	Upper Gallery	0
+1801	20	101	VIP	0
+1802	20	102	VIP	0
+1803	20	103	VIP	0
+1804	20	104	VIP	0
+1805	20	105	VIP	0
+1806	20	106	VIP	0
+1807	20	107	VIP	0
+1808	20	108	VIP	0
+1809	20	109	VIP	0
+1810	20	110	VIP	0
+2081	21	1	Lower Hall	0
+2082	21	2	Lower Hall	0
+2083	21	3	Lower Hall	0
+2084	21	4	Lower Hall	0
+2085	21	5	Lower Hall	0
+2086	21	6	Lower Hall	0
+2087	21	7	Lower Hall	0
+2088	21	8	Lower Hall	0
+2089	21	9	Lower Hall	0
+2090	21	10	Lower Hall	0
+2091	21	11	Lower Hall	0
+2092	21	12	Lower Hall	0
+2093	21	13	Lower Hall	0
+2094	21	14	Lower Hall	0
+2095	21	15	Lower Hall	0
+2096	21	16	Upper Gallery	0
+2097	21	17	Upper Gallery	0
+2098	21	18	Upper Gallery	0
+2099	21	19	Upper Gallery	0
+2100	21	20	Upper Gallery	0
+2101	21	21	Upper Gallery	0
+2102	21	22	Upper Gallery	0
+2103	21	23	Upper Gallery	0
+2104	21	24	Upper Gallery	0
+2105	21	25	Upper Gallery	0
+2106	21	26	Upper Gallery	0
+2107	21	27	Upper Gallery	0
+2108	21	28	Upper Gallery	0
+2109	21	29	Upper Gallery	0
+2110	21	30	Upper Gallery	0
+2111	21	31	Upper Gallery	0
+2112	21	32	Upper Gallery	0
+2113	21	33	Upper Gallery	0
+2114	21	34	Upper Gallery	0
+2115	21	35	Upper Gallery	0
+2116	21	36	Upper Gallery	0
+2117	21	37	Upper Gallery	0
+2118	21	38	Upper Gallery	0
+2119	21	39	Upper Gallery	0
+2120	21	40	Upper Gallery	0
+2121	21	41	VIP	0
+2122	21	42	VIP	0
+2123	21	43	VIP	0
+2124	21	44	VIP	0
+2125	21	45	VIP	0
+2126	21	46	VIP	0
+2127	21	47	VIP	0
+2128	21	48	VIP	0
+2129	21	49	VIP	0
+2130	21	50	VIP	0
+2131	22	1	Lower Hall	0
+2132	22	2	Lower Hall	0
+2133	22	3	Lower Hall	0
+2134	22	4	Lower Hall	0
+2135	22	5	Lower Hall	0
+2136	22	6	Lower Hall	0
+2137	22	7	Lower Hall	0
+2138	22	8	Lower Hall	0
+2139	22	9	Lower Hall	0
+2140	22	10	Lower Hall	0
+2141	22	11	Lower Hall	0
+2142	22	12	Lower Hall	0
+2143	22	13	Lower Hall	0
+2144	22	14	Lower Hall	0
+2145	22	15	Lower Hall	0
+2146	22	16	Lower Hall	0
+2147	22	17	Lower Hall	0
+2148	22	18	Lower Hall	0
+2149	22	19	Lower Hall	0
+2150	22	20	Lower Hall	0
+2151	22	21	Lower Hall	0
+2152	22	22	Lower Hall	0
+2153	22	23	Lower Hall	0
+2154	22	24	Lower Hall	0
+2155	22	25	Lower Hall	0
+2156	22	26	Lower Hall	0
+2157	22	27	Lower Hall	0
+2158	22	28	Lower Hall	0
+2159	22	29	Lower Hall	0
+2160	22	30	Lower Hall	0
+2161	22	31	Upper Gallery	0
+2162	22	32	Upper Gallery	0
+2163	22	33	Upper Gallery	0
+2164	22	34	Upper Gallery	0
+2165	22	35	Upper Gallery	0
+2166	22	36	Upper Gallery	0
+2167	22	37	Upper Gallery	0
+2168	22	38	Upper Gallery	0
+2169	22	39	Upper Gallery	0
+2170	22	40	Upper Gallery	0
+2171	22	41	Upper Gallery	0
+2172	22	42	Upper Gallery	0
+2173	22	43	Upper Gallery	0
+2174	22	44	Upper Gallery	0
+2175	22	45	Upper Gallery	0
+2176	22	46	Upper Gallery	0
+2177	22	47	Upper Gallery	0
+2178	22	48	Upper Gallery	0
+2179	22	49	Upper Gallery	0
+2180	22	50	Upper Gallery	0
+2181	22	51	Upper Gallery	0
+2182	22	52	Upper Gallery	0
+2183	22	53	Upper Gallery	0
+2184	22	54	Upper Gallery	0
+2185	22	55	Upper Gallery	0
+2186	22	56	Upper Gallery	0
+2187	22	57	Upper Gallery	0
+2188	22	58	Upper Gallery	0
+2189	22	59	Upper Gallery	0
+2190	22	60	Upper Gallery	0
+2191	22	61	Upper Gallery	0
+2192	22	62	Upper Gallery	0
+2193	22	63	Upper Gallery	0
+2194	22	64	Upper Gallery	0
+2195	22	65	Upper Gallery	0
+2196	22	66	Upper Gallery	0
+2197	22	67	Upper Gallery	0
+2198	22	68	Upper Gallery	0
+2199	22	69	Upper Gallery	0
+2200	22	70	Upper Gallery	0
+2201	22	71	Upper Gallery	0
+2202	22	72	Upper Gallery	0
+2203	22	73	Upper Gallery	0
+2204	22	74	Upper Gallery	0
+2205	22	75	Upper Gallery	0
+2206	22	76	Upper Gallery	0
+2207	22	77	Upper Gallery	0
+2208	22	78	Upper Gallery	0
+2209	22	79	Upper Gallery	0
+2210	22	80	Upper Gallery	0
+2211	22	81	Upper Gallery	0
+2212	22	82	Upper Gallery	0
+2213	22	83	Upper Gallery	0
+2214	22	84	Upper Gallery	0
+2215	22	85	Upper Gallery	0
+2216	22	86	Upper Gallery	0
+2217	22	87	Upper Gallery	0
+2218	22	88	Upper Gallery	0
+2219	22	89	Upper Gallery	0
+2220	22	90	Upper Gallery	0
+2221	22	91	VIP	0
+2222	22	92	VIP	0
+2223	22	93	VIP	0
+2224	22	94	VIP	0
+2225	22	95	VIP	0
+2226	22	96	VIP	0
+2227	22	97	VIP	0
+2228	22	98	VIP	0
+2229	22	99	VIP	0
+2230	22	100	VIP	0
+2231	23	1	Lower Hall	0
+2232	23	2	Lower Hall	0
+2233	23	3	Lower Hall	0
+2234	23	4	Lower Hall	0
+2235	23	5	Lower Hall	0
+2236	23	6	Lower Hall	0
+2237	23	7	Lower Hall	0
+2238	23	8	Lower Hall	0
+2239	23	9	Lower Hall	0
+2240	23	10	Lower Hall	0
+2241	23	11	Lower Hall	0
+2242	23	12	Lower Hall	0
+2243	23	13	Lower Hall	0
+2244	23	14	Lower Hall	0
+2245	23	15	Lower Hall	0
+2246	23	16	Lower Hall	0
+2247	23	17	Lower Hall	0
+2248	23	18	Lower Hall	0
+2249	23	19	Lower Hall	0
+2250	23	20	Lower Hall	0
+2251	23	21	Lower Hall	0
+2252	23	22	Lower Hall	0
+2253	23	23	Lower Hall	0
+2254	23	24	Lower Hall	0
+2255	23	25	Lower Hall	0
+2256	23	26	Lower Hall	0
+2257	23	27	Lower Hall	0
+2258	23	28	Lower Hall	0
+2259	23	29	Lower Hall	0
+2260	23	30	Lower Hall	0
+2261	23	31	Upper Gallery	0
+2262	23	32	Upper Gallery	0
+2263	23	33	Upper Gallery	0
+2264	23	34	Upper Gallery	0
+2265	23	35	Upper Gallery	0
+2266	23	36	Upper Gallery	0
+2267	23	37	Upper Gallery	0
+2268	23	38	Upper Gallery	0
+2269	23	39	Upper Gallery	0
+2270	23	40	Upper Gallery	0
+2271	23	41	Upper Gallery	0
+2272	23	42	Upper Gallery	0
+2273	23	43	Upper Gallery	0
+2274	23	44	Upper Gallery	0
+2275	23	45	Upper Gallery	0
+2276	23	46	Upper Gallery	0
+2277	23	47	Upper Gallery	0
+2278	23	48	Upper Gallery	0
+2279	23	49	Upper Gallery	0
+2280	23	50	Upper Gallery	0
+2281	23	51	Upper Gallery	0
+2282	23	52	Upper Gallery	0
+2283	23	53	Upper Gallery	0
+2284	23	54	Upper Gallery	0
+2285	23	55	Upper Gallery	0
+2286	23	56	Upper Gallery	0
+2287	23	57	Upper Gallery	0
+2288	23	58	Upper Gallery	0
+2289	23	59	Upper Gallery	0
+2290	23	60	Upper Gallery	0
+2291	23	61	Upper Gallery	0
+2292	23	62	Upper Gallery	0
+2293	23	63	Upper Gallery	0
+2294	23	64	Upper Gallery	0
+2295	23	65	Upper Gallery	0
+2296	23	66	Upper Gallery	0
+2297	23	67	Upper Gallery	0
+2298	23	68	Upper Gallery	0
+2299	23	69	Upper Gallery	0
+2300	23	70	Upper Gallery	0
+2301	23	71	Upper Gallery	0
+2302	23	72	Upper Gallery	0
+2303	23	73	Upper Gallery	0
+2304	23	74	Upper Gallery	0
+2305	23	75	Upper Gallery	0
+2306	23	76	Upper Gallery	0
+2307	23	77	Upper Gallery	0
+2308	23	78	Upper Gallery	0
+2309	23	79	Upper Gallery	0
+2310	23	80	Upper Gallery	0
+2311	23	81	Upper Gallery	0
+2312	23	82	Upper Gallery	0
+2313	23	83	Upper Gallery	0
+2314	23	84	Upper Gallery	0
+2315	23	85	Upper Gallery	0
+2316	23	86	Upper Gallery	0
+2317	23	87	Upper Gallery	0
+2318	23	88	Upper Gallery	0
+2319	23	89	Upper Gallery	0
+2320	23	90	Upper Gallery	0
+2321	23	91	VIP	0
+2322	23	92	VIP	0
+2323	23	93	VIP	0
+2324	23	94	VIP	0
+2325	23	95	VIP	0
+2326	23	96	VIP	0
+2327	23	97	VIP	0
+2328	23	98	VIP	0
+2329	23	99	VIP	0
+2330	23	100	VIP	0
+2551	25	1	Lower Hall	0
+2552	25	2	Lower Hall	0
+2553	25	3	Lower Hall	0
+2554	25	4	Lower Hall	0
+2555	25	5	Lower Hall	0
+2556	25	6	Lower Hall	0
+2557	25	7	Lower Hall	0
+2558	25	8	Lower Hall	0
+2559	25	9	Lower Hall	0
+2560	25	10	Lower Hall	0
+2561	25	11	Lower Hall	0
+2562	25	12	Lower Hall	0
+2563	25	13	Lower Hall	0
+2564	25	14	Lower Hall	0
+2565	25	15	Lower Hall	0
+2566	25	16	Lower Hall	0
+2567	25	17	Lower Hall	0
+2568	25	18	Lower Hall	0
+2569	25	19	Lower Hall	0
+2570	25	20	Lower Hall	0
+2571	25	21	Lower Hall	0
+2572	25	22	Lower Hall	0
+2573	25	23	Lower Hall	0
+2574	25	24	Lower Hall	0
+2575	25	25	Upper Gallery	0
+2576	25	26	Upper Gallery	0
+2577	25	27	Upper Gallery	0
+2578	25	28	Upper Gallery	0
+2579	25	29	Upper Gallery	0
+2580	25	30	Upper Gallery	0
+2581	25	31	Upper Gallery	0
+2582	25	32	Upper Gallery	1
+2583	25	33	Upper Gallery	1
+2584	25	34	Upper Gallery	1
+2585	25	35	Upper Gallery	1
+2586	25	36	Upper Gallery	0
+2587	25	37	Upper Gallery	0
+2588	25	38	Upper Gallery	0
+2589	25	39	Upper Gallery	0
+2590	25	40	Upper Gallery	0
+2591	25	41	Upper Gallery	0
+2592	25	42	Upper Gallery	0
+2593	25	43	Upper Gallery	0
+2594	25	44	Upper Gallery	0
+2595	25	45	Upper Gallery	0
+2596	25	46	Upper Gallery	0
+2597	25	47	Upper Gallery	0
+2598	25	48	Upper Gallery	0
+2599	25	49	Upper Gallery	0
+2600	25	50	Upper Gallery	0
+2601	25	51	Upper Gallery	0
+2602	25	52	Upper Gallery	0
+2603	25	53	Upper Gallery	0
+2604	25	54	Upper Gallery	0
+2605	25	55	Upper Gallery	0
+2606	25	56	Upper Gallery	0
+2607	25	57	Upper Gallery	0
+2608	25	58	Upper Gallery	0
+2609	25	59	Upper Gallery	0
+2610	25	60	Upper Gallery	0
+2611	25	61	Upper Gallery	0
+2612	25	62	Upper Gallery	0
+2613	25	63	Upper Gallery	0
+2614	25	64	Upper Gallery	0
+2615	25	65	Upper Gallery	0
+2616	25	66	Upper Gallery	0
+2617	25	67	Upper Gallery	0
+2618	25	68	Upper Gallery	0
+2619	25	69	Upper Gallery	0
+2620	25	70	Upper Gallery	0
+2621	25	71	VIP	0
+2622	25	72	VIP	0
+2623	25	73	VIP	0
+2624	25	74	VIP	0
+2625	25	75	VIP	0
+2626	25	76	VIP	0
+2627	25	77	VIP	0
+2628	25	78	VIP	0
+2629	25	79	VIP	0
+2630	25	80	VIP	0
+2631	26	1	Lower Hall	0
+2632	26	2	Lower Hall	0
+2633	26	3	Lower Hall	0
+2634	26	4	Lower Hall	0
+2635	26	5	Lower Hall	0
+2636	26	6	Lower Hall	0
+2637	26	7	Lower Hall	0
+2638	26	8	Lower Hall	0
+2639	26	9	Lower Hall	0
+2640	26	10	Lower Hall	0
+2641	26	11	Lower Hall	0
+2642	26	12	Lower Hall	0
+2643	26	13	Lower Hall	0
+2644	26	14	Lower Hall	0
+2645	26	15	Lower Hall	0
+2646	26	16	Lower Hall	0
+2647	26	17	Lower Hall	0
+2648	26	18	Lower Hall	0
+2649	26	19	Lower Hall	0
+2650	26	20	Lower Hall	0
+2651	26	21	Lower Hall	0
+2652	26	22	Lower Hall	0
+2653	26	23	Lower Hall	0
+2654	26	24	Lower Hall	0
+2655	26	25	Lower Hall	0
+2656	26	26	Lower Hall	0
+2657	26	27	Lower Hall	0
+2658	26	28	Lower Hall	0
+2659	26	29	Lower Hall	0
+2660	26	30	Lower Hall	0
+2661	26	31	Upper Gallery	0
+2662	26	32	Upper Gallery	0
+2663	26	33	Upper Gallery	0
+2664	26	34	Upper Gallery	0
+2665	26	35	Upper Gallery	0
+2666	26	36	Upper Gallery	0
+2667	26	37	Upper Gallery	0
+2668	26	38	Upper Gallery	0
+2669	26	39	Upper Gallery	0
+2670	26	40	Upper Gallery	0
+2671	26	41	Upper Gallery	0
+2672	26	42	Upper Gallery	0
+2673	26	43	Upper Gallery	0
+2674	26	44	Upper Gallery	0
+2675	26	45	Upper Gallery	0
+2676	26	46	Upper Gallery	0
+2677	26	47	Upper Gallery	0
+2678	26	48	Upper Gallery	0
+2679	26	49	Upper Gallery	0
+2680	26	50	Upper Gallery	0
+2681	26	51	Upper Gallery	0
+2682	26	52	Upper Gallery	0
+2683	26	53	Upper Gallery	0
+2684	26	54	Upper Gallery	0
+2685	26	55	Upper Gallery	0
+2686	26	56	Upper Gallery	0
+2687	26	57	Upper Gallery	0
+2688	26	58	Upper Gallery	0
+2689	26	59	Upper Gallery	0
+2690	26	60	Upper Gallery	0
+2691	26	61	Upper Gallery	0
+2692	26	62	Upper Gallery	0
+2693	26	63	Upper Gallery	0
+2694	26	64	Upper Gallery	0
+2695	26	65	Upper Gallery	0
+2696	26	66	Upper Gallery	0
+2697	26	67	Upper Gallery	0
+2698	26	68	Upper Gallery	0
+2699	26	69	Upper Gallery	0
+2700	26	70	Upper Gallery	0
+2701	26	71	Upper Gallery	0
+2702	26	72	Upper Gallery	0
+2703	26	73	Upper Gallery	0
+2704	26	74	Upper Gallery	0
+2705	26	75	Upper Gallery	0
+2706	26	76	Upper Gallery	0
+2707	26	77	Upper Gallery	0
+2708	26	78	Upper Gallery	0
+2709	26	79	Upper Gallery	0
+2710	26	80	Upper Gallery	0
+2711	26	81	Upper Gallery	0
+2712	26	82	Upper Gallery	0
+2713	26	83	Upper Gallery	0
+2714	26	84	Upper Gallery	0
+2715	26	85	Upper Gallery	0
+2716	26	86	Upper Gallery	0
+2717	26	87	Upper Gallery	0
+2718	26	88	Upper Gallery	0
+2719	26	89	Upper Gallery	0
+2720	26	90	Upper Gallery	0
+2721	26	91	VIP	0
+2722	26	92	VIP	0
+2723	26	93	VIP	0
+2724	26	94	VIP	0
+2725	26	95	VIP	0
+2726	26	96	VIP	0
+2727	26	97	VIP	0
+2728	26	98	VIP	0
+2729	26	99	VIP	0
+2730	26	100	VIP	0
+2731	27	1	Lower Hall	0
+2732	27	2	Lower Hall	0
+2733	27	3	Lower Hall	0
+2734	27	4	Lower Hall	0
+2735	27	5	Lower Hall	0
+2736	27	6	Lower Hall	0
+2737	27	7	Lower Hall	0
+2738	27	8	Lower Hall	0
+2739	27	9	Lower Hall	0
+2740	27	10	Lower Hall	0
+2741	27	11	Lower Hall	0
+2742	27	12	Lower Hall	0
+2743	27	13	Lower Hall	0
+2744	27	14	Lower Hall	0
+2745	27	15	Lower Hall	0
+2746	27	16	Lower Hall	0
+2747	27	17	Lower Hall	0
+2748	27	18	Lower Hall	0
+2749	27	19	Lower Hall	0
+2750	27	20	Lower Hall	0
+2751	27	21	Upper Gallery	0
+2752	27	22	Upper Gallery	0
+2753	27	23	Upper Gallery	0
+2754	27	24	Upper Gallery	0
+2755	27	25	Upper Gallery	0
+2756	27	26	Upper Gallery	0
+2757	27	27	Upper Gallery	0
+2758	27	28	Upper Gallery	0
+2759	27	29	Upper Gallery	0
+2760	27	30	Upper Gallery	0
+2761	27	31	Upper Gallery	0
+2762	27	32	Upper Gallery	0
+2763	27	33	Upper Gallery	0
+2764	27	34	Upper Gallery	0
+2765	27	35	Upper Gallery	0
+2766	27	36	Upper Gallery	0
+2767	27	37	Upper Gallery	0
+2768	27	38	Upper Gallery	0
+2769	27	39	Upper Gallery	0
+2770	27	40	Upper Gallery	0
+2771	27	41	Upper Gallery	0
+2772	27	42	Upper Gallery	0
+2773	27	43	Upper Gallery	0
+2774	27	44	Upper Gallery	0
+2775	27	45	Upper Gallery	0
+2776	27	46	Upper Gallery	0
+2777	27	47	Upper Gallery	0
+2778	27	48	Upper Gallery	0
+2779	27	49	Upper Gallery	0
+2780	27	50	Upper Gallery	0
+2781	27	51	Upper Gallery	0
+2782	27	52	Upper Gallery	0
+2783	27	53	Upper Gallery	0
+2784	27	54	Upper Gallery	0
+2785	27	55	Upper Gallery	0
+2786	27	56	Upper Gallery	0
+2787	27	57	Upper Gallery	0
+2788	27	58	Upper Gallery	0
+2789	27	59	VIP	0
+2790	27	60	VIP	0
+2791	27	61	VIP	0
+2792	27	62	VIP	0
+2793	27	63	VIP	0
+2794	27	64	VIP	0
+2795	27	65	VIP	0
+2796	27	66	VIP	0
+2797	27	67	VIP	0
+2798	27	68	VIP	0
+2799	28	1	Lower Hall	0
+2800	28	2	Lower Hall	0
+2801	28	3	Lower Hall	0
+2802	28	4	Lower Hall	0
+2803	28	5	Lower Hall	0
+2804	28	6	Lower Hall	0
+2805	28	7	Lower Hall	0
+2806	28	8	Lower Hall	0
+2807	28	9	Lower Hall	0
+2808	28	10	Lower Hall	0
+2809	28	11	Lower Hall	0
+2810	28	12	Lower Hall	0
+2811	28	13	Lower Hall	0
+2812	28	14	Lower Hall	0
+2813	28	15	Lower Hall	0
+2814	28	16	Lower Hall	0
+2815	28	17	Lower Hall	0
+2816	28	18	Lower Hall	0
+2817	28	19	Lower Hall	0
+2818	28	20	Lower Hall	0
+2819	28	21	Lower Hall	0
+2820	28	22	Lower Hall	0
+2821	28	23	Lower Hall	0
+2822	28	24	Lower Hall	0
+2823	28	25	Lower Hall	0
+2824	28	26	Lower Hall	0
+2825	28	27	Lower Hall	0
+2826	28	28	Lower Hall	0
+2827	28	29	Lower Hall	0
+2828	28	30	Lower Hall	0
+2829	28	31	Lower Hall	0
+2830	28	32	Lower Hall	0
+2831	28	33	Lower Hall	0
+2832	28	34	Upper Gallery	0
+2833	28	35	Upper Gallery	0
+2834	28	36	Upper Gallery	0
+2835	28	37	Upper Gallery	0
+2836	28	38	Upper Gallery	0
+2837	28	39	Upper Gallery	0
+2838	28	40	Upper Gallery	0
+2839	28	41	Upper Gallery	0
+2840	28	42	Upper Gallery	0
+2841	28	43	Upper Gallery	0
+2842	28	44	Upper Gallery	0
+2843	28	45	Upper Gallery	0
+2844	28	46	Upper Gallery	0
+2845	28	47	Upper Gallery	0
+2846	28	48	Upper Gallery	0
+2847	28	49	Upper Gallery	0
+2848	28	50	Upper Gallery	0
+2849	28	51	Upper Gallery	0
+2850	28	52	Upper Gallery	0
+2851	28	53	Upper Gallery	0
+2852	28	54	Upper Gallery	0
+2853	28	55	Upper Gallery	0
+2854	28	56	Upper Gallery	0
+2855	28	57	Upper Gallery	0
+2856	28	58	Upper Gallery	0
+2857	28	59	Upper Gallery	0
+2858	28	60	Upper Gallery	0
+2859	28	61	Upper Gallery	0
+2860	28	62	Upper Gallery	0
+2861	28	63	Upper Gallery	0
+2862	28	64	Upper Gallery	0
+2863	28	65	Upper Gallery	0
+2864	28	66	Upper Gallery	0
+2865	28	67	Upper Gallery	0
+2866	28	68	Upper Gallery	0
+2867	28	69	Upper Gallery	0
+2868	28	70	Upper Gallery	0
+2869	28	71	Upper Gallery	0
+2870	28	72	Upper Gallery	0
+2871	28	73	Upper Gallery	0
+2872	28	74	Upper Gallery	0
+2873	28	75	Upper Gallery	0
+2874	28	76	Upper Gallery	0
+2875	28	77	Upper Gallery	0
+2876	28	78	Upper Gallery	0
+2877	28	79	Upper Gallery	0
+2878	28	80	Upper Gallery	0
+2879	28	81	Upper Gallery	0
+2880	28	82	Upper Gallery	0
+2881	28	83	Upper Gallery	0
+2882	28	84	Upper Gallery	0
+2883	28	85	Upper Gallery	0
+2884	28	86	Upper Gallery	0
+2885	28	87	Upper Gallery	0
+2886	28	88	Upper Gallery	0
+2887	28	89	Upper Gallery	0
+2888	28	90	Upper Gallery	0
+2889	28	91	Upper Gallery	0
+2890	28	92	Upper Gallery	0
+2891	28	93	Upper Gallery	0
+2892	28	94	Upper Gallery	0
+2893	28	95	Upper Gallery	0
+2894	28	96	Upper Gallery	0
+2895	28	97	Upper Gallery	0
+2896	28	98	Upper Gallery	0
+2897	28	99	Upper Gallery	0
+2898	28	100	Upper Gallery	0
+2899	28	101	VIP	0
+2900	28	102	VIP	0
+2901	28	103	VIP	0
+2902	28	104	VIP	0
+2903	28	105	VIP	0
+2904	28	106	VIP	0
+2905	28	107	VIP	0
+2906	28	108	VIP	0
+2907	28	109	VIP	0
+2908	28	110	VIP	0
+2909	29	1	Lower Hall	0
+2910	29	2	Lower Hall	0
+2911	29	3	Lower Hall	0
+2912	29	4	Lower Hall	0
+2913	29	5	Lower Hall	0
+2914	29	6	Lower Hall	0
+2915	29	7	Lower Hall	0
+2916	29	8	Lower Hall	0
+2917	29	9	Lower Hall	0
+2918	29	10	Lower Hall	0
+2919	29	11	Lower Hall	0
+2920	29	12	Lower Hall	0
+2921	29	13	Lower Hall	0
+2922	29	14	Lower Hall	0
+2923	29	15	Lower Hall	0
+2924	29	16	Lower Hall	0
+2925	29	17	Lower Hall	0
+2926	29	18	Lower Hall	0
+2927	29	19	Lower Hall	0
+2928	29	20	Lower Hall	0
+2929	29	21	Lower Hall	0
+2930	29	22	Lower Hall	0
+2931	29	23	Lower Hall	0
+2932	29	24	Lower Hall	0
+2933	29	25	Upper Gallery	0
+2934	29	26	Upper Gallery	0
+2935	29	27	Upper Gallery	0
+2936	29	28	Upper Gallery	0
+2937	29	29	Upper Gallery	0
+2938	29	30	Upper Gallery	0
+2939	29	31	Upper Gallery	0
+2940	29	32	Upper Gallery	0
+2941	29	33	Upper Gallery	0
+2942	29	34	Upper Gallery	0
+2943	29	35	Upper Gallery	0
+2944	29	36	Upper Gallery	0
+2945	29	37	Upper Gallery	0
+2946	29	38	Upper Gallery	0
+2947	29	39	Upper Gallery	0
+2948	29	40	Upper Gallery	0
+2949	29	41	Upper Gallery	0
+2950	29	42	Upper Gallery	0
+2951	29	43	Upper Gallery	0
+2952	29	44	Upper Gallery	0
+2953	29	45	Upper Gallery	0
+2954	29	46	Upper Gallery	0
+2955	29	47	Upper Gallery	0
+2956	29	48	Upper Gallery	0
+2957	29	49	Upper Gallery	0
+2958	29	50	Upper Gallery	0
+2959	29	51	Upper Gallery	0
+2960	29	52	Upper Gallery	0
+2961	29	53	Upper Gallery	0
+2962	29	54	Upper Gallery	0
+2963	29	55	Upper Gallery	0
+2964	29	56	Upper Gallery	0
+2965	29	57	Upper Gallery	0
+2966	29	58	Upper Gallery	0
+2967	29	59	Upper Gallery	0
+2968	29	60	Upper Gallery	0
+2969	29	61	Upper Gallery	0
+2970	29	62	Upper Gallery	0
+2971	29	63	Upper Gallery	0
+2972	29	64	Upper Gallery	0
+2973	29	65	Upper Gallery	0
+2974	29	66	Upper Gallery	0
+2975	29	67	Upper Gallery	0
+2976	29	68	Upper Gallery	0
+2977	29	69	Upper Gallery	0
+2978	29	70	Upper Gallery	0
+2979	29	71	VIP	0
+2980	29	72	VIP	0
+2981	29	73	VIP	0
+2982	29	74	VIP	0
+2983	29	75	VIP	0
+2984	29	76	VIP	0
+2985	29	77	VIP	0
+2986	29	78	VIP	0
+2987	29	79	VIP	0
+2988	29	80	VIP	0
+2989	30	1	Lower Hall	0
+2990	30	2	Lower Hall	0
+2991	30	3	Lower Hall	0
+2992	30	4	Lower Hall	0
+2993	30	5	Lower Hall	0
+2994	30	6	Lower Hall	0
+2995	30	7	Lower Hall	0
+2996	30	8	Lower Hall	0
+2997	30	9	Lower Hall	0
+2998	30	10	Lower Hall	0
+2999	30	11	Lower Hall	0
+3000	30	12	Lower Hall	0
+3001	30	13	Lower Hall	0
+3002	30	14	Lower Hall	0
+3003	30	15	Lower Hall	0
+3004	30	16	Lower Hall	0
+3005	30	17	Lower Hall	0
+3006	30	18	Lower Hall	0
+3007	30	19	Lower Hall	0
+3008	30	20	Lower Hall	0
+3009	30	21	Lower Hall	0
+3010	30	22	Lower Hall	0
+3011	30	23	Lower Hall	0
+3012	30	24	Lower Hall	0
+3013	30	25	Lower Hall	0
+3014	30	26	Lower Hall	0
+3015	30	27	Lower Hall	0
+3016	30	28	Lower Hall	0
+3017	30	29	Lower Hall	0
+3018	30	30	Lower Hall	0
+3019	30	31	Lower Hall	0
+3020	30	32	Lower Hall	0
+3021	30	33	Lower Hall	0
+3022	30	34	Lower Hall	0
+3023	30	35	Lower Hall	0
+3024	30	36	Lower Hall	0
+3025	30	37	Upper Gallery	0
+3026	30	38	Upper Gallery	0
+3027	30	39	Upper Gallery	0
+3028	30	40	Upper Gallery	0
+3029	30	41	Upper Gallery	0
+3030	30	42	Upper Gallery	0
+3031	30	43	Upper Gallery	0
+3032	30	44	Upper Gallery	0
+3033	30	45	Upper Gallery	0
+3034	30	46	Upper Gallery	0
+3035	30	47	Upper Gallery	0
+3036	30	48	Upper Gallery	0
+3037	30	49	Upper Gallery	0
+3038	30	50	Upper Gallery	0
+3039	30	51	Upper Gallery	0
+3040	30	52	Upper Gallery	0
+3041	30	53	Upper Gallery	0
+3042	30	54	Upper Gallery	0
+3043	30	55	Upper Gallery	0
+3044	30	56	Upper Gallery	0
+3045	30	57	Upper Gallery	0
+3046	30	58	Upper Gallery	0
+3047	30	59	Upper Gallery	0
+3048	30	60	Upper Gallery	0
+3049	30	61	Upper Gallery	0
+3050	30	62	Upper Gallery	0
+3051	30	63	Upper Gallery	0
+3052	30	64	Upper Gallery	0
+3053	30	65	Upper Gallery	0
+3054	30	66	Upper Gallery	0
+3055	30	67	Upper Gallery	0
+3056	30	68	Upper Gallery	0
+3057	30	69	Upper Gallery	0
+3058	30	70	Upper Gallery	0
+3059	30	71	Upper Gallery	0
+3060	30	72	Upper Gallery	0
+3061	30	73	Upper Gallery	0
+3062	30	74	Upper Gallery	0
+3063	30	75	Upper Gallery	0
+3064	30	76	Upper Gallery	0
+3065	30	77	Upper Gallery	0
+3066	30	78	Upper Gallery	0
+3067	30	79	Upper Gallery	0
+3068	30	80	Upper Gallery	0
+3069	30	81	Upper Gallery	0
+3070	30	82	Upper Gallery	0
+3071	30	83	Upper Gallery	0
+3072	30	84	Upper Gallery	0
+3073	30	85	Upper Gallery	0
+3074	30	86	Upper Gallery	0
+3075	30	87	Upper Gallery	0
+3076	30	88	Upper Gallery	0
+3077	30	89	Upper Gallery	0
+3078	30	90	Upper Gallery	0
+3079	30	91	Upper Gallery	0
+3080	30	92	Upper Gallery	0
+3081	30	93	Upper Gallery	0
+3082	30	94	Upper Gallery	0
+3083	30	95	Upper Gallery	0
+3084	30	96	Upper Gallery	0
+3085	30	97	Upper Gallery	0
+3086	30	98	Upper Gallery	0
+3087	30	99	Upper Gallery	0
+3088	30	100	Upper Gallery	0
+3089	30	101	Upper Gallery	0
+3090	30	102	Upper Gallery	0
+3091	30	103	Upper Gallery	0
+3092	30	104	Upper Gallery	0
+3093	30	105	Upper Gallery	0
+3094	30	106	Upper Gallery	0
+3095	30	107	Upper Gallery	0
+3096	30	108	Upper Gallery	0
+3097	30	109	Upper Gallery	0
+3098	30	110	Upper Gallery	0
+3099	30	111	VIP	0
+3100	30	112	VIP	0
+3101	30	113	VIP	0
+3102	30	114	VIP	0
+3103	30	115	VIP	0
+3104	30	116	VIP	0
+3105	30	117	VIP	0
+3106	30	118	VIP	0
+3107	30	119	VIP	0
+3108	30	120	VIP	0
+3109	31	1	Lower Hall	0
+3110	31	2	Lower Hall	0
+3111	31	3	Lower Hall	0
+3112	31	4	Lower Hall	0
+3113	31	5	Lower Hall	0
+3114	31	6	Lower Hall	0
+3115	31	7	Lower Hall	0
+3116	31	8	Lower Hall	0
+3117	31	9	Lower Hall	0
+3118	31	10	Lower Hall	0
+3119	31	11	Lower Hall	0
+3120	31	12	Lower Hall	0
+3121	31	13	Lower Hall	0
+3122	31	14	Lower Hall	0
+3123	31	15	Lower Hall	0
+3124	31	16	Lower Hall	0
+3125	31	17	Lower Hall	0
+3126	31	18	Lower Hall	0
+3127	31	19	Lower Hall	0
+3128	31	20	Lower Hall	0
+3129	31	21	Lower Hall	0
+3130	31	22	Lower Hall	0
+3131	31	23	Lower Hall	0
+3132	31	24	Lower Hall	0
+3133	31	25	Upper Gallery	0
+3134	31	26	Upper Gallery	0
+3135	31	27	Upper Gallery	0
+3136	31	28	Upper Gallery	0
+3137	31	29	Upper Gallery	0
+3138	31	30	Upper Gallery	0
+3139	31	31	Upper Gallery	0
+3140	31	32	Upper Gallery	0
+3141	31	33	Upper Gallery	0
+3142	31	34	Upper Gallery	0
+3143	31	35	Upper Gallery	0
+3144	31	36	Upper Gallery	0
+3145	31	37	Upper Gallery	0
+3146	31	38	Upper Gallery	0
+3147	31	39	Upper Gallery	0
+3148	31	40	Upper Gallery	0
+3149	31	41	Upper Gallery	0
+3150	31	42	Upper Gallery	0
+3151	31	43	Upper Gallery	0
+3152	31	44	Upper Gallery	0
+3153	31	45	Upper Gallery	0
+3154	31	46	Upper Gallery	0
+3155	31	47	Upper Gallery	0
+3156	31	48	Upper Gallery	0
+3157	31	49	Upper Gallery	0
+3158	31	50	Upper Gallery	0
+3159	31	51	Upper Gallery	0
+3160	31	52	Upper Gallery	0
+3161	31	53	Upper Gallery	0
+3162	31	54	Upper Gallery	0
+3163	31	55	Upper Gallery	0
+3164	31	56	Upper Gallery	0
+3165	31	57	Upper Gallery	0
+3166	31	58	Upper Gallery	0
+3167	31	59	Upper Gallery	0
+3168	31	60	Upper Gallery	0
+3169	31	61	Upper Gallery	0
+3170	31	62	Upper Gallery	0
+3171	31	63	Upper Gallery	0
+3172	31	64	Upper Gallery	0
+3173	31	65	Upper Gallery	0
+3174	31	66	Upper Gallery	0
+3175	31	67	Upper Gallery	0
+3176	31	68	Upper Gallery	0
+3177	31	69	Upper Gallery	0
+3178	31	70	Upper Gallery	0
+3179	31	71	VIP	0
+3180	31	72	VIP	0
+3181	31	73	VIP	0
+3182	31	74	VIP	0
+3183	31	75	VIP	0
+3184	31	76	VIP	0
+3185	31	77	VIP	0
+3186	31	78	VIP	0
+3187	31	79	VIP	0
+3188	31	80	VIP	0
+3189	32	1	Lower Hall	0
+3190	32	2	Lower Hall	0
+3191	32	3	Lower Hall	0
+3192	32	4	Lower Hall	0
+3193	32	5	Lower Hall	0
+3194	32	6	Lower Hall	0
+3195	32	7	Lower Hall	0
+3196	32	8	Lower Hall	0
+3197	32	9	Lower Hall	0
+3198	32	10	Lower Hall	0
+3199	32	11	Lower Hall	0
+3200	32	12	Lower Hall	0
+3201	32	13	Lower Hall	0
+3202	32	14	Lower Hall	0
+3203	32	15	Lower Hall	0
+3204	32	16	Lower Hall	0
+3205	32	17	Lower Hall	0
+3206	32	18	Lower Hall	0
+3207	32	19	Lower Hall	0
+3208	32	20	Lower Hall	0
+3209	32	21	Lower Hall	0
+3210	32	22	Lower Hall	0
+3211	32	23	Lower Hall	0
+3212	32	24	Lower Hall	0
+3213	32	25	Lower Hall	0
+3214	32	26	Lower Hall	0
+3215	32	27	Lower Hall	0
+3216	32	28	Lower Hall	0
+3217	32	29	Lower Hall	0
+3218	32	30	Lower Hall	0
+3219	32	31	Lower Hall	0
+3220	32	32	Lower Hall	0
+3221	32	33	Lower Hall	0
+3222	32	34	Lower Hall	0
+3223	32	35	Lower Hall	0
+3224	32	36	Lower Hall	0
+3225	32	37	Upper Gallery	0
+3226	32	38	Upper Gallery	0
+3227	32	39	Upper Gallery	0
+3228	32	40	Upper Gallery	0
+3229	32	41	Upper Gallery	0
+3230	32	42	Upper Gallery	0
+3231	32	43	Upper Gallery	0
+3232	32	44	Upper Gallery	0
+3233	32	45	Upper Gallery	0
+3234	32	46	Upper Gallery	0
+3235	32	47	Upper Gallery	0
+3236	32	48	Upper Gallery	0
+3237	32	49	Upper Gallery	0
+3238	32	50	Upper Gallery	0
+3239	32	51	Upper Gallery	0
+3240	32	52	Upper Gallery	0
+3241	32	53	Upper Gallery	0
+3242	32	54	Upper Gallery	0
+3243	32	55	Upper Gallery	0
+3244	32	56	Upper Gallery	0
+3245	32	57	Upper Gallery	0
+3246	32	58	Upper Gallery	0
+3247	32	59	Upper Gallery	0
+3248	32	60	Upper Gallery	0
+3249	32	61	Upper Gallery	0
+3250	32	62	Upper Gallery	0
+3251	32	63	Upper Gallery	0
+3252	32	64	Upper Gallery	0
+3253	32	65	Upper Gallery	0
+3254	32	66	Upper Gallery	0
+3255	32	67	Upper Gallery	0
+3256	32	68	Upper Gallery	0
+3257	32	69	Upper Gallery	0
+3258	32	70	Upper Gallery	0
+3259	32	71	Upper Gallery	0
+3260	32	72	Upper Gallery	0
+3261	32	73	Upper Gallery	0
+3262	32	74	Upper Gallery	0
+3263	32	75	Upper Gallery	0
+3264	32	76	Upper Gallery	0
+3265	32	77	Upper Gallery	0
+3266	32	78	Upper Gallery	0
+3267	32	79	Upper Gallery	0
+3268	32	80	Upper Gallery	0
+3269	32	81	Upper Gallery	0
+3270	32	82	Upper Gallery	0
+3271	32	83	Upper Gallery	0
+3272	32	84	Upper Gallery	0
+3273	32	85	Upper Gallery	0
+3274	32	86	Upper Gallery	0
+3275	32	87	Upper Gallery	0
+3276	32	88	Upper Gallery	0
+3277	32	89	Upper Gallery	0
+3278	32	90	Upper Gallery	0
+3279	32	91	Upper Gallery	0
+3280	32	92	Upper Gallery	0
+3281	32	93	Upper Gallery	0
+3282	32	94	Upper Gallery	0
+3283	32	95	Upper Gallery	0
+3284	32	96	Upper Gallery	0
+3285	32	97	Upper Gallery	0
+3286	32	98	Upper Gallery	0
+3287	32	99	Upper Gallery	0
+3288	32	100	Upper Gallery	0
+3289	32	101	Upper Gallery	0
+3290	32	102	Upper Gallery	0
+3291	32	103	Upper Gallery	0
+3292	32	104	Upper Gallery	0
+3293	32	105	Upper Gallery	0
+3294	32	106	Upper Gallery	0
+3295	32	107	Upper Gallery	0
+3296	32	108	Upper Gallery	0
+3297	32	109	Upper Gallery	0
+3298	32	110	Upper Gallery	0
+3299	32	111	VIP	0
+3300	32	112	VIP	0
+3301	32	113	VIP	0
+3302	32	114	VIP	0
+3303	32	115	VIP	0
+3304	32	116	VIP	0
+3305	32	117	VIP	0
+3306	32	118	VIP	0
+3307	32	119	VIP	0
+3308	32	120	VIP	0
+3309	33	1	Lower Hall	0
+3310	33	2	Lower Hall	0
+3311	33	3	Lower Hall	0
+3312	33	4	Lower Hall	0
+3313	33	5	Lower Hall	0
+3314	33	6	Lower Hall	0
+3315	33	7	Lower Hall	0
+3316	33	8	Lower Hall	0
+3317	33	9	Lower Hall	0
+3318	33	10	Lower Hall	0
+3319	33	11	Lower Hall	0
+3320	33	12	Lower Hall	0
+3321	33	13	Lower Hall	0
+3322	33	14	Lower Hall	0
+3323	33	15	Lower Hall	0
+3324	33	16	Lower Hall	0
+3325	33	17	Lower Hall	0
+3326	33	18	Lower Hall	0
+3327	33	19	Lower Hall	0
+3328	33	20	Lower Hall	0
+3329	33	21	Lower Hall	0
+3330	33	22	Lower Hall	0
+3331	33	23	Lower Hall	0
+3332	33	24	Lower Hall	0
+3333	33	25	Lower Hall	0
+3334	33	26	Lower Hall	0
+3335	33	27	Lower Hall	0
+3336	33	28	Lower Hall	0
+3337	33	29	Lower Hall	0
+3338	33	30	Lower Hall	0
+3339	33	31	Lower Hall	0
+3340	33	32	Lower Hall	0
+3341	33	33	Lower Hall	0
+3342	33	34	Upper Gallery	0
+3343	33	35	Upper Gallery	0
+3344	33	36	Upper Gallery	0
+3345	33	37	Upper Gallery	0
+3346	33	38	Upper Gallery	0
+3347	33	39	Upper Gallery	0
+3348	33	40	Upper Gallery	0
+3349	33	41	Upper Gallery	0
+3350	33	42	Upper Gallery	0
+3351	33	43	Upper Gallery	0
+3352	33	44	Upper Gallery	0
+3353	33	45	Upper Gallery	0
+3354	33	46	Upper Gallery	0
+3355	33	47	Upper Gallery	0
+3356	33	48	Upper Gallery	0
+3357	33	49	Upper Gallery	0
+3358	33	50	Upper Gallery	0
+3359	33	51	Upper Gallery	0
+3360	33	52	Upper Gallery	0
+3361	33	53	Upper Gallery	0
+3362	33	54	Upper Gallery	0
+3363	33	55	Upper Gallery	0
+3364	33	56	Upper Gallery	0
+3365	33	57	Upper Gallery	0
+3366	33	58	Upper Gallery	0
+3367	33	59	Upper Gallery	0
+3368	33	60	Upper Gallery	0
+3369	33	61	Upper Gallery	0
+3370	33	62	Upper Gallery	0
+3371	33	63	Upper Gallery	0
+3372	33	64	Upper Gallery	0
+3373	33	65	Upper Gallery	0
+3374	33	66	Upper Gallery	0
+3375	33	67	Upper Gallery	0
+3376	33	68	Upper Gallery	0
+3377	33	69	Upper Gallery	0
+3378	33	70	Upper Gallery	0
+3379	33	71	Upper Gallery	0
+3380	33	72	Upper Gallery	0
+3381	33	73	Upper Gallery	0
+3382	33	74	Upper Gallery	0
+3383	33	75	Upper Gallery	0
+3384	33	76	Upper Gallery	0
+3385	33	77	Upper Gallery	0
+3386	33	78	Upper Gallery	0
+3387	33	79	Upper Gallery	0
+3388	33	80	Upper Gallery	0
+3389	33	81	Upper Gallery	0
+3390	33	82	Upper Gallery	0
+3391	33	83	Upper Gallery	0
+3392	33	84	Upper Gallery	0
+3393	33	85	Upper Gallery	0
+3394	33	86	Upper Gallery	0
+3395	33	87	Upper Gallery	0
+3396	33	88	Upper Gallery	0
+3397	33	89	Upper Gallery	0
+3398	33	90	Upper Gallery	0
+3399	33	91	Upper Gallery	0
+3400	33	92	Upper Gallery	0
+3401	33	93	Upper Gallery	0
+3402	33	94	Upper Gallery	0
+3403	33	95	Upper Gallery	0
+3404	33	96	Upper Gallery	0
+3405	33	97	Upper Gallery	0
+3406	33	98	Upper Gallery	0
+3407	33	99	Upper Gallery	0
+3408	33	100	Upper Gallery	0
+3409	33	101	VIP	0
+3410	33	102	VIP	0
+3411	33	103	VIP	0
+3412	33	104	VIP	0
+3413	33	105	VIP	0
+3414	33	106	VIP	0
+3415	33	107	VIP	0
+3416	33	108	VIP	0
+3417	33	109	VIP	0
+3418	33	110	VIP	0
+3419	34	1	Lower Hall	0
+3420	34	2	Lower Hall	0
+3421	34	3	Lower Hall	0
+3422	34	4	Lower Hall	0
+3423	34	5	Lower Hall	0
+3424	34	6	Lower Hall	0
+3425	34	7	Lower Hall	0
+3426	34	8	Lower Hall	0
+3427	34	9	Lower Hall	0
+3428	34	10	Lower Hall	0
+3429	34	11	Lower Hall	0
+3430	34	12	Lower Hall	0
+3431	34	13	Lower Hall	0
+3432	34	14	Lower Hall	0
+3433	34	15	Lower Hall	0
+3434	34	16	Lower Hall	0
+3435	34	17	Lower Hall	0
+3436	34	18	Lower Hall	0
+3437	34	19	Lower Hall	0
+3438	34	20	Lower Hall	0
+3439	34	21	Lower Hall	0
+3440	34	22	Lower Hall	0
+3441	34	23	Lower Hall	0
+3442	34	24	Lower Hall	0
+3443	34	25	Lower Hall	0
+3444	34	26	Lower Hall	0
+3445	34	27	Lower Hall	0
+3446	34	28	Lower Hall	0
+3447	34	29	Lower Hall	0
+3448	34	30	Lower Hall	0
+3449	34	31	Lower Hall	0
+3450	34	32	Lower Hall	0
+3451	34	33	Lower Hall	0
+3452	34	34	Lower Hall	0
+3453	34	35	Lower Hall	0
+3454	34	36	Lower Hall	0
+3455	34	37	Upper Gallery	0
+3456	34	38	Upper Gallery	0
+3457	34	39	Upper Gallery	0
+3458	34	40	Upper Gallery	0
+3459	34	41	Upper Gallery	0
+3460	34	42	Upper Gallery	0
+3461	34	43	Upper Gallery	0
+3462	34	44	Upper Gallery	0
+3463	34	45	Upper Gallery	0
+3464	34	46	Upper Gallery	0
+3465	34	47	Upper Gallery	0
+3466	34	48	Upper Gallery	0
+3467	34	49	Upper Gallery	0
+3468	34	50	Upper Gallery	0
+3469	34	51	Upper Gallery	0
+3470	34	52	Upper Gallery	0
+3471	34	53	Upper Gallery	0
+3472	34	54	Upper Gallery	0
+3473	34	55	Upper Gallery	0
+3474	34	56	Upper Gallery	0
+3475	34	57	Upper Gallery	0
+3476	34	58	Upper Gallery	0
+3477	34	59	Upper Gallery	0
+3478	34	60	Upper Gallery	0
+3479	34	61	Upper Gallery	0
+3480	34	62	Upper Gallery	0
+3481	34	63	Upper Gallery	0
+3482	34	64	Upper Gallery	0
+3483	34	65	Upper Gallery	0
+3484	34	66	Upper Gallery	0
+3485	34	67	Upper Gallery	0
+3486	34	68	Upper Gallery	0
+3487	34	69	Upper Gallery	0
+3488	34	70	Upper Gallery	0
+3489	34	71	Upper Gallery	0
+3490	34	72	Upper Gallery	0
+3491	34	73	Upper Gallery	0
+3492	34	74	Upper Gallery	0
+3493	34	75	Upper Gallery	0
+3494	34	76	Upper Gallery	0
+3495	34	77	Upper Gallery	0
+3496	34	78	Upper Gallery	0
+3497	34	79	Upper Gallery	0
+3498	34	80	Upper Gallery	0
+3499	34	81	Upper Gallery	0
+3500	34	82	Upper Gallery	0
+3501	34	83	Upper Gallery	0
+3502	34	84	Upper Gallery	0
+3503	34	85	Upper Gallery	0
+3504	34	86	Upper Gallery	0
+3505	34	87	Upper Gallery	0
+3506	34	88	Upper Gallery	0
+3507	34	89	Upper Gallery	0
+3508	34	90	Upper Gallery	0
+3509	34	91	Upper Gallery	0
+3510	34	92	Upper Gallery	0
+3511	34	93	Upper Gallery	0
+3512	34	94	Upper Gallery	0
+3513	34	95	Upper Gallery	0
+3514	34	96	Upper Gallery	0
+3515	34	97	Upper Gallery	0
+3516	34	98	Upper Gallery	0
+3517	34	99	Upper Gallery	0
+3518	34	100	Upper Gallery	0
+3519	34	101	Upper Gallery	0
+3520	34	102	Upper Gallery	0
+3521	34	103	Upper Gallery	0
+3522	34	104	Upper Gallery	0
+3523	34	105	Upper Gallery	0
+3524	34	106	Upper Gallery	0
+3525	34	107	Upper Gallery	0
+3526	34	108	Upper Gallery	0
+3527	34	109	Upper Gallery	0
+3528	34	110	Upper Gallery	0
+3529	34	111	VIP	0
+3530	34	112	VIP	0
+3531	34	113	VIP	0
+3532	34	114	VIP	0
+3533	34	115	VIP	0
+3534	34	116	VIP	0
+3535	34	117	VIP	0
+3536	34	118	VIP	0
+3537	34	119	VIP	0
+3538	34	120	VIP	0
+3705	35	1	Lower Hall	0
+3706	35	2	Lower Hall	0
+3707	35	3	Lower Hall	0
+3708	35	4	Lower Hall	0
+3709	35	5	Lower Hall	0
+3710	35	6	Lower Hall	0
+3711	35	7	Lower Hall	0
+3712	35	8	Lower Hall	0
+3713	35	9	Lower Hall	0
+3714	35	10	Lower Hall	0
+3715	35	11	Lower Hall	0
+3716	35	12	Lower Hall	0
+3717	35	13	Lower Hall	0
+3718	35	14	Lower Hall	0
+3719	35	15	Lower Hall	0
+3720	35	16	Lower Hall	0
+3721	35	17	Lower Hall	0
+3722	35	18	Lower Hall	0
+3723	35	19	Lower Hall	0
+3724	35	20	Lower Hall	0
+3725	35	21	Lower Hall	0
+3726	35	22	Lower Hall	0
+3727	35	23	Lower Hall	0
+3728	35	24	Lower Hall	0
+3729	35	25	Lower Hall	0
+3730	35	26	Lower Hall	0
+3731	35	27	Lower Hall	0
+3732	35	28	Lower Hall	0
+3733	35	29	Upper Gallery	0
+3734	35	30	Upper Gallery	0
+3735	35	31	Upper Gallery	0
+3736	35	32	Upper Gallery	0
+3737	35	33	Upper Gallery	0
+3738	35	34	Upper Gallery	0
+3739	35	35	Upper Gallery	0
+3740	35	36	Upper Gallery	0
+3741	35	37	Upper Gallery	0
+3742	35	38	Upper Gallery	0
+3743	35	39	Upper Gallery	0
+3744	35	40	Upper Gallery	0
+3745	35	41	Upper Gallery	0
+3746	35	42	Upper Gallery	0
+3747	35	43	Upper Gallery	0
+3748	35	44	Upper Gallery	0
+3749	35	45	Upper Gallery	0
+3750	35	46	Upper Gallery	0
+3751	35	47	Upper Gallery	0
+3752	35	48	Upper Gallery	0
+3753	35	49	Upper Gallery	0
+3754	35	50	Upper Gallery	0
+3755	35	51	Upper Gallery	0
+3756	35	52	Upper Gallery	0
+3757	35	53	Upper Gallery	0
+3758	35	54	Upper Gallery	0
+3759	35	55	Upper Gallery	0
+3760	35	56	Upper Gallery	0
+3761	35	57	Upper Gallery	0
+3762	35	58	Upper Gallery	0
+3763	35	59	Upper Gallery	0
+3764	35	60	Upper Gallery	0
+3765	35	61	Upper Gallery	0
+3766	35	62	Upper Gallery	0
+3767	35	63	Upper Gallery	0
+3768	35	64	Upper Gallery	0
+3769	35	65	Upper Gallery	0
+3770	35	66	Upper Gallery	0
+3771	35	67	Upper Gallery	0
+3772	35	68	Upper Gallery	0
+3773	35	69	Upper Gallery	0
+3774	35	70	Upper Gallery	0
+3775	35	71	Upper Gallery	0
+3776	35	72	Upper Gallery	0
+3777	35	73	Upper Gallery	0
+3778	35	74	Upper Gallery	0
+3779	35	75	Upper Gallery	0
+3780	35	76	Upper Gallery	0
+3781	35	77	Upper Gallery	0
+3782	35	78	Upper Gallery	0
+3783	35	79	Upper Gallery	0
+3784	35	80	Upper Gallery	0
+3785	35	81	Upper Gallery	0
+3786	35	82	Upper Gallery	0
+3787	35	83	Upper Gallery	0
+3788	35	84	Upper Gallery	0
+3789	35	85	VIP	0
+3790	35	86	VIP	0
+3791	35	87	VIP	0
+3792	35	88	VIP	0
+3793	35	89	VIP	0
+3794	35	90	VIP	0
+3795	35	91	VIP	0
+3796	35	92	VIP	0
+3797	35	93	VIP	0
+3798	35	94	VIP	0
+3799	24	1	Lower Hall	0
+3800	24	2	Lower Hall	0
+3801	24	3	Lower Hall	0
+3802	24	4	Lower Hall	0
+3803	24	5	Lower Hall	0
+3804	24	6	Lower Hall	0
+3805	24	7	Lower Hall	0
+3806	24	8	Lower Hall	0
+3807	24	9	Lower Hall	0
+3808	24	10	Lower Hall	0
+3809	24	11	Lower Hall	0
+3810	24	12	Lower Hall	0
+3811	24	13	Lower Hall	0
+3812	24	14	Lower Hall	0
+3813	24	15	Lower Hall	0
+3814	24	16	Lower Hall	0
+3815	24	17	Lower Hall	0
+3816	24	18	Lower Hall	0
+3817	24	19	Lower Hall	0
+3818	24	20	Lower Hall	0
+3819	24	21	Lower Hall	0
+3820	24	22	Lower Hall	0
+3821	24	23	Lower Hall	0
+3822	24	24	Lower Hall	0
+3823	24	25	Lower Hall	0
+3824	24	26	Lower Hall	0
+3825	24	27	Lower Hall	0
+3826	24	28	Lower Hall	0
+3827	24	29	Lower Hall	0
+3828	24	30	Lower Hall	0
+3829	24	31	Lower Hall	0
+3830	24	32	Lower Hall	0
+3831	24	33	Upper Gallery	0
+3832	24	34	Upper Gallery	0
+3833	24	35	Upper Gallery	0
+3834	24	36	Upper Gallery	0
+3835	24	37	Upper Gallery	0
+3836	24	38	Upper Gallery	0
+3837	24	39	Upper Gallery	0
+3838	24	40	Upper Gallery	0
+3839	24	41	Upper Gallery	0
+3840	24	42	Upper Gallery	0
+3841	24	43	Upper Gallery	0
+3842	24	44	Upper Gallery	0
+3843	24	45	Upper Gallery	0
+3844	24	46	Upper Gallery	0
+3845	24	47	Upper Gallery	0
+3846	24	48	Upper Gallery	0
+3847	24	49	Upper Gallery	0
+3848	24	50	Upper Gallery	0
+3849	24	51	Upper Gallery	0
+3850	24	52	Upper Gallery	0
+3851	24	53	Upper Gallery	0
+3852	24	54	Upper Gallery	0
+3853	24	55	Upper Gallery	0
+3854	24	56	Upper Gallery	0
+3855	24	57	Upper Gallery	0
+3856	24	58	Upper Gallery	0
+3857	24	59	Upper Gallery	0
+3858	24	60	Upper Gallery	0
+3859	24	61	Upper Gallery	0
+3860	24	62	Upper Gallery	0
+3861	24	63	Upper Gallery	0
+3862	24	64	Upper Gallery	0
+3863	24	65	Upper Gallery	0
+3864	24	66	Upper Gallery	0
+3865	24	67	Upper Gallery	0
+3866	24	68	Upper Gallery	0
+3867	24	69	Upper Gallery	0
+3868	24	70	Upper Gallery	0
+3869	24	71	Upper Gallery	0
+3870	24	72	Upper Gallery	0
+3871	24	73	Upper Gallery	0
+3872	24	74	Upper Gallery	0
+3873	24	75	Upper Gallery	0
+3874	24	76	Upper Gallery	0
+3875	24	77	Upper Gallery	0
+3876	24	78	Upper Gallery	0
+3877	24	79	Upper Gallery	0
+3878	24	80	Upper Gallery	0
+3879	24	81	Upper Gallery	0
+3880	24	82	Upper Gallery	0
+3881	24	83	Upper Gallery	0
+3882	24	84	Upper Gallery	0
+3883	24	85	Upper Gallery	0
+3884	24	86	Upper Gallery	0
+3885	24	87	Upper Gallery	0
+3886	24	88	Upper Gallery	0
+3887	24	89	Upper Gallery	0
+3888	24	90	Upper Gallery	0
+3889	24	91	Upper Gallery	0
+3890	24	92	Upper Gallery	0
+3891	24	93	Upper Gallery	0
+3892	24	94	Upper Gallery	0
+3893	24	95	Upper Gallery	0
+3894	24	96	Upper Gallery	0
+3895	24	97	VIP	0
+3896	24	98	VIP	0
+3897	24	99	VIP	0
+3898	24	100	VIP	0
+3899	24	101	VIP	0
+3900	24	102	VIP	0
+3901	24	103	VIP	0
+3902	24	104	VIP	0
+3903	24	105	VIP	0
+3904	24	106	VIP	0
+3905	36	1	Lower Hall	0
+3906	36	2	Lower Hall	0
+3907	36	3	Lower Hall	0
+3908	36	4	Lower Hall	0
+3909	36	5	Lower Hall	0
+3910	36	6	Lower Hall	0
+3911	36	7	Lower Hall	0
+3912	36	8	Lower Hall	0
+3913	36	9	Lower Hall	0
+3914	36	10	Lower Hall	0
+3915	36	11	Lower Hall	0
+3916	36	12	Lower Hall	0
+3917	36	13	Lower Hall	0
+3918	36	14	Lower Hall	0
+3919	36	15	Lower Hall	0
+3920	36	16	Lower Hall	0
+3921	36	17	Lower Hall	0
+3922	36	18	Lower Hall	0
+3923	36	19	Lower Hall	0
+3924	36	20	Lower Hall	0
+3925	36	21	Lower Hall	0
+3926	36	22	Lower Hall	0
+3927	36	23	Lower Hall	0
+3928	36	24	Lower Hall	0
+3929	36	25	Upper Gallery	0
+3930	36	26	Upper Gallery	0
+3931	36	27	Upper Gallery	0
+3932	36	28	Upper Gallery	0
+3933	36	29	Upper Gallery	0
+3934	36	30	Upper Gallery	0
+3935	36	31	Upper Gallery	0
+3936	36	32	Upper Gallery	0
+3937	36	33	Upper Gallery	0
+3938	36	34	Upper Gallery	0
+3939	36	35	Upper Gallery	0
+3940	36	36	Upper Gallery	0
+3941	36	37	Upper Gallery	0
+3942	36	38	Upper Gallery	0
+3943	36	39	Upper Gallery	0
+3944	36	40	Upper Gallery	0
+3945	36	41	Upper Gallery	0
+3946	36	42	Upper Gallery	0
+3947	36	43	Upper Gallery	0
+3948	36	44	Upper Gallery	0
+3949	36	45	Upper Gallery	0
+3950	36	46	Upper Gallery	0
+3951	36	47	Upper Gallery	0
+3952	36	48	Upper Gallery	0
+3953	36	49	Upper Gallery	0
+3954	36	50	Upper Gallery	0
+3955	36	51	Upper Gallery	0
+3956	36	52	Upper Gallery	0
+3957	36	53	Upper Gallery	0
+3958	36	54	Upper Gallery	0
+3959	36	55	Upper Gallery	0
+3960	36	56	Upper Gallery	0
+3961	36	57	Upper Gallery	0
+3962	36	58	Upper Gallery	0
+3963	36	59	Upper Gallery	0
+3964	36	60	Upper Gallery	0
+3965	36	61	Upper Gallery	0
+3966	36	62	Upper Gallery	0
+3967	36	63	Upper Gallery	0
+3968	36	64	Upper Gallery	0
+3969	36	65	Upper Gallery	0
+3970	36	66	Upper Gallery	0
+3971	36	67	Upper Gallery	0
+3972	36	68	Upper Gallery	0
+3973	36	69	Upper Gallery	0
+3974	36	70	Upper Gallery	0
+3975	36	71	VIP	0
+3976	36	72	VIP	0
+3977	36	73	VIP	0
+3978	36	74	VIP	0
+3979	36	75	VIP	0
+3980	36	76	VIP	0
+3981	36	77	VIP	0
+3982	36	78	VIP	0
+3983	36	79	VIP	0
+3984	36	80	VIP	0
+3985	37	1	Lower Hall	0
+3986	37	2	Lower Hall	0
+3987	37	3	Lower Hall	0
+3988	37	4	Lower Hall	0
+3989	37	5	Lower Hall	0
+3990	37	6	Lower Hall	0
+3991	37	7	Lower Hall	0
+3992	37	8	Lower Hall	0
+3993	37	9	Lower Hall	0
+3994	37	10	Lower Hall	0
+3995	37	11	Lower Hall	0
+3996	37	12	Lower Hall	0
+3997	37	13	Lower Hall	0
+3998	37	14	Lower Hall	0
+3999	37	15	Lower Hall	0
+4000	37	16	Lower Hall	0
+4001	37	17	Lower Hall	0
+4002	37	18	Lower Hall	0
+4003	37	19	Lower Hall	0
+4004	37	20	Lower Hall	0
+4005	37	21	Lower Hall	0
+4006	37	22	Lower Hall	0
+4007	37	23	Lower Hall	0
+4008	37	24	Lower Hall	0
+4009	37	25	Upper Gallery	0
+4010	37	26	Upper Gallery	0
+4011	37	27	Upper Gallery	0
+4012	37	28	Upper Gallery	0
+4013	37	29	Upper Gallery	0
+4014	37	30	Upper Gallery	0
+4015	37	31	Upper Gallery	0
+4016	37	32	Upper Gallery	0
+4017	37	33	Upper Gallery	0
+4018	37	34	Upper Gallery	0
+4019	37	35	Upper Gallery	0
+4020	37	36	Upper Gallery	0
+4021	37	37	Upper Gallery	0
+4022	37	38	Upper Gallery	0
+4023	37	39	Upper Gallery	0
+4024	37	40	Upper Gallery	0
+4025	37	41	Upper Gallery	0
+4026	37	42	Upper Gallery	0
+4027	37	43	Upper Gallery	0
+4028	37	44	Upper Gallery	0
+4029	37	45	Upper Gallery	0
+4030	37	46	Upper Gallery	0
+4031	37	47	Upper Gallery	0
+4032	37	48	Upper Gallery	0
+4033	37	49	Upper Gallery	0
+4034	37	50	Upper Gallery	0
+4035	37	51	Upper Gallery	0
+4036	37	52	Upper Gallery	0
+4037	37	53	Upper Gallery	0
+4038	37	54	Upper Gallery	0
+4039	37	55	Upper Gallery	0
+4040	37	56	Upper Gallery	0
+4041	37	57	Upper Gallery	0
+4042	37	58	Upper Gallery	0
+4043	37	59	Upper Gallery	0
+4044	37	60	Upper Gallery	0
+4045	37	61	Upper Gallery	0
+4046	37	62	Upper Gallery	0
+4047	37	63	Upper Gallery	0
+4048	37	64	Upper Gallery	0
+4049	37	65	Upper Gallery	0
+4050	37	66	Upper Gallery	0
+4051	37	67	Upper Gallery	0
+4052	37	68	Upper Gallery	0
+4053	37	69	Upper Gallery	0
+4054	37	70	Upper Gallery	0
+4055	37	71	VIP	0
+4056	37	72	VIP	0
+4057	37	73	VIP	0
+4058	37	74	VIP	0
+4059	37	75	VIP	0
+4060	37	76	VIP	0
+4061	37	77	VIP	0
+4062	37	78	VIP	0
+4063	37	79	VIP	0
+4064	37	80	VIP	0
+4065	38	1	Lower Hall	0
+4066	38	2	Lower Hall	0
+4067	38	3	Lower Hall	0
+4068	38	4	Lower Hall	0
+4069	38	5	Lower Hall	0
+4070	38	6	Lower Hall	0
+4071	38	7	Lower Hall	0
+4072	38	8	Lower Hall	0
+4073	38	9	Lower Hall	0
+4074	38	10	Lower Hall	0
+4075	38	11	Lower Hall	0
+4076	38	12	Lower Hall	0
+4077	38	13	Lower Hall	0
+4078	38	14	Lower Hall	0
+4079	38	15	Lower Hall	0
+4080	38	16	Lower Hall	0
+4081	38	17	Lower Hall	0
+4082	38	18	Lower Hall	0
+4083	38	19	Lower Hall	0
+4084	38	20	Lower Hall	0
+4085	38	21	Lower Hall	0
+4086	38	22	Lower Hall	0
+4087	38	23	Lower Hall	0
+4088	38	24	Lower Hall	0
+4089	38	25	Upper Gallery	0
+4090	38	26	Upper Gallery	0
+4091	38	27	Upper Gallery	0
+4092	38	28	Upper Gallery	0
+4093	38	29	Upper Gallery	0
+4094	38	30	Upper Gallery	0
+4095	38	31	Upper Gallery	0
+4096	38	32	Upper Gallery	0
+4097	38	33	Upper Gallery	0
+4098	38	34	Upper Gallery	0
+4099	38	35	Upper Gallery	0
+4100	38	36	Upper Gallery	0
+4101	38	37	Upper Gallery	0
+4102	38	38	Upper Gallery	0
+4103	38	39	Upper Gallery	0
+4104	38	40	Upper Gallery	0
+4105	38	41	Upper Gallery	0
+4106	38	42	Upper Gallery	0
+4107	38	43	Upper Gallery	0
+4108	38	44	Upper Gallery	0
+4109	38	45	Upper Gallery	0
+4110	38	46	Upper Gallery	0
+4111	38	47	Upper Gallery	0
+4112	38	48	Upper Gallery	0
+4113	38	49	Upper Gallery	0
+4114	38	50	Upper Gallery	0
+4115	38	51	Upper Gallery	0
+4116	38	52	Upper Gallery	0
+4117	38	53	Upper Gallery	0
+4118	38	54	Upper Gallery	0
+4119	38	55	Upper Gallery	0
+4120	38	56	Upper Gallery	0
+4121	38	57	Upper Gallery	0
+4122	38	58	Upper Gallery	0
+4123	38	59	Upper Gallery	0
+4124	38	60	Upper Gallery	0
+4125	38	61	Upper Gallery	0
+4126	38	62	Upper Gallery	0
+4127	38	63	Upper Gallery	0
+4128	38	64	Upper Gallery	0
+4129	38	65	Upper Gallery	0
+4130	38	66	Upper Gallery	0
+4131	38	67	Upper Gallery	0
+4132	38	68	Upper Gallery	0
+4133	38	69	Upper Gallery	0
+4134	38	70	Upper Gallery	0
+4135	38	71	VIP	0
+4136	38	72	VIP	0
+4137	38	73	VIP	0
+4138	38	74	VIP	0
+4139	38	75	VIP	0
+4140	38	76	VIP	0
+4141	38	77	VIP	0
+4142	38	78	VIP	0
+4143	38	79	VIP	0
+4144	38	80	VIP	0
+4145	39	1	Lower Hall	0
+4146	39	2	Lower Hall	0
+4147	39	3	Lower Hall	0
+4148	39	4	Lower Hall	0
+4149	39	5	Lower Hall	0
+4150	39	6	Lower Hall	0
+4151	39	7	Lower Hall	0
+4152	39	8	Lower Hall	0
+4153	39	9	Lower Hall	0
+4154	39	10	Lower Hall	0
+4155	39	11	Lower Hall	0
+4156	39	12	Lower Hall	0
+4157	39	13	Lower Hall	0
+4158	39	14	Lower Hall	0
+4159	39	15	Lower Hall	0
+4160	39	16	Lower Hall	0
+4161	39	17	Lower Hall	0
+4162	39	18	Lower Hall	0
+4163	39	19	Lower Hall	0
+4164	39	20	Lower Hall	0
+4165	39	21	Lower Hall	0
+4166	39	22	Lower Hall	0
+4167	39	23	Lower Hall	0
+4168	39	24	Lower Hall	0
+4169	39	25	Upper Gallery	0
+4170	39	26	Upper Gallery	0
+4171	39	27	Upper Gallery	0
+4172	39	28	Upper Gallery	0
+4173	39	29	Upper Gallery	0
+4174	39	30	Upper Gallery	0
+4175	39	31	Upper Gallery	0
+4176	39	32	Upper Gallery	0
+4177	39	33	Upper Gallery	0
+4178	39	34	Upper Gallery	0
+4179	39	35	Upper Gallery	0
+4180	39	36	Upper Gallery	0
+4181	39	37	Upper Gallery	0
+4182	39	38	Upper Gallery	0
+4183	39	39	Upper Gallery	0
+4184	39	40	Upper Gallery	0
+4185	39	41	Upper Gallery	0
+4186	39	42	Upper Gallery	0
+4187	39	43	Upper Gallery	0
+4188	39	44	Upper Gallery	0
+4189	39	45	Upper Gallery	0
+4190	39	46	Upper Gallery	0
+4191	39	47	Upper Gallery	0
+4192	39	48	Upper Gallery	0
+4193	39	49	Upper Gallery	0
+4194	39	50	Upper Gallery	0
+4195	39	51	Upper Gallery	0
+4196	39	52	Upper Gallery	0
+4197	39	53	Upper Gallery	0
+4198	39	54	Upper Gallery	0
+4199	39	55	Upper Gallery	0
+4200	39	56	Upper Gallery	0
+4201	39	57	Upper Gallery	0
+4202	39	58	Upper Gallery	0
+4203	39	59	Upper Gallery	0
+4204	39	60	Upper Gallery	0
+4205	39	61	Upper Gallery	0
+4206	39	62	Upper Gallery	0
+4207	39	63	Upper Gallery	0
+4208	39	64	Upper Gallery	0
+4209	39	65	Upper Gallery	0
+4210	39	66	Upper Gallery	0
+4211	39	67	Upper Gallery	0
+4212	39	68	Upper Gallery	0
+4213	39	69	Upper Gallery	0
+4214	39	70	Upper Gallery	0
+4215	39	71	VIP	0
+4216	39	72	VIP	0
+4217	39	73	VIP	0
+4218	39	74	VIP	0
+4219	39	75	VIP	0
+4220	39	76	VIP	0
+4221	39	77	VIP	0
+4222	39	78	VIP	0
+4223	39	79	VIP	0
+4224	39	80	VIP	0
+4225	40	1	Lower Hall	0
+4226	40	2	Lower Hall	0
+4227	40	3	Lower Hall	0
+4228	40	4	Lower Hall	0
+4229	40	5	Lower Hall	0
+4230	40	6	Lower Hall	0
+4231	40	7	Lower Hall	0
+4232	40	8	Lower Hall	0
+4233	40	9	Lower Hall	0
+4234	40	10	Lower Hall	0
+4235	40	11	Lower Hall	0
+4236	40	12	Lower Hall	0
+4237	40	13	Lower Hall	0
+4238	40	14	Lower Hall	0
+4239	40	15	Lower Hall	0
+4240	40	16	Lower Hall	0
+4241	40	17	Lower Hall	0
+4242	40	18	Lower Hall	0
+4243	40	19	Lower Hall	0
+4244	40	20	Lower Hall	0
+4245	40	21	Lower Hall	0
+4246	40	22	Lower Hall	0
+4247	40	23	Lower Hall	0
+4248	40	24	Lower Hall	0
+4249	40	25	Upper Gallery	0
+4250	40	26	Upper Gallery	0
+4251	40	27	Upper Gallery	0
+4252	40	28	Upper Gallery	0
+4253	40	29	Upper Gallery	0
+4254	40	30	Upper Gallery	0
+4255	40	31	Upper Gallery	0
+4256	40	32	Upper Gallery	0
+4257	40	33	Upper Gallery	0
+4258	40	34	Upper Gallery	0
+4259	40	35	Upper Gallery	0
+4260	40	36	Upper Gallery	0
+4261	40	37	Upper Gallery	0
+4262	40	38	Upper Gallery	0
+4263	40	39	Upper Gallery	0
+4264	40	40	Upper Gallery	0
+4265	40	41	Upper Gallery	0
+4266	40	42	Upper Gallery	0
+4267	40	43	Upper Gallery	0
+4268	40	44	Upper Gallery	0
+4269	40	45	Upper Gallery	0
+4270	40	46	Upper Gallery	0
+4271	40	47	Upper Gallery	0
+4272	40	48	Upper Gallery	0
+4273	40	49	Upper Gallery	0
+4274	40	50	Upper Gallery	0
+4275	40	51	Upper Gallery	0
+4276	40	52	Upper Gallery	0
+4277	40	53	Upper Gallery	0
+4278	40	54	Upper Gallery	0
+4279	40	55	Upper Gallery	0
+4280	40	56	Upper Gallery	0
+4281	40	57	Upper Gallery	0
+4282	40	58	Upper Gallery	0
+4283	40	59	Upper Gallery	0
+4284	40	60	Upper Gallery	0
+4285	40	61	Upper Gallery	0
+4286	40	62	Upper Gallery	0
+4287	40	63	Upper Gallery	0
+4288	40	64	Upper Gallery	0
+4289	40	65	Upper Gallery	0
+4290	40	66	Upper Gallery	0
+4291	40	67	Upper Gallery	0
+4292	40	68	Upper Gallery	0
+4293	40	69	Upper Gallery	0
+4294	40	70	Upper Gallery	0
+4295	40	71	VIP	0
+4296	40	72	VIP	0
+4297	40	73	VIP	0
+4298	40	74	VIP	0
+4299	40	75	VIP	0
+4300	40	76	VIP	0
+4301	40	77	VIP	0
+4302	40	78	VIP	0
+4303	40	79	VIP	0
+4304	40	80	VIP	0
+4305	41	1	Lower Hall	0
+4306	41	2	Lower Hall	0
+4307	41	3	Lower Hall	0
+4308	41	4	Lower Hall	0
+4309	41	5	Lower Hall	0
+4310	41	6	Lower Hall	0
+4311	41	7	Lower Hall	0
+4312	41	8	Lower Hall	0
+4313	41	9	Lower Hall	0
+4314	41	10	Lower Hall	0
+4315	41	11	Lower Hall	0
+4316	41	12	Lower Hall	0
+4317	41	13	Lower Hall	0
+4318	41	14	Lower Hall	0
+4319	41	15	Lower Hall	0
+4320	41	16	Lower Hall	0
+4321	41	17	Lower Hall	0
+4322	41	18	Lower Hall	0
+4323	41	19	Lower Hall	0
+4324	41	20	Lower Hall	0
+4325	41	21	Lower Hall	0
+4326	41	22	Lower Hall	0
+4327	41	23	Lower Hall	0
+4328	41	24	Lower Hall	0
+4329	41	25	Upper Gallery	0
+4330	41	26	Upper Gallery	0
+4331	41	27	Upper Gallery	0
+4332	41	28	Upper Gallery	0
+4333	41	29	Upper Gallery	0
+4334	41	30	Upper Gallery	0
+4335	41	31	Upper Gallery	0
+4336	41	32	Upper Gallery	0
+4337	41	33	Upper Gallery	0
+4338	41	34	Upper Gallery	0
+4339	41	35	Upper Gallery	0
+4340	41	36	Upper Gallery	0
+4341	41	37	Upper Gallery	0
+4342	41	38	Upper Gallery	0
+4343	41	39	Upper Gallery	0
+4344	41	40	Upper Gallery	0
+4345	41	41	Upper Gallery	0
+4346	41	42	Upper Gallery	0
+4347	41	43	Upper Gallery	0
+4348	41	44	Upper Gallery	0
+4349	41	45	Upper Gallery	0
+4350	41	46	Upper Gallery	0
+4351	41	47	Upper Gallery	0
+4352	41	48	Upper Gallery	0
+4353	41	49	Upper Gallery	0
+4354	41	50	Upper Gallery	0
+4355	41	51	Upper Gallery	0
+4356	41	52	Upper Gallery	0
+4357	41	53	Upper Gallery	0
+4358	41	54	Upper Gallery	0
+4359	41	55	Upper Gallery	0
+4360	41	56	Upper Gallery	0
+4361	41	57	Upper Gallery	0
+4362	41	58	Upper Gallery	0
+4363	41	59	Upper Gallery	0
+4364	41	60	Upper Gallery	0
+4365	41	61	Upper Gallery	0
+4366	41	62	Upper Gallery	0
+4367	41	63	Upper Gallery	0
+4368	41	64	Upper Gallery	0
+4369	41	65	Upper Gallery	0
+4370	41	66	Upper Gallery	0
+4371	41	67	Upper Gallery	0
+4372	41	68	Upper Gallery	0
+4373	41	69	Upper Gallery	0
+4374	41	70	Upper Gallery	0
+4375	41	71	VIP	0
+4376	41	72	VIP	0
+4377	41	73	VIP	0
+4378	41	74	VIP	0
+4379	41	75	VIP	0
+4380	41	76	VIP	0
+4381	41	77	VIP	0
+4382	41	78	VIP	0
+4383	41	79	VIP	0
+4384	41	80	VIP	0
+4385	42	1	Lower Hall	0
+4386	42	2	Lower Hall	0
+4387	42	3	Lower Hall	0
+4388	42	4	Lower Hall	0
+4389	42	5	Lower Hall	0
+4390	42	6	Lower Hall	0
+4391	42	7	Lower Hall	0
+4392	42	8	Lower Hall	0
+4393	42	9	Lower Hall	0
+4394	42	10	Lower Hall	0
+4395	42	11	Lower Hall	0
+4396	42	12	Lower Hall	0
+4397	42	13	Lower Hall	0
+4398	42	14	Lower Hall	0
+4399	42	15	Lower Hall	0
+4400	42	16	Upper Gallery	0
+4401	42	17	Upper Gallery	0
+4402	42	18	Upper Gallery	0
+4403	42	19	Upper Gallery	0
+4404	42	20	Upper Gallery	0
+4405	42	21	Upper Gallery	0
+4406	42	22	Upper Gallery	0
+4407	42	23	Upper Gallery	0
+4408	42	24	Upper Gallery	0
+4409	42	25	Upper Gallery	0
+4410	42	26	Upper Gallery	0
+4411	42	27	Upper Gallery	0
+4412	42	28	Upper Gallery	0
+4413	42	29	Upper Gallery	0
+4414	42	30	Upper Gallery	0
+4415	42	31	Upper Gallery	0
+4416	42	32	Upper Gallery	0
+4417	42	33	Upper Gallery	0
+4418	42	34	Upper Gallery	0
+4419	42	35	Upper Gallery	0
+4420	42	36	Upper Gallery	0
+4421	42	37	Upper Gallery	0
+4422	42	38	Upper Gallery	0
+4423	42	39	Upper Gallery	0
+4424	42	40	Upper Gallery	0
+4425	42	41	VIP	0
+4426	42	42	VIP	0
+4427	42	43	VIP	0
+4428	42	44	VIP	0
+4429	42	45	VIP	0
+4430	42	46	VIP	0
+4431	42	47	VIP	0
+4432	42	48	VIP	0
+4433	42	49	VIP	0
+4434	42	50	VIP	0
+4435	43	1	Lower Hall	0
+4436	43	2	Lower Hall	0
+4437	43	3	Lower Hall	0
+4438	43	4	Lower Hall	0
+4439	43	5	Lower Hall	0
+4440	43	6	Lower Hall	0
+4441	43	7	Lower Hall	0
+4442	43	8	Lower Hall	0
+4443	43	9	Lower Hall	0
+4444	43	10	Lower Hall	0
+4445	43	11	Lower Hall	0
+4446	43	12	Lower Hall	0
+4447	43	13	Lower Hall	0
+4448	43	14	Lower Hall	0
+4449	43	15	Lower Hall	0
+4450	43	16	Upper Gallery	0
+4451	43	17	Upper Gallery	0
+4452	43	18	Upper Gallery	0
+4453	43	19	Upper Gallery	0
+4454	43	20	Upper Gallery	0
+4455	43	21	Upper Gallery	0
+4456	43	22	Upper Gallery	0
+4457	43	23	Upper Gallery	0
+4458	43	24	Upper Gallery	0
+4459	43	25	Upper Gallery	0
+4460	43	26	Upper Gallery	0
+4461	43	27	Upper Gallery	0
+4462	43	28	Upper Gallery	0
+4463	43	29	Upper Gallery	0
+4464	43	30	Upper Gallery	0
+4465	43	31	Upper Gallery	0
+4466	43	32	Upper Gallery	0
+4467	43	33	Upper Gallery	0
+4468	43	34	Upper Gallery	0
+4469	43	35	Upper Gallery	0
+4470	43	36	Upper Gallery	0
+4471	43	37	Upper Gallery	0
+4472	43	38	Upper Gallery	0
+4473	43	39	Upper Gallery	0
+4474	43	40	Upper Gallery	0
+4475	43	41	VIP	0
+4476	43	42	VIP	0
+4477	43	43	VIP	0
+4478	43	44	VIP	0
+4479	43	45	VIP	0
+4480	43	46	VIP	0
+4481	43	47	VIP	0
+4482	43	48	VIP	0
+4483	43	49	VIP	0
+4484	43	50	VIP	0
+4485	44	1	Lower Hall	0
+4486	44	2	Lower Hall	0
+4487	44	3	Lower Hall	0
+4488	44	4	Lower Hall	0
+4489	44	5	Lower Hall	0
+4490	44	6	Lower Hall	0
+4491	44	7	Lower Hall	0
+4492	44	8	Lower Hall	0
+4493	44	9	Lower Hall	0
+4494	44	10	Lower Hall	0
+4495	44	11	Lower Hall	0
+4496	44	12	Lower Hall	0
+4497	44	13	Lower Hall	0
+4498	44	14	Lower Hall	0
+4499	44	15	Lower Hall	0
+4500	44	16	Upper Gallery	0
+4501	44	17	Upper Gallery	0
+4502	44	18	Upper Gallery	0
+4503	44	19	Upper Gallery	0
+4504	44	20	Upper Gallery	0
+4505	44	21	Upper Gallery	0
+4506	44	22	Upper Gallery	0
+4507	44	23	Upper Gallery	0
+4508	44	24	Upper Gallery	0
+4509	44	25	Upper Gallery	0
+4510	44	26	Upper Gallery	0
+4511	44	27	Upper Gallery	0
+4512	44	28	Upper Gallery	0
+4513	44	29	Upper Gallery	0
+4514	44	30	Upper Gallery	0
+4515	44	31	Upper Gallery	0
+4516	44	32	Upper Gallery	0
+4517	44	33	Upper Gallery	0
+4518	44	34	Upper Gallery	0
+4519	44	35	Upper Gallery	0
+4520	44	36	Upper Gallery	0
+4521	44	37	Upper Gallery	0
+4522	44	38	Upper Gallery	0
+4523	44	39	Upper Gallery	0
+4524	44	40	Upper Gallery	0
+4525	44	41	VIP	0
+4526	44	42	VIP	0
+4527	44	43	VIP	0
+4528	44	44	VIP	0
+4529	44	45	VIP	0
+4530	44	46	VIP	0
+4531	44	47	VIP	0
+4532	44	48	VIP	0
+4533	44	49	VIP	0
+4534	44	50	VIP	0
+4535	45	1	Lower Hall	0
+4536	45	2	Lower Hall	0
+4537	45	3	Lower Hall	0
+4538	45	4	Lower Hall	0
+4539	45	5	Lower Hall	0
+4540	45	6	Lower Hall	0
+4541	45	7	Lower Hall	0
+4542	45	8	Lower Hall	0
+4543	45	9	Lower Hall	0
+4544	45	10	Lower Hall	0
+4545	45	11	Lower Hall	0
+4546	45	12	Lower Hall	0
+4547	45	13	Lower Hall	0
+4548	45	14	Lower Hall	0
+4549	45	15	Lower Hall	0
+4550	45	16	Upper Gallery	0
+4551	45	17	Upper Gallery	0
+4552	45	18	Upper Gallery	0
+4553	45	19	Upper Gallery	0
+4554	45	20	Upper Gallery	0
+4555	45	21	Upper Gallery	0
+4556	45	22	Upper Gallery	0
+4557	45	23	Upper Gallery	0
+4558	45	24	Upper Gallery	0
+4559	45	25	Upper Gallery	0
+4560	45	26	Upper Gallery	0
+4561	45	27	Upper Gallery	0
+4562	45	28	Upper Gallery	0
+4563	45	29	Upper Gallery	0
+4564	45	30	Upper Gallery	0
+4565	45	31	Upper Gallery	0
+4566	45	32	Upper Gallery	0
+4567	45	33	Upper Gallery	0
+4568	45	34	Upper Gallery	0
+4569	45	35	Upper Gallery	0
+4570	45	36	Upper Gallery	0
+4571	45	37	Upper Gallery	0
+4572	45	38	Upper Gallery	0
+4573	45	39	Upper Gallery	0
+4574	45	40	Upper Gallery	0
+4575	45	41	VIP	0
+4576	45	42	VIP	0
+4577	45	43	VIP	0
+4578	45	44	VIP	0
+4579	45	45	VIP	0
+4580	45	46	VIP	0
+4581	45	47	VIP	0
+4582	45	48	VIP	0
+4583	45	49	VIP	0
+4584	45	50	VIP	0
+
+
+-- Table: bookings
+
+-- Schema:
+id (INTEGER)
+customer_name (TEXT)
+customer_email (TEXT)
+customer_phone (TEXT)
+showtime_id (INTEGER)
+seat_id (INTEGER)
+booking_reference (TEXT)
+total_price (REAL)
+booking_staff_id (INTEGER)
+booking_date (TEXT)
+
+id	customer_name	customer_email	customer_phone	showtime_id	seat_id	booking_reference	total_price	booking_staff_id	booking_date
+--------------------------------------------------
+2	John Doe	john@example.com	123456789	1	6	db035360	10.0	1	2025-02-12 02:05:49
+4	Alice	alice@example.com	123456789	1	7	34cd237c	15.0	1	2025-02-13 02:13:48
+5	Jack	jack@example.com	123456779	1	8	ebe7ddb5	20.0	1	2025-02-13 03:26:53
+6	Jack	jack@example.com	123456779	1	9	1cbd79e1	10.0	1	2025-02-13 03:26:53
+8	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	1	22	705ba424	16.8	3	2025-02-28 18:37:07
+9	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	3	20	28ace109	12.0	3	2025-02-28 18:42:06
+10	sergio	foyezahammed897@gmail.com	07440316630	1	18	44eef22d	14.0	3	2025-03-03 13:21:13
+11	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	1	17	b20154fb	12.0	3	2025-03-10 14:54:02
+12	Sergio	sergio12@gmail.com	07440316123	7	21	7b58befc	14.4	3	2025-03-12 02:48:56
+13	Customer1	first.customer@gmail.com	1234	34	1590	a496d647	14.4	3	2025-03-26 00:58:21
+14	Customer1	first.customer@gmail.com	1234	34	1589	0f905ea5	14.4	3	2025-03-26 00:58:21
+15	Customer1	first.customer@gmail.com	1234	34	1588	20606101	14.4	3	2025-03-26 00:58:21
+16	Second Customer	second.customer@gmail.com	2345	34	1575	1af4c7cd	12.0	3	2025-03-26 01:29:14
+17	Second Customer	second.customer@gmail.com	2345	34	1576	1af4c7cd	12.0	3	2025-03-26 01:29:14
+18	Second Customer	second.customer@gmail.com	2345	34	1577	1af4c7cd	12.0	3	2025-03-26 01:29:14
+25	Sergio	sergio897@gmail.com	07440316630	20	1564	91d3d1ab	10.56	1	2025-03-28 16:38:37
+26	Sergio	sergio897@gmail.com	07440316630	20	1565	91d3d1ab	10.56	1	2025-03-28 16:38:37
+27	Sergio	sergio897@gmail.com	07440316630	20	1566	91d3d1ab	10.56	1	2025-03-28 16:38:37
+28	Sergio	sergio897@gmail.com	07440316630	20	1567	91d3d1ab	10.56	1	2025-03-28 16:38:37
+29	Sergio	sergio897@gmail.com	07440316630	20	1568	91d3d1ab	10.56	1	2025-03-28 16:38:37
+30	sandy	sandy897@gmail.com	07440316630	21	2526	00697a20	13.2	3	2025-03-28 17:13:20
+31	sandy	sandy897@gmail.com	07440316630	21	2527	00697a20	13.2	3	2025-03-28 17:13:20
+32	sandy	sandy897@gmail.com	07440316630	21	2526	864c3c9b	13.2	3	2025-03-28 17:14:12
+33	sandy	sandy897@gmail.com	07440316630	21	2527	864c3c9b	13.2	3	2025-03-28 17:14:12
+34	Foyez 	foyeza897@gmail.com	07440316630	20	1491	531ed6b1	8.8	3	2025-03-28 22:19:00
+35	Foyez 	foyeza897@gmail.com	07440316630	20	1492	531ed6b1	8.8	3	2025-03-28 22:19:00
+36	Foyez 	foyeza897@gmail.com	07440316630	20	1493	531ed6b1	8.8	3	2025-03-28 22:19:00
+37	Foyez 	foyeza897@gmail.com	07440316630	20	1494	531ed6b1	8.8	3	2025-03-28 22:19:00
+38	Foyez 	foyeza897@gmail.com	07440316630	20	1502	4d7e1c1c	11.0	1	2025-03-28 22:30:35
+39	Foyez 	foyeza897@gmail.com	07440316630	20	1503	4d7e1c1c	11.0	1	2025-03-28 22:30:35
+40	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	37	2582	884020f3	6.720000000000001	1	2025-03-29 04:02:25
+41	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	37	2583	884020f3	6.720000000000001	1	2025-03-29 04:02:25
+42	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	37	2584	884020f3	6.720000000000001	1	2025-03-29 04:02:25
+43	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	37	2585	884020f3	6.720000000000001	1	2025-03-29 04:02:25

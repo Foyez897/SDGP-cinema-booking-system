@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Choose Seats - {{ film.title }}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <style>
+    .seat-layout {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+      gap: 8px;
+      max-width: 600px;
+      margin: 0 auto 1.5rem auto;
+      justify-items: center;
+    }
+
+    .seat {
+      width: 50px;
+      height: 50px;
+      border-radius: 8px;
+      background-color: #d1e7dd;
+      text-align: center;
+      line-height: 50px;
+      font-weight: bold;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+
+    .seat.vip { background-color: #e0b3ff; }
+    .seat.gallery { background-color: #a8dadc; }
+    .seat.hall { background-color: #bde0fe; }
+    .seat.booked { background-color: #adb5bd; cursor: not-allowed; }
+    .seat.selected { border: 2px solid #212529; }
+
+    .screen {
+      width: 90%;
+      height: 30px;
+      background-color: #333;
+      color: white;
+      text-align: center;
+      line-height: 30px;
+      margin: 0 auto 20px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="/">🎬 Horizon Cinemas</a>
+    <a href="/logout" class="btn btn-outline-light">Logout</a>
+  </div>
+</nav>
+
+<div class="container mt-4">
+  <h2 class="text-center">🎟️ Select Your Seat - {{ film.title }} at {{ showtime.show_time }}</h2>
+
+  {% if discount_eligible %}
+  <div class="alert alert-success text-center fw-bold">
+    🎉 This showtime qualifies for a 25% last-minute discount!
+  </div>
+  {% endif %}
+
+  <div class="screen">SCREEN</div>
+
+  <div class="seat-layout">
+    {% for seat in seats %}
+      <div class="seat 
+                  {% if seat.seat_type == 'VIP' %}vip{% endif %}
+                  {% if seat.seat_type == 'Upper Gallery' %}gallery{% endif %}
+                  {% if seat.seat_type == 'Lower Hall' %}hall{% endif %}
+                  {% if seat.is_booked %} booked{% endif %}"
+           data-seat-id="{{ seat.id }}"
+           data-seat-type="{{ seat.seat_type }}"
+           data-seat-number="{{ seat.seat_number }}"
+           data-seat-price="{{ seat.price }}"
+           title="Seat {{ seat.seat_number }} - {{ seat.seat_type }} (£{{ seat.price }})">
+        {{ seat.seat_number }}
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="mb-4">
+    <h5>Selected Seats:</h5>
+    <ul id="selected-seats" class="list-group mb-2"></ul>
+    <div class="fw-bold">Total: £<span id="total-price">0.00</span></div>
+  </div>
+
+  <form method="POST" action="/book" id="booking-form">
+    <input type="hidden" name="showtime_id" value="{{ showtime.id }}">
+    <input type="hidden" name="seat_ids" id="seat_ids">
+
+    <div class="row">
+      <div class="col-md-4">
+        <label class="form-label">Customer Name</label>
+        <input type="text" name="customer_name" class="form-control" required>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Email</label>
+        <input type="email" name="customer_email" class="form-control" required>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Phone</label>
+        <input type="text" name="customer_phone" class="form-control" required>
+      </div>
+    </div>
+
+    <button class="btn btn-success mt-4 w-100">✅ Book Selected Seats</button>
+  </form>
+</div>
+
+<footer class="text-center bg-dark text-white py-3 mt-5">
+  <p>© 2025 Horizon Cinemas. All Rights Reserved.</p>
+</footer>
+
+<script>
+  const seatElements = document.querySelectorAll(".seat:not(.booked)");
+  const selectedSeatsList = document.getElementById("selected-seats");
+  const seatIdsInput = document.getElementById("seat_ids");
+  const totalPriceElement = document.getElementById("total-price");
+
+  const selectedSeats = new Map();
+
+  seatElements.forEach(seat => {
+    seat.addEventListener("click", () => {
+      const seatId = seat.dataset.seatId;
+      const seatType = seat.dataset.seatType;
+      const seatNumber = seat.dataset.seatNumber;
+      const seatPrice = parseFloat(seat.dataset.seatPrice);
+
+      if (seat.classList.contains("selected")) {
+        seat.classList.remove("selected");
+        selectedSeats.delete(seatId);
+      } else {
+        seat.classList.add("selected");
+        selectedSeats.set(seatId, {
+          label: `${seatNumber} (${seatType}) - £${seatPrice.toFixed(2)}`,
+          price: seatPrice
+        });
+      }
+
+      updateSelectedSeats();
+    });
+  });
+
+  function updateSelectedSeats() {
+    selectedSeatsList.innerHTML = "";
+    let total = 0;
+    const ids = [];
+
+    selectedSeats.forEach((seat, id) => {
+      const li = document.createElement("li");
+      li.classList.add("list-group-item");
+      li.textContent = seat.label;
+      selectedSeatsList.appendChild(li);
+      ids.push(id);
+      total += seat.price;
+    });
+
+    seatIdsInput.value = ids.join(",");
+    totalPriceElement.textContent = total.toFixed(2);
+  }
+
+  document.getElementById("booking-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+
+    const response = await fetch("/book", {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await response.json();
+
+    if (data.error) {
+      alert("❌ " + data.error);
+    } else {
+      alert(`${data.message}\nTotal Paid: £${data.total_price.toFixed(2)}${data.note ? '\n\n' + data.note : ''}`);
+      window.location.href = `/receipt/${data.booking_reference}`;
+    }
+  });
+</script>
+
+
+</body>
+</html>

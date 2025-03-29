@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Timetable - {{ cinema.city }} ({{ cinema.location }})</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <style>
+    td, th { text-align: center; vertical-align: middle; }
+    .cell-clickable { cursor: pointer; }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="/">🎬 Horizon Cinemas</a>
+    <a href="/manage_film_listing/{{ cinema_id }}" class="btn btn-outline-light">Back</a>
+  </div>
+</nav>
+
+<div class="container mt-5">
+  <h2 class="text-center mb-4">📅 Timetable - {{ cinema.city }} ({{ cinema.location }})</h2>
+
+  <table class="table table-bordered">
+    <thead class="table-dark">
+      <tr>
+        <th>Screen</th>
+        {% for time in time_slots %}
+          <th>{{ time }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for screen in screens %}
+      <tr>
+        <td><strong>Screen {{ screen }}</strong></td>
+        {% for time in time_slots %}
+          {% set key = (screen, time) %}
+          <td class="cell-clickable" data-screen="{{ screen }}" data-time="{{ time }}"
+              data-bs-toggle="modal" data-bs-target="#addModal">
+            {% if showtime_map.get(key) %}
+              🎬 {{ showtime_map[key] }}
+            {% else %}
+              <span class="text-muted">➕ Add</span>
+            {% endif %}
+          </td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal: Add Film Listing -->
+<div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="POST" action="/add_showtime_from_timetable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Film to Showtime</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="cinema_id" value="{{ cinema_id }}">
+          <input type="hidden" name="screen_number" id="modal_screen">
+          <input type="hidden" name="time_slot" id="modal_time">
+
+          <div class="mb-3">
+            <label class="form-label">Select Film</label>
+            <select name="film_id" class="form-select" required>
+              <option value="">-- Choose --</option>
+              {% for film in films %}
+                <option value="{{ film.id }}">{{ film.title }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Select Date</label>
+            <input type="date" name="date" class="form-control" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-success">Add Showtime</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const modal = document.getElementById('addModal')
+  modal.addEventListener('show.bs.modal', function (event) {
+    const cell = event.relatedTarget
+    document.getElementById('modal_screen').value = cell.dataset.screen
+    document.getElementById('modal_time').value = cell.dataset.time
+  });
+</script>
+</body>
+</html>

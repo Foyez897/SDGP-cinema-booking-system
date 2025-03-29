@@ -1,89 +1,158 @@
+<!-- templates/admin_dashboard.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Horizon Cinemas</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <meta charset="UTF-8">
+  <title>Admin Dashboard - Horizon Cinemas</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/">🎬 Horizon Cinemas</a>
-            <a href="/" class="btn btn-outline-light">Logout</a>
-        </div>
-    </nav>
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="/">🎬 Horizon Cinemas</a>
+    <form action="/logout" method="POST" class="d-inline">
+      <button type="submit" class="btn btn-outline-light">Logout</button>
+    </form>
+  </div>
+</nav>
 
-    <div class="container mt-4">
-        <h2 class="text-center">Admin Dashboard</h2>
-        <td><a href="/booking" class="btn btn-primary">➕ Add Booking</a></td>
-        <h3>Manage Films</h3>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Film</th>
-                    <th>Genre</th>
-                    <th>Showtimes</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for film in films %}
-                <tr>
-                    <td>{{ film.title }}</td>
-                    <td>{{ film.genre }}</td>
-                    <td>{{ film.showtimes }}</td>
-                    <td>
-                        <a href="{{ url_for('update_film', film_id=film.id) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <a href="{{ url_for('delete_film', film_id=film.id) }}" class="btn btn-danger btn-sm">Delete</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<div class="container mt-4">
+  <h2 class="text-center mb-4">Admin Dashboard</h2>
 
-        <h3>Add New Film</h3>
-        <form action="{{ url_for('add_film') }}" method="post">
-            <input type="text" name="title" placeholder="Film Title" required class="form-control mb-2">
-            <input type="text" name="genre" placeholder="Genre" required class="form-control mb-2">
-            <input type="text" name="age_rating" placeholder="Age Rating" required class="form-control mb-2">
-            <textarea name="description" placeholder="Description" required class="form-control mb-2"></textarea>
-            <input type="text" name="showtimes" placeholder="Showtimes (comma-separated)" required class="form-control mb-2">
-            <button type="submit" class="btn btn-success">Add Film</button>
-        </form>
-
-        <h3>📊 Admin Reports</h3>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Report</th>
-                    <th>View</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Number of Bookings for Each Film</td>
-                    <td><a href="/report/bookings_per_film" class="btn btn-primary">📄 View</a></td>
-                </tr>
-                <tr>
-                    <td>Total Monthly Revenue for Each Cinema</td>
-                    <td><a href="/report/monthly_revenue" class="btn btn-primary">📄 View</a></td>
-                </tr>
-                <tr>
-                    <td>Top Revenue-Generating Film</td>
-                    <td><a href="/report/top_film" class="btn btn-primary">📄 View</a></td>
-                </tr>
-                <tr>
-                    <td>Monthly List of Staff with Bookings (Sorted)</td>
-                    <td><a href="/report/staff_bookings" class="btn btn-primary">📄 View</a></td>
-                </tr>
-            </tbody>
-        </table>
+  {% if request.args.get('from_manager') == 'true' %}
+    <div class="alert alert-info text-center">
+      ⚠️ Accessing Admin Dashboard from Manager View
     </div>
+  {% endif %}
 
-    <footer class="text-center bg-dark text-white py-3">
-        <p>© 2024 Horizon Cinemas. All Rights Reserved.</p>
-    </footer>
+  <div class="mb-3 text-end">
+    <a href="/booking" class="btn btn-primary">➕ Add Booking</a>
+  </div>
+
+  <!-- 🎬 Film List -->
+  <h4 class="mt-4">🎬 Manage Films</h4>
+  <table class="table table-striped">
+    <thead class="table-dark">
+      <tr>
+        <th>Film</th>
+        <th>Genre</th>
+        <th>Showtimes</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for film in films %}
+      <tr>
+        <td>{{ film.title }}</td>
+        <td>{{ film.genre }}</td>
+        <td>{{ film.showtimes or "None" }}</td>
+        <td>
+          <a href="{{ url_for('admin.delete_film', film_id=film.id) }}" class="btn btn-danger btn-sm">Delete</a>
+
+          {% set cinemas_for_film = film_cinemas.get(film.id, []) %}
+          {% if cinemas_for_film|length == 1 %}
+            <a href="{{ url_for('admin.manage_film', cinema_id=cinemas_for_film[0].id) }}" class="btn btn-info btn-sm mt-1">➕ Manage</a>
+          {% elif cinemas_for_film|length > 1 %}
+            <div class="dropdown mt-1">
+              <button class="btn btn-info btn-sm dropdown-toggle" data-bs-toggle="dropdown">➕ Manage</button>
+              <ul class="dropdown-menu">
+                {% for c in cinemas_for_film %}
+                  <li>
+                    <a class="dropdown-item" href="{{ url_for('admin.manage_film', cinema_id=c.id) }}">
+                      {{ c.city }} - {{ c.location }}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% else %}
+            <a href="{{ url_for('admin.select_cinema_for_showtime', film_id=film.id) }}" class="btn btn-secondary btn-sm mt-1">➕ Assign Cinema</a>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+ <!-- ➕ Add New Film Quick -->
+<h4 class="mt-5">➕ Add New Film (Quick)</h4>
+<form action="{{ url_for('admin.add_film') }}" method="post">
+  <div class="row g-2">
+    <div class="col-md-3">
+      <input type="text" name="title" placeholder="Title" class="form-control" required>
+    </div>
+    <div class="col-md-3">
+      <input type="text" name="genre" placeholder="Genre" class="form-control" required>
+    </div>
+    <div class="col-md-2">
+      <input type="text" name="age_rating" placeholder="Rating" class="form-control" required>
+    </div>
+    <div class="col-md-4">
+      <input type="text" name="description" placeholder="Short Description" class="form-control" required>
+    </div>
+  </div>
+
+  <div class="row g-2 mt-2">
+    <div class="col-md-4">
+      <select name="cinema_id" class="form-select" required>
+        <option value="">-- Select Cinema --</option>
+        {% for c in cinema_dropdown %}
+          <option value="{{ c.id }}">{{ c.city }} - {{ c.location }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <input type="number" name="screen_number" placeholder="Screen #" class="form-control" required>
+    </div>
+    <div class="col-md-3">
+      <input type="date" name="date" class="form-control" required>
+    </div>
+    <div class="col-md-3">
+      <input type="time" name="time_slot" class="form-control" required>
+    </div>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-md-3">
+      <input type="number" step="0.01" name="price" class="form-control" placeholder="Ticket Price (£)" required>
+    </div>
+    <div class="col-md-9 text-end">
+      <button type="submit" class="btn btn-success px-4">✅ Add Film with Showtime</button>
+    </div>
+  </div>
+</form>
+  <!-- 📊 Admin Reports -->
+  <h4 class="mt-5">📊 Reports</h4>
+  <table class="table table-bordered">
+    <thead class="table-light">
+      <tr><th>Report</th><th>View</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Bookings per Film</td>
+        <td><a href="/report/bookings_per_film" class="btn btn-outline-primary">📄 View</a></td>
+      </tr>
+      <tr>
+        <td>Total Monthly Revenue (Cinema)</td>
+        <td><a href="/report/monthly_revenue" class="btn btn-outline-primary">📄 View</a></td>
+      </tr>
+      <tr>
+        <td>Top Revenue-Generating Film</td>
+        <td><a href="/report/top_film" class="btn btn-outline-primary">📄 View</a></td>
+      </tr>
+      <tr>
+        <td>Monthly Staff Booking Activity</td>
+        <td><a href="/report/staff_bookings" class="btn btn-outline-primary">📄 View</a></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<footer class="text-center bg-dark text-white py-3">
+  <p>© 2025 Horizon Cinemas. All Rights Reserved.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
