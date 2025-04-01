@@ -36,6 +36,27 @@ def admin_login():
     return render_template("admin_login.html")
 
 
+# admin manage cinemas
+@app.route('/admin_manage_cinemas')
+@jwt_required()
+def admin_manage_cinemas():
+    user_id = get_jwt_identity()
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        
+        # Check access - only admin can access this page
+        cursor.execute("SELECT role FROM users WHERE id = ?", (user_id,))
+        user = cursor.fetchone()
+        if not user or user["role"] != "admin":
+            flash("❌ Unauthorized access!", "danger")
+            return redirect(url_for("home"))
+        
+        # Get all cinemas
+        cursor.execute("SELECT id, city, location, num_of_screens FROM cinemas")
+        cinemas = cursor.fetchall()
+        
+    return render_template("admin_manage_cinemas.html", cinemas=cinemas)
+
 # ===============================
 #  Admin Dashboard
 # ===============================
