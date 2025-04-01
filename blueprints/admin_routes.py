@@ -1,9 +1,10 @@
 from flask import Blueprint, request, render_template, redirect, url_for, flash, make_response
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity, set_access_cookies
 from database.database_setup import get_db_connection
-from extensions import bcrypt
 from datetime import datetime
 import uuid
+from flask_bcrypt import Bcrypt
+bcrypt = Bcrypt()
 
 admin_routes = Blueprint('admin', __name__)
 
@@ -86,10 +87,15 @@ def admin_dashboard():
     return render_template("admin_dashboard.html", admin_id=user_id, films=films,
                        film_cinemas=film_cinemas, cinema_dropdown=cinema_dropdown)
 
-   
+# ===============================
+#  Add Redirect for /admin
+# ===============================   
+@admin_routes.route('/admin')
+def admin_root():
+    return redirect(url_for('admin.admin_dashboard'))
 
 # ===============================
-# 🎬 Add Film + Initial Showtimes
+#  Add Film + Initial Showtimes
 # ===============================
 @admin_routes.route('/add_film', methods=['GET', 'POST'])
 @jwt_required()
@@ -208,7 +214,7 @@ def manage_film():
                            selected_screen=selected_screen,
                            showtime_map=showtime_map)
 # ===============================
-#  Quick add film
+#  Add film
 # ===============================
 
 @admin_routes.route('/quick_add_film', methods=['POST'])

@@ -17,12 +17,17 @@
     <a class="navbar-brand" href="/">🎬 Horizon Cinemas</a>
     <form action="/logout" method="POST" style="display:inline;">
       <button type="submit" class="btn btn-outline-light">Logout</button>
-  </form>
+    </form>
   </div>
 </nav>
 
 <div class="container mt-4">
-  <h2 class="text-center mb-4">🎞️ Showtime Timetable - {{ cinema.city }} ({{ cinema.location }})</h2>
+  <h2 class="text-center mb-3">🎞️ Showtime Timetable - {{ cinema.city }} ({{ cinema.location }})</h2>
+
+  <!-- Optional note for clarity -->
+  <div class="alert alert-info text-center">
+    Only scheduled shows are shown. Empty slots display <strong>N/A</strong>.
+  </div>
 
   <!-- Date Picker Form -->
   <form method="get" class="row mb-4">

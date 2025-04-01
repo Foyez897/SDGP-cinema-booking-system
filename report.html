@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title id="head-title">report.html</title>
+      <link href="assets/style.css" rel="stylesheet" type="text/css"/>
+  </head>
+  <body>
+    <h1 id="title">report.html</h1>
+    <p>Report generated on 01-Apr-2025 at 11:18:11 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a>
+        v4.1.1</p>
+    <div id="environment-header">
+      <h2>Environment</h2>
+    </div>
+    <table id="environment"></table>
+    <!-- TEMPLATES -->
+      <template id="template_environment_row">
+      <tr>
+        <td></td>
+        <td></td>
+      </tr>
+    </template>
+    <template id="template_results-table__body--empty">
+      <tbody class="results-table-row">
+        <tr id="not-found-message">
+          <td colspan="4">No results found. Check the filters.</th>
+        </tr>
+    </template>
+    <template id="template_results-table__tbody">
+      <tbody class="results-table-row">
+        <tr class="collapsible">
+        </tr>
+        <tr class="extras-row">
+          <td class="extra" colspan="4">
+            <div class="extraHTML"></div>
+            <div class="media">
+              <div class="media-container">
+                  <div class="media-container__nav--left"><</div>
+                  <div class="media-container__viewport">
+                    <img src="" />
+                    <video controls>
+                      <source src="" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="media-container__nav--right">></div>
+                </div>
+                <div class="media__name"></div>
+                <div class="media__counter"></div>
+            </div>
+            <div class="logwrapper">
+              <div class="logexpander"></div>
+              <div class="log"></div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </template>
+    <!-- END TEMPLATES -->
+    <div class="summary">
+      <div class="summary__data">
+        <h2>Summary</h2>
+        <div class="additional-summary prefix">
+        </div>
+        <p class="run-count">1 test took 12 ms.</p>
+        <p class="filter">(Un)check the boxes to filter the results.</p>
+        <div class="summary__reload">
+          <div class="summary__reload__button hidden" onclick="location.reload()">
+            <div>There are still tests running. <br />Reload this page to get the latest results!</div>
+          </div>
+        </div>
+        <div class="summary__spacer"></div>
+        <div class="controls">
+          <div class="filters">
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="failed" />
+            <span class="failed">1 Failed,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="passed" disabled/>
+            <span class="passed">0 Passed,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="skipped" disabled/>
+            <span class="skipped">0 Skipped,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="xfailed" disabled/>
+            <span class="xfailed">0 Expected failures,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="xpassed" disabled/>
+            <span class="xpassed">0 Unexpected passes,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="error" disabled/>
+            <span class="error">0 Errors,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="rerun" disabled/>
+            <span class="rerun">0 Reruns</span>
+          </div>
+          <div class="collapse">
+            <button id="show_all_details">Show all details</button>&nbsp;/&nbsp;<button id="hide_all_details">Hide all details</button>
+          </div>
+        </div>
+      </div>
+      <div class="additional-summary summary">
+      </div>
+      <div class="additional-summary postfix">
+      </div>
+    </div>
+    <table id="results-table">
+      <thead id="results-table-head">
+        <tr>
+          <th class="sortable" data-column-type="result">Result</th>
+          <th class="sortable" data-column-type="testId">Test</th>
+          <th class="sortable" data-column-type="duration">Duration</th>
+          <th>Links</th>
+        </tr>
+      </thead>
+    </table>
+  </body>
+  <footer>
+    <div id="data-container" data-jsonblob="{&#34;environment&#34;: {&#34;Python&#34;: &#34;3.11.8&#34;, &#34;Platform&#34;: &#34;macOS-15.2-arm64-arm-64bit&#34;, &#34;Packages&#34;: {&#34;pytest&#34;: &#34;8.3.5&#34;, &#34;pluggy&#34;: &#34;1.5.0&#34;}, &#34;Plugins&#34;: {&#34;flask&#34;: &#34;1.3.0&#34;, &#34;html&#34;: &#34;4.1.1&#34;, &#34;metadata&#34;: &#34;3.1.1&#34;}}, &#34;tests&#34;: {&#34;tests/test_admin_cinema_screen.py::test_add_cinema_and_screens&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Failed&#34;, &#34;testId&#34;: &#34;tests/test_admin_cinema_screen.py::test_add_cinema_and_screens&#34;, &#34;duration&#34;: &#34;12 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Failed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/test_admin_cinema_screen.py::test_add_cinema_and_screens&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;12 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;client = &amp;lt;FlaskClient &amp;lt;Flask &amp;#x27;app&amp;#x27;&amp;gt;&amp;gt;\napp = &amp;lt;Flask &amp;#x27;app&amp;#x27;&amp;gt;\n\n    @pytest.mark.usefixtures(&amp;quot;client&amp;quot;, &amp;quot;app&amp;quot;)\n    def test_add_cinema_and_screens(client, app):\n        with app.app_context():\n            # Insert a test admin user\n            with get_db_connection() as conn:\n                cursor = conn.cursor()\n                cursor.execute(&amp;quot;&amp;quot;&amp;quot;\n                    INSERT OR IGNORE INTO users (id, username, password, role)\n                    VALUES (?, ?, ?, ?)&amp;quot;&amp;quot;&amp;quot;, (\n                    8888, &amp;quot;testadmin&amp;quot;, &amp;quot;fakehashed&amp;quot;, &amp;quot;admin&amp;quot;\n                ))\n                conn.commit()\n    \n            # Set JWT token\n            token = create_access_token(identity=&amp;quot;8888&amp;quot;)\n            client.set_cookie(domain=&amp;quot;localhost&amp;quot;, key=&amp;quot;access_token_cookie&amp;quot;, value=token)\n    \n            # \ud83e\uddea POST request to add cinema\n            response = client.post(&amp;quot;/add_cinema&amp;quot;, data={\n                &amp;quot;city&amp;quot;: &amp;quot;Testville&amp;quot;,\n                &amp;quot;location&amp;quot;: &amp;quot;123 Test Street&amp;quot;\n            }, follow_redirects=True)\n    \n            print(&amp;quot;\\n\ud83d\udce8 POST /add_cinema response:&amp;quot;)\n            print(response.data.decode())  # Useful for debugging form errors, template issues\n    \n            # \ud83e\uddea Check response and print entire cinema table\n            assert response.status_code == 200\n    \n            with get_db_connection() as conn:\n                cursor = conn.cursor()\n                cursor.execute(&amp;quot;SELECT * FROM cinemas&amp;quot;)\n                all_cinemas = cursor.fetchall()\n                print(&amp;quot;\ud83c\udfd9\ufe0f All cinemas in DB after POST:&amp;quot;, all_cinemas)\n    \n                cursor.execute(&amp;quot;SELECT id FROM cinemas WHERE city = ? AND location = ?&amp;quot;, (&amp;quot;Testville&amp;quot;, &amp;quot;123 Test Street&amp;quot;))\n                cinema = cursor.fetchone()\n    \n&amp;gt;           assert cinema is not None\nE           assert None is not None\n\ntests/test_admin_cinema_screen.py:43: AssertionError\n\n----------------------------- Captured stdout call -----------------------------\n\u2705 get_db_connection() called\n\ud83d\udccd USING DB: /Users/foyezahammed/Desktop/SDGP-1/database/horizon_cinemas.db\n\u2705 get_db_connection() called\n\ud83d\udccd USING DB: /Users/foyezahammed/Desktop/SDGP-1/database/horizon_cinemas.db\n\u2705 get_db_connection() called\n\ud83d\udccd USING DB: /Users/foyezahammed/Desktop/SDGP-1/database/horizon_cinemas.db\n\n\ud83d\udce8 POST /add_cinema response:\n&amp;lt;!DOCTYPE html&amp;gt;\n&amp;lt;html lang=&amp;quot;en&amp;quot;&amp;gt;\n&amp;lt;head&amp;gt;\n  &amp;lt;meta charset=&amp;quot;UTF-8&amp;quot; /&amp;gt;\n  &amp;lt;meta name=&amp;quot;viewport&amp;quot; content=&amp;quot;width=device-width, initial-scale=1.0&amp;quot;/&amp;gt;\n  &amp;lt;title&amp;gt;Add New Cinema - Horizon Cinemas&amp;lt;/title&amp;gt;\n  &amp;lt;link rel=&amp;quot;stylesheet&amp;quot; href=&amp;quot;/static/style.css&amp;quot;&amp;gt;\n  &amp;lt;link rel=&amp;quot;stylesheet&amp;quot; href=&amp;quot;https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css&amp;quot;&amp;gt;\n  &amp;lt;style&amp;gt;\n    .seat-preview {\n      display: flex;\n      flex-wrap: wrap;\n      max-width: 300px;\n    }\n    .seat-box {\n      width: 20px;\n      height: 20px;\n      margin: 2px;\n      border-radius: 3px;\n    }\n    .lower-hall { background-color: #0d6efd; }\n    .upper-gallery { background-color: #198754; }\n    .vip { background-color: #a020f0; }\n    .slider-container {\n      display: flex;\n      align-items: center;\n      gap: 1rem;\n    }\n    input[type=range] {\n      width: 200px;\n    }\n    .slider-value {\n      font-weight: bold;\n      min-width: 40px;\n    }\n  &amp;lt;/style&amp;gt;\n&amp;lt;/head&amp;gt;\n&amp;lt;body&amp;gt;\n\n&amp;lt;nav class=&amp;quot;navbar navbar-dark bg-dark&amp;quot;&amp;gt;\n  &amp;lt;div class=&amp;quot;container&amp;quot;&amp;gt;\n    &amp;lt;a class=&amp;quot;navbar-brand&amp;quot; href=&amp;quot;/&amp;quot;&amp;gt;\ud83c\udfac Horizon Cinemas&amp;lt;/a&amp;gt;\n    &amp;lt;a href=&amp;quot;/manager_dashboard&amp;quot; class=&amp;quot;btn btn-outline-light&amp;quot;&amp;gt;Back to Dashboard&amp;lt;/a&amp;gt;\n  &amp;lt;/div&amp;gt;\n&amp;lt;/nav&amp;gt;\n\n&amp;lt;div class=&amp;quot;container mt-5&amp;quot;&amp;gt;\n  &amp;lt;h2 class=&amp;quot;text-center&amp;quot;&amp;gt;\u2795 Add New Cinema&amp;lt;/h2&amp;gt;\n  &amp;lt;form action=&amp;quot;/add_cinema&amp;quot; method=&amp;quot;POST&amp;quot; class=&amp;quot;mt-4&amp;quot;&amp;gt;\n    &amp;lt;div class=&amp;quot;mb-3&amp;quot;&amp;gt;\n      &amp;lt;label for=&amp;quot;cinema_name&amp;quot; class=&amp;quot;form-label&amp;quot;&amp;gt;Cinema Name&amp;lt;/label&amp;gt;\n      &amp;lt;input type=&amp;quot;text&amp;quot; class=&amp;quot;form-control&amp;quot; id=&amp;quot;cinema_name&amp;quot; name=&amp;quot;cinema_name&amp;quot; required&amp;gt;\n    &amp;lt;/div&amp;gt;\n    &amp;lt;div class=&amp;quot;mb-3&amp;quot;&amp;gt;\n      &amp;lt;label for=&amp;quot;city&amp;quot; class=&amp;quot;form-label&amp;quot;&amp;gt;City&amp;lt;/label&amp;gt;\n      &amp;lt;input type=&amp;quot;text&amp;quot; class=&amp;quot;form-control&amp;quot; id=&amp;quot;city&amp;quot; name=&amp;quot;city&amp;quot; required&amp;gt;\n    &amp;lt;/div&amp;gt;\n    &amp;lt;div class=&amp;quot;mb-3&amp;quot;&amp;gt;\n      &amp;lt;label for=&amp;quot;address&amp;quot; class=&amp;quot;form-label&amp;quot;&amp;gt;Address&amp;lt;/label&amp;gt;\n      &amp;lt;textarea class=&amp;quot;form-control&amp;quot; id=&amp;quot;address&amp;quot; name=&amp;quot;address&amp;quot; rows=&amp;quot;3&amp;quot; required&amp;gt;&amp;lt;/textarea&amp;gt;\n    &amp;lt;/div&amp;gt;\n\n    &amp;lt;!-- Number of Screens --&amp;gt;\n    &amp;lt;div class=&amp;quot;mb-3&amp;quot;&amp;gt;\n      &amp;lt;label class=&amp;quot;form-label&amp;quot;&amp;gt;Number of Screens&amp;lt;/label&amp;gt;\n      &amp;lt;div class=&amp;quot;input-group&amp;quot;&amp;gt;\n        &amp;lt;button type=&amp;quot;button&amp;quot; class=&amp;quot;btn btn-outline-primary&amp;quot; onclick=&amp;quot;toggleScreensDropdown()&amp;quot;&amp;gt;\n          \ud83c\udfac Select Number of Screens\n        &amp;lt;/button&amp;gt;\n        &amp;lt;select class=&amp;quot;form-select ms-2&amp;quot; id=&amp;quot;num_of_screens&amp;quot; name=&amp;quot;num_of_screens&amp;quot; style=&amp;quot;display: none; max-width: 150px;&amp;quot; required&amp;gt;\n          &amp;lt;option value=&amp;quot;&amp;quot;&amp;gt;-- Choose --&amp;lt;/option&amp;gt;\n          \n            &amp;lt;option value=&amp;quot;1&amp;quot;&amp;gt;1&amp;lt;/option&amp;gt;\n          \n            &amp;lt;option value=&amp;quot;2&amp;quot;&amp;gt;2&amp;lt;/option&amp;gt;\n          \n            &amp;lt;option value=&amp;quot;3&amp;quot;&amp;gt;3&amp;lt;/option&amp;gt;\n          \n            &amp;lt;option value=&amp;quot;4&amp;quot;&amp;gt;4&amp;lt;/option&amp;gt;\n          \n            &amp;lt;option value=&amp;quot;5&amp;quot;&amp;gt;5&amp;lt;/option&amp;gt;\n          \n            &amp;lt;option value=&amp;quot;6&amp;quot;&amp;gt;6&amp;lt;/option&amp;gt;\n          \n        &amp;lt;/select&amp;gt;\n      &amp;lt;/div&amp;gt;\n      &amp;lt;div class=&amp;quot;form-text&amp;quot;&amp;gt;Maximum allowed: 6 screens&amp;lt;/div&amp;gt;\n    &amp;lt;/div&amp;gt;\n\n    &amp;lt;!-- Seat Configuration Mode --&amp;gt;\n    &amp;lt;div class=&amp;quot;mb-3&amp;quot;&amp;gt;\n      &amp;lt;label class=&amp;quot;form-label&amp;quot;&amp;gt;Seat Configuration&amp;lt;/label&amp;gt;\n      &amp;lt;div&amp;gt;\n        &amp;lt;input type=&amp;quot;radio&amp;quot; name=&amp;quot;seat_config&amp;quot; value=&amp;quot;all&amp;quot; checked onclick=&amp;quot;toggleSeatConfig()&amp;quot;&amp;gt; Apply to All Screens\n        &amp;lt;input type=&amp;quot;radio&amp;quot; name=&amp;quot;seat_config&amp;quot; value=&amp;quot;individual&amp;quot; onclick=&amp;quot;toggleSeatConfig()&amp;quot;&amp;gt; Customize Each Screen\n      &amp;lt;/div&amp;gt;\n      &amp;lt;small class=&amp;quot;form-text text-muted mt-1&amp;quot;&amp;gt;30% will be Lower Hall (blue), 70% Upper Gallery (green), optional VIP (purple, max 10)&amp;lt;/small&amp;gt;\n    &amp;lt;/div&amp;gt;\n\n    &amp;lt;!-- Dynamic Seat Input + Preview --&amp;gt;\n    &amp;lt;div id=&amp;quot;seat-config-container&amp;quot; class=&amp;quot;mt-3&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;\n\n    &amp;lt;button type=&amp;quot;submit&amp;quot; class=&amp;quot;btn btn-success mt-4&amp;quot;&amp;gt;Add Cinema&amp;lt;/button&amp;gt;\n  &amp;lt;/form&amp;gt;\n&amp;lt;/div&amp;gt;\n\n&amp;lt;footer class=&amp;quot;text-center bg-dark text-white py-3 mt-5&amp;quot;&amp;gt;\n  &amp;lt;p&amp;gt;\u00a9 2024 Horizon Cinemas. All Rights Reserved.&amp;lt;/p&amp;gt;\n&amp;lt;/footer&amp;gt;\n\n&amp;lt;!-- \ud83d\udc47 This part is INSIDE &amp;lt;head&amp;gt; already --&amp;gt;\n  &amp;lt;script&amp;gt;\n    const vipCounts = {};\n  \n    function toggleScreensDropdown() {\n      const dropdown = document.getElementById(&amp;#x27;num_of_screens&amp;#x27;);\n      dropdown.style.display = dropdown.style.display === &amp;#x27;none&amp;#x27; ? &amp;#x27;inline-block&amp;#x27; : &amp;#x27;none&amp;#x27;;\n      toggleSeatConfig();\n    }\n  \n    document.getElementById(&amp;#x27;num_of_screens&amp;#x27;).addEventListener(&amp;#x27;change&amp;#x27;, toggleSeatConfig);\n  \n    function toggleSeatConfig() {\n      const screenCount = parseInt(document.getElementById(&amp;#x27;num_of_screens&amp;#x27;).value);\n      const configType = document.querySelector(&amp;#x27;input[name=&amp;quot;seat_config&amp;quot;]:checked&amp;#x27;).value;\n      const container = document.getElementById(&amp;quot;seat-config-container&amp;quot;);\n      container.innerHTML = &amp;quot;&amp;quot;;\n  \n      if (!screenCount || screenCount &amp;lt; 1) return;\n  \n      if (configType === &amp;quot;all&amp;quot;) {\n        vipCounts[&amp;#x27;all&amp;#x27;] = 0;\n        container.innerHTML = `\n          &amp;lt;label class=&amp;quot;form-label&amp;quot;&amp;gt;Total Seats for All Screens&amp;lt;/label&amp;gt;\n          &amp;lt;div class=&amp;quot;slider-container mb-2&amp;quot;&amp;gt;\n            &amp;lt;input type=&amp;quot;range&amp;quot; min=&amp;quot;50&amp;quot; max=&amp;quot;120&amp;quot; value=&amp;quot;50&amp;quot; class=&amp;quot;form-range&amp;quot; id=&amp;quot;total_seats_all&amp;quot; name=&amp;quot;total_seats_all&amp;quot;\n              oninput=&amp;quot;renderSeatPreview(&amp;#x27;all&amp;#x27;, false, this.value)&amp;quot; \n              onchange=&amp;quot;renderSeatPreview(&amp;#x27;all&amp;#x27;, true, this.value)&amp;quot;&amp;gt;\n            &amp;lt;span class=&amp;quot;slider-value&amp;quot; id=&amp;quot;value_all&amp;quot;&amp;gt;50&amp;lt;/span&amp;gt;\n          &amp;lt;/div&amp;gt;\n          &amp;lt;div class=&amp;quot;mb-2&amp;quot;&amp;gt;\n            &amp;lt;button type=&amp;quot;button&amp;quot; class=&amp;quot;btn btn-sm btn-outline-success me-2&amp;quot; onclick=&amp;quot;adjustVIP(&amp;#x27;all&amp;#x27;, 1)&amp;quot;&amp;gt;+ VIP&amp;lt;/button&amp;gt;\n            &amp;lt;button type=&amp;quot;button&amp;quot; class=&amp;quot;btn btn-sm btn-outline-danger&amp;quot; onclick=&amp;quot;adjustVIP(&amp;#x27;all&amp;#x27;, -1)&amp;quot;&amp;gt;- VIP&amp;lt;/button&amp;gt;\n          &amp;lt;/div&amp;gt;\n          &amp;lt;div id=&amp;quot;seat_preview_all&amp;quot; class=&amp;quot;seat-preview mb-2&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;\n          &amp;lt;div id=&amp;quot;seat_counts_all&amp;quot; class=&amp;quot;text-muted mb-4&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;\n        `;\n        renderSeatPreview(&amp;#x27;all&amp;#x27;, false, 50);\n      } else {\n        for (let i = 1; i &amp;lt;= screenCount; i++) {\n          vipCounts[i] = 0;\n          container.innerHTML += `\n            &amp;lt;label class=&amp;quot;form-label&amp;quot;&amp;gt;Screen ${i} - Total Seats&amp;lt;/label&amp;gt;\n            &amp;lt;div class=&amp;quot;slider-container mb-2&amp;quot;&amp;gt;\n              &amp;lt;input type=&amp;quot;range&amp;quot; min=&amp;quot;50&amp;quot; max=&amp;quot;120&amp;quot; value=&amp;quot;50&amp;quot; class=&amp;quot;form-range&amp;quot; id=&amp;quot;total_seats_${i}&amp;quot; name=&amp;quot;total_seats_${i}&amp;quot;\n                oninput=&amp;quot;renderSeatPreview(${i}, false, this.value)&amp;quot; \n                onchange=&amp;quot;renderSeatPreview(${i}, true, this.value)&amp;quot;&amp;gt;\n              &amp;lt;span class=&amp;quot;slider-value&amp;quot; id=&amp;quot;value_${i}&amp;quot;&amp;gt;50&amp;lt;/span&amp;gt;\n            &amp;lt;/div&amp;gt;\n            &amp;lt;div class=&amp;quot;mb-2&amp;quot;&amp;gt;\n              &amp;lt;button type=&amp;quot;button&amp;quot; class=&amp;quot;btn btn-sm btn-outline-success me-2&amp;quot; onclick=&amp;quot;adjustVIP(${i}, 1)&amp;quot;&amp;gt;+ VIP&amp;lt;/button&amp;gt;\n              &amp;lt;button type=&amp;quot;button&amp;quot; class=&amp;quot;btn btn-sm btn-outline-danger&amp;quot; onclick=&amp;quot;adjustVIP(${i}, -1)&amp;quot;&amp;gt;- VIP&amp;lt;/button&amp;gt;\n            &amp;lt;/div&amp;gt;\n            &amp;lt;div id=&amp;quot;seat_preview_${i}&amp;quot; class=&amp;quot;seat-preview mb-2&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;\n            &amp;lt;div id=&amp;quot;seat_counts_${i}&amp;quot; class=&amp;quot;text-muted mb-4&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;\n          `;\n          renderSeatPreview(i, false, 50);\n        }\n      }\n    }\n  \n    function adjustVIP(screenId, change) {\n      const current = vipCounts[screenId] || 0;\n      const newValue = current + change;\n      if (newValue &amp;lt; 0 || newValue &amp;gt; 10) return;\n  \n      const totalSeats = parseInt(document.getElementById(\n        screenId === &amp;#x27;all&amp;#x27; ? &amp;#x27;total_seats_all&amp;#x27; : `total_seats_${screenId}`\n      ).value);\n  \n      if (newValue &amp;gt; Math.round(totalSeats * 0.7)) return;\n  \n      vipCounts[screenId] = newValue;\n      renderSeatPreview(screenId, true, totalSeats);\n    }\n  \n    function renderSeatPreview(screenId, isFinal = false, valueOverride = null) {\n      const inputId = screenId === &amp;#x27;all&amp;#x27; ? &amp;#x27;total_seats_all&amp;#x27; : `total_seats_${screenId}`;\n      const valueLabelId = screenId === &amp;#x27;all&amp;#x27; ? &amp;#x27;value_all&amp;#x27; : `value_${screenId}`;\n      const previewId = screenId === &amp;#x27;all&amp;#x27; ? &amp;#x27;seat_preview_all&amp;#x27; : `seat_preview_${screenId}`;\n      const countId = screenId === &amp;#x27;all&amp;#x27; ? &amp;#x27;seat_counts_all&amp;#x27; : `seat_counts_${screenId}`;\n  \n      const seatCount = parseInt(valueOverride);\n      document.getElementById(valueLabelId).innerText = seatCount;\n  \n      const vip = vipCounts[screenId] || 0;\n      const lowerCount = Math.round(seatCount * 0.3);\n      let upperCount = seatCount - lowerCount - vip;\n  \n      if (upperCount &amp;lt; 0) upperCount = 0;\n  \n      const previewContainer = document.getElementById(previewId);\n      const countContainer = document.getElementById(countId);\n  \n      previewContainer.innerHTML = &amp;quot;&amp;quot;;\n  \n      for (let i = 0; i &amp;lt; lowerCount; i++) {\n        const seat = document.createElement(&amp;quot;div&amp;quot;);\n        seat.classList.add(&amp;quot;seat-box&amp;quot;, &amp;quot;lower-hall&amp;quot;);\n        previewContainer.appendChild(seat);\n      }\n  \n      for (let i = 0; i &amp;lt; upperCount; i++) {\n        const seat = document.createElement(&amp;quot;div&amp;quot;);\n        seat.classList.add(&amp;quot;seat-box&amp;quot;, &amp;quot;upper-gallery&amp;quot;);\n        previewContainer.appendChild(seat);\n      }\n  \n      for (let i = 0; i &amp;lt; vip; i++) {\n        const seat = document.createElement(&amp;quot;div&amp;quot;);\n        seat.classList.add(&amp;quot;seat-box&amp;quot;, &amp;quot;vip&amp;quot;);\n        previewContainer.appendChild(seat);\n      }\n  \n      countContainer.innerText = `Lower Hall: ${lowerCount} | Upper Gallery: ${upperCount} | VIP: ${vip}`;\n  \n      // \u2705 Add or update hidden VIP input so Flask can access it\n      const vipInputId = screenId === &amp;#x27;all&amp;#x27; ? &amp;#x27;vip_count_all&amp;#x27; : `vip_count_${screenId}`;\n      let vipInput = document.getElementById(vipInputId);\n      if (!vipInput) {\n        vipInput = document.createElement(&amp;#x27;input&amp;#x27;);\n        vipInput.type = &amp;#x27;hidden&amp;#x27;;\n        vipInput.name = vipInputId;\n        vipInput.id = vipInputId;\n        document.querySelector(&amp;#x27;form&amp;#x27;).appendChild(vipInput);\n      }\n      vipInput.value = vip;\n    }\n  &amp;lt;/script&amp;gt;\n&amp;lt;/body&amp;gt;\n&amp;lt;/html&amp;gt;\n\u2705 get_db_connection() called\n\ud83d\udccd USING DB: /Users/foyezahammed/Desktop/SDGP-1/database/horizon_cinemas.db\n\ud83c\udfd9\ufe0f All cinemas in DB after POST: [&amp;lt;sqlite3.Row object at 0x130de4550&amp;gt;, &amp;lt;sqlite3.Row object at 0x130de4250&amp;gt;, &amp;lt;sqlite3.Row object at 0x130de71c0&amp;gt;, &amp;lt;sqlite3.Row object at 0x130de6e00&amp;gt;, &amp;lt;sqlite3.Row object at 0x130de6c50&amp;gt;, &amp;lt;sqlite3.Row object at 0x130de6e30&amp;gt;, &amp;lt;sqlite3.Row object at 0x130de71f0&amp;gt;, &amp;lt;sqlite3.Row object at 0x130de7250&amp;gt;, &amp;lt;sqlite3.Row object at 0x130de7580&amp;gt;]\n&#34;}]}, &#34;renderCollapsed&#34;: [&#34;passed&#34;], &#34;initialSort&#34;: &#34;result&#34;, &#34;title&#34;: &#34;report.html&#34;}"></div>
+    <script>
+      (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+const { getCollapsedCategory, setCollapsedIds } = require('./storage.js')
+
+class DataManager {
+    setManager(data) {
+        const collapsedCategories = [...getCollapsedCategory(data.renderCollapsed)]
+        const collapsedIds = []
+        const tests = Object.values(data.tests).flat().map((test, index) => {
+            const collapsed = collapsedCategories.includes(test.result.toLowerCase())
+            const id = `test_${index}`
+            if (collapsed) {
+                collapsedIds.push(id)
+            }
+            return {
+                ...test,
+                id,
+                collapsed,
+            }
+        })
+        const dataBlob = { ...data, tests }
+        this.data = { ...dataBlob }
+        this.renderData = { ...dataBlob }
+        setCollapsedIds(collapsedIds)
+    }
+
+    get allData() {
+        return { ...this.data }
+    }
+
+    resetRender() {
+        this.renderData = { ...this.data }
+    }
+
+    setRender(data) {
+        this.renderData.tests = [...data]
+    }
+
+    toggleCollapsedItem(id) {
+        this.renderData.tests = this.renderData.tests.map((test) =>
+            test.id === id ? { ...test, collapsed: !test.collapsed } : test,
+        )
+    }
+
+    set allCollapsed(collapsed) {
+        this.renderData = { ...this.renderData, tests: [...this.renderData.tests.map((test) => (
+            { ...test, collapsed }
+        ))] }
+    }
+
+    get testSubset() {
+        return [...this.renderData.tests]
+    }
+
+    get environment() {
+        return this.renderData.environment
+    }
+
+    get initialSort() {
+        return this.data.initialSort
+    }
+}
+
+module.exports = {
+    manager: new DataManager(),
+}
+
+},{"./storage.js":8}],2:[function(require,module,exports){
+const mediaViewer = require('./mediaviewer.js')
+const templateEnvRow = document.getElementById('template_environment_row')
+const templateResult = document.getElementById('template_results-table__tbody')
+
+function htmlToElements(html) {
+    const temp = document.createElement('template')
+    temp.innerHTML = html
+    return temp.content.childNodes
+}
+
+const find = (selector, elem) => {
+    if (!elem) {
+        elem = document
+    }
+    return elem.querySelector(selector)
+}
+
+const findAll = (selector, elem) => {
+    if (!elem) {
+        elem = document
+    }
+    return [...elem.querySelectorAll(selector)]
+}
+
+const dom = {
+    getStaticRow: (key, value) => {
+        const envRow = templateEnvRow.content.cloneNode(true)
+        const isObj = typeof value === 'object' && value !== null
+        const values = isObj ? Object.keys(value).map((k) => `${k}: ${value[k]}`) : null
+
+        const valuesElement = htmlToElements(
+            values ? `<ul>${values.map((val) => `<li>${val}</li>`).join('')}<ul>` : `<div>${value}</div>`)[0]
+        const td = findAll('td', envRow)
+        td[0].textContent = key
+        td[1].appendChild(valuesElement)
+
+        return envRow
+    },
+    getResultTBody: ({ testId, id, log, extras, resultsTableRow, tableHtml, result, collapsed }) => {
+        const resultBody = templateResult.content.cloneNode(true)
+        resultBody.querySelector('tbody').classList.add(result.toLowerCase())
+        resultBody.querySelector('tbody').id = testId
+        resultBody.querySelector('.collapsible').dataset.id = id
+
+        resultsTableRow.forEach((html) => {
+            const t = document.createElement('template')
+            t.innerHTML = html
+            resultBody.querySelector('.collapsible').appendChild(t.content)
+        })
+
+        if (log) {
+            // Wrap lines starting with "E" with span.error to color those lines red
+            const wrappedLog = log.replace(/^E.*$/gm, (match) => `<span class="error">${match}</span>`)
+            resultBody.querySelector('.log').innerHTML = wrappedLog
+        } else {
+            resultBody.querySelector('.log').remove()
+        }
+
+        if (collapsed) {
+            resultBody.querySelector('.collapsible > td')?.classList.add('collapsed')
+            resultBody.querySelector('.extras-row').classList.add('hidden')
+        } else {
+            resultBody.querySelector('.collapsible > td')?.classList.remove('collapsed')
+        }
+
+        const media = []
+        extras?.forEach(({ name, format_type, content }) => {
+            if (['image', 'video'].includes(format_type)) {
+                media.push({ path: content, name, format_type })
+            }
+
+            if (format_type === 'html') {
+                resultBody.querySelector('.extraHTML').insertAdjacentHTML('beforeend', `<div>${content}</div>`)
+            }
+        })
+        mediaViewer.setup(resultBody, media)
+
+        // Add custom html from the pytest_html_results_table_html hook
+        tableHtml?.forEach((item) => {
+            resultBody.querySelector('td[class="extra"]').insertAdjacentHTML('beforeend', item)
+        })
+
+        return resultBody
+    },
+}
+
+module.exports = {
+    dom,
+    htmlToElements,
+    find,
+    findAll,
+}
+
+},{"./mediaviewer.js":6}],3:[function(require,module,exports){
+const { manager } = require('./datamanager.js')
+const { doSort } = require('./sort.js')
+const storageModule = require('./storage.js')
+
+const getFilteredSubSet = (filter) =>
+    manager.allData.tests.filter(({ result }) => filter.includes(result.toLowerCase()))
+
+const doInitFilter = () => {
+    const currentFilter = storageModule.getVisible()
+    const filteredSubset = getFilteredSubSet(currentFilter)
+    manager.setRender(filteredSubset)
+}
+
+const doFilter = (type, show) => {
+    if (show) {
+        storageModule.showCategory(type)
+    } else {
+        storageModule.hideCategory(type)
+    }
+
+    const currentFilter = storageModule.getVisible()
+    const filteredSubset = getFilteredSubSet(currentFilter)
+    manager.setRender(filteredSubset)
+
+    const sortColumn = storageModule.getSort()
+    doSort(sortColumn, true)
+}
+
+module.exports = {
+    doFilter,
+    doInitFilter,
+}
+
+},{"./datamanager.js":1,"./sort.js":7,"./storage.js":8}],4:[function(require,module,exports){
+const { redraw, bindEvents, renderStatic } = require('./main.js')
+const { doInitFilter } = require('./filter.js')
+const { doInitSort } = require('./sort.js')
+const { manager } = require('./datamanager.js')
+const data = JSON.parse(document.getElementById('data-container').dataset.jsonblob)
+
+function init() {
+    manager.setManager(data)
+    doInitFilter()
+    doInitSort()
+    renderStatic()
+    redraw()
+    bindEvents()
+}
+
+init()
+
+},{"./datamanager.js":1,"./filter.js":3,"./main.js":5,"./sort.js":7}],5:[function(require,module,exports){
+const { dom, find, findAll } = require('./dom.js')
+const { manager } = require('./datamanager.js')
+const { doSort } = require('./sort.js')
+const { doFilter } = require('./filter.js')
+const {
+    getVisible,
+    getCollapsedIds,
+    setCollapsedIds,
+    getSort,
+    getSortDirection,
+    possibleFilters,
+} = require('./storage.js')
+
+const removeChildren = (node) => {
+    while (node.firstChild) {
+        node.removeChild(node.firstChild)
+    }
+}
+
+const renderStatic = () => {
+    const renderEnvironmentTable = () => {
+        const environment = manager.environment
+        const rows = Object.keys(environment).map((key) => dom.getStaticRow(key, environment[key]))
+        const table = document.getElementById('environment')
+        removeChildren(table)
+        rows.forEach((row) => table.appendChild(row))
+    }
+    renderEnvironmentTable()
+}
+
+const addItemToggleListener = (elem) => {
+    elem.addEventListener('click', ({ target }) => {
+        const id = target.parentElement.dataset.id
+        manager.toggleCollapsedItem(id)
+
+        const collapsedIds = getCollapsedIds()
+        if (collapsedIds.includes(id)) {
+            const updated = collapsedIds.filter((item) => item !== id)
+            setCollapsedIds(updated)
+        } else {
+            collapsedIds.push(id)
+            setCollapsedIds(collapsedIds)
+        }
+        redraw()
+    })
+}
+
+const renderContent = (tests) => {
+    const sortAttr = getSort(manager.initialSort)
+    const sortAsc = JSON.parse(getSortDirection())
+    const rows = tests.map(dom.getResultTBody)
+    const table = document.getElementById('results-table')
+    const tableHeader = document.getElementById('results-table-head')
+
+    const newTable = document.createElement('table')
+    newTable.id = 'results-table'
+
+    // remove all sorting classes and set the relevant
+    findAll('.sortable', tableHeader).forEach((elem) => elem.classList.remove('asc', 'desc'))
+    tableHeader.querySelector(`.sortable[data-column-type="${sortAttr}"]`)?.classList.add(sortAsc ? 'desc' : 'asc')
+    newTable.appendChild(tableHeader)
+
+    if (!rows.length) {
+        const emptyTable = document.getElementById('template_results-table__body--empty').content.cloneNode(true)
+        newTable.appendChild(emptyTable)
+    } else {
+        rows.forEach((row) => {
+            if (!!row) {
+                findAll('.collapsible td:not(.col-links', row).forEach(addItemToggleListener)
+                find('.logexpander', row).addEventListener('click',
+                    (evt) => evt.target.parentNode.classList.toggle('expanded'),
+                )
+                newTable.appendChild(row)
+            }
+        })
+    }
+
+    table.replaceWith(newTable)
+}
+
+const renderDerived = () => {
+    const currentFilter = getVisible()
+    possibleFilters.forEach((result) => {
+        const input = document.querySelector(`input[data-test-result="${result}"]`)
+        input.checked = currentFilter.includes(result)
+    })
+}
+
+const bindEvents = () => {
+    const filterColumn = (evt) => {
+        const { target: element } = evt
+        const { testResult } = element.dataset
+
+        doFilter(testResult, element.checked)
+        const collapsedIds = getCollapsedIds()
+        const updated = manager.renderData.tests.map((test) => {
+            return {
+                ...test,
+                collapsed: collapsedIds.includes(test.id),
+            }
+        })
+        manager.setRender(updated)
+        redraw()
+    }
+
+    const header = document.getElementById('environment-header')
+    header.addEventListener('click', () => {
+        const table = document.getElementById('environment')
+        table.classList.toggle('hidden')
+        header.classList.toggle('collapsed')
+    })
+
+    findAll('input[name="filter_checkbox"]').forEach((elem) => {
+        elem.addEventListener('click', filterColumn)
+    })
+
+    findAll('.sortable').forEach((elem) => {
+        elem.addEventListener('click', (evt) => {
+            const { target: element } = evt
+            const { columnType } = element.dataset
+            doSort(columnType)
+            redraw()
+        })
+    })
+
+    document.getElementById('show_all_details').addEventListener('click', () => {
+        manager.allCollapsed = false
+        setCollapsedIds([])
+        redraw()
+    })
+    document.getElementById('hide_all_details').addEventListener('click', () => {
+        manager.allCollapsed = true
+        const allIds = manager.renderData.tests.map((test) => test.id)
+        setCollapsedIds(allIds)
+        redraw()
+    })
+}
+
+const redraw = () => {
+    const { testSubset } = manager
+
+    renderContent(testSubset)
+    renderDerived()
+}
+
+module.exports = {
+    redraw,
+    bindEvents,
+    renderStatic,
+}
+
+},{"./datamanager.js":1,"./dom.js":2,"./filter.js":3,"./sort.js":7,"./storage.js":8}],6:[function(require,module,exports){
+class MediaViewer {
+    constructor(assets) {
+        this.assets = assets
+        this.index = 0
+    }
+
+    nextActive() {
+        this.index = this.index === this.assets.length - 1 ? 0 : this.index + 1
+        return [this.activeFile, this.index]
+    }
+
+    prevActive() {
+        this.index = this.index === 0 ? this.assets.length - 1 : this.index -1
+        return [this.activeFile, this.index]
+    }
+
+    get currentIndex() {
+        return this.index
+    }
+
+    get activeFile() {
+        return this.assets[this.index]
+    }
+}
+
+
+const setup = (resultBody, assets) => {
+    if (!assets.length) {
+        resultBody.querySelector('.media').classList.add('hidden')
+        return
+    }
+
+    const mediaViewer = new MediaViewer(assets)
+    const container = resultBody.querySelector('.media-container')
+    const leftArrow = resultBody.querySelector('.media-container__nav--left')
+    const rightArrow = resultBody.querySelector('.media-container__nav--right')
+    const mediaName = resultBody.querySelector('.media__name')
+    const counter = resultBody.querySelector('.media__counter')
+    const imageEl = resultBody.querySelector('img')
+    const sourceEl = resultBody.querySelector('source')
+    const videoEl = resultBody.querySelector('video')
+
+    const setImg = (media, index) => {
+        if (media?.format_type === 'image') {
+            imageEl.src = media.path
+
+            imageEl.classList.remove('hidden')
+            videoEl.classList.add('hidden')
+        } else if (media?.format_type === 'video') {
+            sourceEl.src = media.path
+
+            videoEl.classList.remove('hidden')
+            imageEl.classList.add('hidden')
+        }
+
+        mediaName.innerText = media?.name
+        counter.innerText = `${index + 1} / ${assets.length}`
+    }
+    setImg(mediaViewer.activeFile, mediaViewer.currentIndex)
+
+    const moveLeft = () => {
+        const [media, index] = mediaViewer.prevActive()
+        setImg(media, index)
+    }
+    const doRight = () => {
+        const [media, index] = mediaViewer.nextActive()
+        setImg(media, index)
+    }
+    const openImg = () => {
+        window.open(mediaViewer.activeFile.path, '_blank')
+    }
+    if (assets.length === 1) {
+        container.classList.add('media-container--fullscreen')
+    } else {
+        leftArrow.addEventListener('click', moveLeft)
+        rightArrow.addEventListener('click', doRight)
+    }
+    imageEl.addEventListener('click', openImg)
+}
+
+module.exports = {
+    setup,
+}
+
+},{}],7:[function(require,module,exports){
+const { manager } = require('./datamanager.js')
+const storageModule = require('./storage.js')
+
+const genericSort = (list, key, ascending, customOrder) => {
+    let sorted
+    if (customOrder) {
+        sorted = list.sort((a, b) => {
+            const aValue = a.result.toLowerCase()
+            const bValue = b.result.toLowerCase()
+
+            const aIndex = customOrder.findIndex((item) => item.toLowerCase() === aValue)
+            const bIndex = customOrder.findIndex((item) => item.toLowerCase() === bValue)
+
+            // Compare the indices to determine the sort order
+            return aIndex - bIndex
+        })
+    } else {
+        sorted = list.sort((a, b) => a[key] === b[key] ? 0 : a[key] > b[key] ? 1 : -1)
+    }
+
+    if (ascending) {
+        sorted.reverse()
+    }
+    return sorted
+}
+
+const durationSort = (list, ascending) => {
+    const parseDuration = (duration) => {
+        if (duration.includes(':')) {
+            // If it's in the format "HH:mm:ss"
+            const [hours, minutes, seconds] = duration.split(':').map(Number)
+            return (hours * 3600 + minutes * 60 + seconds) * 1000
+        } else {
+            // If it's in the format "nnn ms"
+            return parseInt(duration)
+        }
+    }
+    const sorted = list.sort((a, b) => parseDuration(a['duration']) - parseDuration(b['duration']))
+    if (ascending) {
+        sorted.reverse()
+    }
+    return sorted
+}
+
+const doInitSort = () => {
+    const type = storageModule.getSort(manager.initialSort)
+    const ascending = storageModule.getSortDirection()
+    const list = manager.testSubset
+    const initialOrder = ['Error', 'Failed', 'Rerun', 'XFailed', 'XPassed', 'Skipped', 'Passed']
+
+    storageModule.setSort(type)
+    storageModule.setSortDirection(ascending)
+
+    if (type?.toLowerCase() === 'original') {
+        manager.setRender(list)
+    } else {
+        let sortedList
+        switch (type) {
+        case 'duration':
+            sortedList = durationSort(list, ascending)
+            break
+        case 'result':
+            sortedList = genericSort(list, type, ascending, initialOrder)
+            break
+        default:
+            sortedList = genericSort(list, type, ascending)
+            break
+        }
+        manager.setRender(sortedList)
+    }
+}
+
+const doSort = (type, skipDirection) => {
+    const newSortType = storageModule.getSort(manager.initialSort) !== type
+    const currentAsc = storageModule.getSortDirection()
+    let ascending
+    if (skipDirection) {
+        ascending = currentAsc
+    } else {
+        ascending = newSortType ? false : !currentAsc
+    }
+    storageModule.setSort(type)
+    storageModule.setSortDirection(ascending)
+
+    const list = manager.testSubset
+    const sortedList = type === 'duration' ? durationSort(list, ascending) : genericSort(list, type, ascending)
+    manager.setRender(sortedList)
+}
+
+module.exports = {
+    doInitSort,
+    doSort,
+}
+
+},{"./datamanager.js":1,"./storage.js":8}],8:[function(require,module,exports){
+const possibleFilters = [
+    'passed',
+    'skipped',
+    'failed',
+    'error',
+    'xfailed',
+    'xpassed',
+    'rerun',
+]
+
+const getVisible = () => {
+    const url = new URL(window.location.href)
+    const settings = new URLSearchParams(url.search).get('visible')
+    const lower = (item) => {
+        const lowerItem = item.toLowerCase()
+        if (possibleFilters.includes(lowerItem)) {
+            return lowerItem
+        }
+        return null
+    }
+    return settings === null ?
+        possibleFilters :
+        [...new Set(settings?.split(',').map(lower).filter((item) => item))]
+}
+
+const hideCategory = (categoryToHide) => {
+    const url = new URL(window.location.href)
+    const visibleParams = new URLSearchParams(url.search).get('visible')
+    const currentVisible = visibleParams ? visibleParams.split(',') : [...possibleFilters]
+    const settings = [...new Set(currentVisible)].filter((f) => f !== categoryToHide).join(',')
+
+    url.searchParams.set('visible', settings)
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const showCategory = (categoryToShow) => {
+    if (typeof window === 'undefined') {
+        return
+    }
+    const url = new URL(window.location.href)
+    const currentVisible = new URLSearchParams(url.search).get('visible')?.split(',').filter(Boolean) ||
+        [...possibleFilters]
+    const settings = [...new Set([categoryToShow, ...currentVisible])]
+    const noFilter = possibleFilters.length === settings.length || !settings.length
+
+    noFilter ? url.searchParams.delete('visible') : url.searchParams.set('visible', settings.join(','))
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const getSort = (initialSort) => {
+    const url = new URL(window.location.href)
+    let sort = new URLSearchParams(url.search).get('sort')
+    if (!sort) {
+        sort = initialSort || 'result'
+    }
+    return sort
+}
+
+const setSort = (type) => {
+    const url = new URL(window.location.href)
+    url.searchParams.set('sort', type)
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const getCollapsedCategory = (renderCollapsed) => {
+    let categories
+    if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href)
+        const collapsedItems = new URLSearchParams(url.search).get('collapsed')
+        switch (true) {
+        case !renderCollapsed && collapsedItems === null:
+            categories = ['passed']
+            break
+        case collapsedItems?.length === 0 || /^["']{2}$/.test(collapsedItems):
+            categories = []
+            break
+        case /^all$/.test(collapsedItems) || collapsedItems === null && /^all$/.test(renderCollapsed):
+            categories = [...possibleFilters]
+            break
+        default:
+            categories = collapsedItems?.split(',').map((item) => item.toLowerCase()) || renderCollapsed
+            break
+        }
+    } else {
+        categories = []
+    }
+    return categories
+}
+
+const getSortDirection = () => JSON.parse(sessionStorage.getItem('sortAsc')) || false
+const setSortDirection = (ascending) => sessionStorage.setItem('sortAsc', ascending)
+
+const getCollapsedIds = () => JSON.parse(sessionStorage.getItem('collapsedIds')) || []
+const setCollapsedIds = (list) => sessionStorage.setItem('collapsedIds', JSON.stringify(list))
+
+module.exports = {
+    getVisible,
+    hideCategory,
+    showCategory,
+    getCollapsedIds,
+    setCollapsedIds,
+    getSort,
+    setSort,
+    getSortDirection,
+    setSortDirection,
+    getCollapsedCategory,
+    possibleFilters,
+}
+
+},{}]},{},[4]);
+    </script>
+  </footer>
+</html>

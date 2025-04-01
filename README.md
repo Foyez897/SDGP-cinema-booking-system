@@ -32,8 +32,8 @@ Includes top-performing films, monthly revenue per cinema, and staff performance
 .
 ├── run.py                    # Flask entry point
 ├── requirements.txt
-├── Procfile                  # For deployment (e.g., Heroku/Gunicorn)
-├── extensions.py             # Global extensions (Bcrypt, JWT manager)
+├── Procfile                  # For deployment (optional)
+├── extensions (Bcrypt, JWT manager)
 ├── app/
 │   └── __init__.py           # Flask app factory
 ├── blueprints/

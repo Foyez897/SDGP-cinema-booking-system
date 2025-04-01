@@ -11,7 +11,7 @@ manager_routes = Blueprint('manager', __name__)
 
 
 # ===============================
-# 🔹 Manager Login
+#  Manager Login
 # ===============================
 
 @manager_routes.route('/manager_login', methods=['GET', 'POST'])
@@ -42,7 +42,7 @@ def manager_login():
     return response
 
 # ===============================
-# 🔹 Managera Dashboard
+#  Managera Dashboard
 # ===============================
 
 @manager_routes.route('/manager_dashboard', methods=['GET'])
@@ -77,7 +77,7 @@ def manager_dashboard():
     )
 
 # ===============================
-# 🔹 Manager logout
+#  Manager logout
 # ===============================
 
 @manager_routes.route('/logout', methods=['POST'])
@@ -88,7 +88,7 @@ def logout():
     return response
 
 # ===============================
-# 🔹 Add New Cinema
+#  Add New Cinema
 # ===============================
 
 @manager_routes.route('/add_cinema', methods=['GET', 'POST'])
@@ -153,7 +153,7 @@ def add_cinema():
     return redirect(url_for("manager.manager_dashboard"))
 
 # ===============================
-# 🔹 Manage Cinemas
+#  Manage Cinemas
 # ===============================
 
 @manager_routes.route('/manage_cinemas', methods=['GET'])
@@ -181,7 +181,7 @@ def manage_cinemas():
     return render_template("manage_cinemas.html", cinemas=cinemas)
 
 # ===============================
-# 🔹 Edit Screens
+#  Edit Screens
 # ===============================
 
 @manager_routes.route('/edit_screens/<int:cinema_id>', methods=['GET', 'POST'])
@@ -270,7 +270,7 @@ def generate_seats(cursor, screen_id, total_seats, vip_count=10):
         seat_number += 1
 
 # ===============================
-# 🔹 Delete Cinema
+#  Delete Cinema
 # ===============================
 
 @manager_routes.route('/delete_cinema/<int:cinema_id>', methods=['POST'])

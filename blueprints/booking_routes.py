@@ -15,15 +15,18 @@ from sklearn.linear_model import LinearRegression
 import numpy as np
 import matplotlib.pyplot as plt
 from flask import send_file
+from flask_mail import Message
+from flask import current_app
 
-bcrypt = Bcrypt()  # ✅ You must initialize it!
+
+bcrypt = Bcrypt()  
 print("✅ booking_routes.py LOADED")
 
 booking_routes = Blueprint('booking', __name__)
 
 
 # ===============================
-# 🔹 Booking Staff Login
+#  Booking Staff Login
 # ===============================
 
 @booking_routes.route('/staff_login', methods=['GET', 'POST'])
@@ -54,9 +57,9 @@ def staff_login():
 
     logging.info(f"DEBUG: JWT token set for {username}")
     return response  # ✅ Redirects to 'booking.html' instead of returning JSON
-
+    
 # ===============================
-# 🔹 Booking Page 
+#  Booking Page 
 # ===============================
 
 @booking_routes.route('/booking')
@@ -72,14 +75,13 @@ def booking_page():
 
     return render_template("booking.html", cinemas=cinemas, request=request)
 
+
 # ===============================
 # 🔹 Booking Home
 # ===============================
 
 @booking_routes.route('/', methods=['GET', 'POST'])
 def home():
-    print("📍 booking_routes: using get_db_connection()")  # 👈 add this
-
     try:
         with get_db_connection() as conn:
             cursor = conn.cursor()
@@ -87,10 +89,12 @@ def home():
             cursor.execute("SELECT id, city, location FROM cinemas")
             cinemas = cursor.fetchall()
 
-            selected_cinema_id = request.form.get("cinema_id")
+            selected_cinema_id = request.form.get("cinema_id") if request.method == "POST" else None
+
             films = []
 
             if selected_cinema_id:
+                # ✅ Filter by selected cinema
                 cursor.execute("""
                     SELECT films.id, films.title, films.genre, films.age_rating, films.description,
                            GROUP_CONCAT(showtimes.show_time) AS showtimes
@@ -100,17 +104,51 @@ def home():
                     GROUP BY films.id
                 """, (selected_cinema_id,))
                 films = cursor.fetchall()
+                return render_template("index.html", cinemas=cinemas, films=films, selected_cinema_id=selected_cinema_id)
 
-            return render_template("index.html", cinemas=cinemas, films=films)
+            else:
+                # ✅ Default: show all today's showtimes across all cinemas
+                today = datetime.now().strftime('%Y-%m-%d')
+                cursor.execute("""
+                    SELECT 
+                         f.id AS film_id, f.title, f.genre, f.age_rating, f.description,
+                         s.show_time, c.city, c.location
+                    FROM films f
+                    JOIN showtimes s ON f.id = s.film_id
+                    JOIN cinemas c ON s.cinema_id = c.id
+                    WHERE DATE(s.show_time) = ?
+                    ORDER BY f.title, s.show_time
+                """, (today,))
+                rows = cursor.fetchall()
+
+                films_dict = {}
+                for row in rows:
+                    film_id = row["film_id"]
+                    if film_id not in films_dict:
+                        films_dict[film_id] = {
+                            "id": film_id,
+                            "title": row["title"],
+                            "genre": row["genre"],
+                            "age_rating": row["age_rating"],
+                            "description": row["description"],
+                            "showtimes": []
+                        }
+
+                    films_dict[film_id]["showtimes"].append({
+                         "time": row["show_time"][11:16],
+                         "cinema": f"{row['city']} - {row['location']}"
+                    })
+
+                films = list(films_dict.values())
+                return render_template("index.html", cinemas=cinemas, films=films, selected_cinema_id=None)
 
     except Exception as e:
-       import traceback
-       print("❌ ERROR IN HOME ROUTE:\n", traceback.format_exc())
-       return "Internal Server Error", 500
-
+        import traceback
+        print("❌ ERROR IN HOME ROUTE:\n", traceback.format_exc())
+        return "Internal Server Error", 500
 
 # ===============================
-# 🔹 Select Cinema
+#  Select Cinema
 # ===============================
 
 @booking_routes.route('/select_cinema', methods=['GET'])
@@ -140,8 +178,15 @@ def select_cinema():
         cursor.execute("SELECT screen_number FROM screens WHERE cinema_id = ? ORDER BY screen_number", (cinema_id,))
         screens = [row["screen_number"] for row in cursor.fetchall()]
 
-        # Define time slots
-        time_slots = ["10:00", "12:00", "14:00", "16:00", "18:00", "20:00"]
+        # ✅ Dynamically fetch all distinct time slots for this date and cinema
+        cursor.execute("""
+            SELECT DISTINCT strftime('%H:%M', show_time) AS time_slot
+            FROM showtimes
+            WHERE cinema_id = ? AND DATE(show_time) = ?
+            ORDER BY time_slot
+        """, (cinema_id, selected_date))
+        time_slot_rows = cursor.fetchall()
+        time_slots = [row["time_slot"] for row in time_slot_rows]
 
         # Fetch showtimes only for the selected date
         cursor.execute("""
@@ -155,7 +200,7 @@ def select_cinema():
         # Map showtimes into (screen, time) key
         showtime_map = {}
         for st in showtimes:
-            time_str = st["show_time"][11:16]
+            time_str = st["show_time"][11:16]  # Extract HH:MM from datetime string
             key = (st["screen_number"], time_str)
             showtime_map[key] = {
                 "title": st["title"],
@@ -173,7 +218,7 @@ def select_cinema():
     )
 
 # ===============================
-# 🔹 Seat Availability 
+#  Seat Availability 
 # ===============================
 
 @booking_routes.route('/view_showtime/<int:showtime_id>')
@@ -261,7 +306,7 @@ def view_showtime(showtime_id):
     )
 
 # ===============================
-# 🔹 Dynamic Pricing Function
+#  Dynamic Pricing Function
 # ===============================
 
 def get_dynamic_price(city, show_time, seat_type):
@@ -295,17 +340,15 @@ def get_dynamic_price(city, show_time, seat_type):
         return round(base_price, 2)
 
 # ===============================
-# 🔹 Book Ticket API (Protected)
+#  Book Ticket API (Protected)
 # ===============================
 
 @booking_routes.route('/book', methods=['GET', 'POST'])
 @jwt_required(optional=True, locations=["headers", "cookies"])
 def book_tickets():
     if request.method == 'GET':
-        # ✅ Redirect to main booking page instead of showing booking form
         return redirect(url_for('booking.home'))
 
-    # ✅ POST: Booking logic remains the same
     try:
         user_id = get_jwt_identity()
         data = request.get_json() if request.is_json else request.form
@@ -330,7 +373,6 @@ def book_tickets():
         with get_db_connection() as conn:
             cursor = conn.cursor()
 
-            # Get showtime info
             cursor.execute("SELECT show_time, cinema_id FROM showtimes WHERE id = ?", (showtime_id,))
             showtime_data = cursor.fetchone()
             if not showtime_data:
@@ -340,18 +382,15 @@ def book_tickets():
             show_dt = datetime.strptime(show_time, "%Y-%m-%d %H:%M:%S")
             now = datetime.now()
 
-            # Enforce 7-day booking limit
             if show_dt > now + timedelta(days=7):
                 return jsonify({"error": "❌ You can only book tickets up to 7 days in advance."}), 400
 
             within_30_min = 0 <= (show_dt - now).total_seconds() <= 1800
 
-            # Get city
             cursor.execute("SELECT city FROM cinemas WHERE id = ?", (cinema_id,))
             city_row = cursor.fetchone()
             city = city_row[0] if city_row else "Bristol"
 
-            # Calculate occupancy
             cursor.execute("SELECT COUNT(*) FROM seats WHERE screen_id IN (SELECT id FROM screens WHERE cinema_id = ?)", (cinema_id,))
             total_seats = cursor.fetchone()[0]
 
@@ -401,6 +440,37 @@ def book_tickets():
             user_row = cursor.fetchone()
             staff_name = user_row["username"] if user_row else "Unknown"
 
+        # ✅ Send confirmation email using current_app
+
+        try:
+            msg = Message(
+                subject="🎟️ Horizon Cinemas Booking Confirmation",
+                sender=current_app.config["MAIL_USERNAME"],
+                recipients=[customer_email]
+            )
+
+            msg.body = f"""
+Hi {customer_name},
+
+🎬 Thank you for booking with Horizon Cinemas!
+
+📌 Booking Reference: {booking_reference}
+📅 Showtime: {show_time}
+💺 Seats: {', '.join(str(s) for s in seat_ids)}
+🏙️ Cinema: {city}
+💰 Total Paid: £{round(total_price, 2)}
+
+Please arrive 10 minutes before the showtime.
+Enjoy your movie! 🍿
+
+- Horizon Cinemas Team
+"""
+            current_app.extensions["mail"].send(msg)
+            print(f"✅ Confirmation email sent to {customer_email}")
+
+        except Exception as e:
+            print(f"❌ Failed to send confirmation email: {e}")
+
         message = "✅ Booking successful!"
         if last_minute_discount_applied:
             message += " 🎉 25% last-minute discount applied!"
@@ -415,11 +485,189 @@ def book_tickets():
         }), 201
 
     except Exception as e:
-        import traceback
         print("❌ BOOKING ERROR:", traceback.format_exc())
         return jsonify({"error": "Internal server error"}), 500
+
+
 # ===============================
-# 🔹 AI Model: Predict Future Booking Demand
+#  Process Refund
+# ===============================
+
+@booking_routes.route('/process_refund', methods=['POST'])
+@jwt_required()
+def process_refund():
+    booking_id = request.form.get("booking_id")
+
+    if not booking_id:
+        flash("❌ Booking ID is missing!", "danger")
+        return redirect(url_for('booking.refund_page'))
+
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+
+        # Get booking reference from any one booking
+        cursor.execute("""
+            SELECT booking_reference FROM bookings WHERE id = ?
+        """, (booking_id,))
+        ref_row = cursor.fetchone()
+
+        if not ref_row:
+            flash("❌ Booking not found!", "danger")
+            return redirect(url_for('booking.refund_page'))
+
+        booking_reference = ref_row["booking_reference"]
+
+        # Fetch all bookings with this reference
+        cursor.execute("""
+            SELECT b.id, b.total_price, s.show_time, b.seat_id,
+                   b.customer_name, b.customer_email,
+                   f.title AS film_title, seats.seat_number
+            FROM bookings b
+            JOIN showtimes s ON b.showtime_id = s.id
+            JOIN films f ON s.film_id = f.id
+            JOIN seats ON b.seat_id = seats.id
+            WHERE b.booking_reference = ?
+        """, (booking_reference,))
+        bookings = cursor.fetchall()
+
+        if not bookings:
+            flash("❌ No bookings found for refund!", "danger")
+            return redirect(url_for('booking.refund_page'))
+
+        showtime_str = bookings[0]["show_time"]
+        from datetime import datetime, timedelta
+        showtime_dt = datetime.strptime(showtime_str, "%Y-%m-%d %H:%M:%S")
+        now = datetime.now()
+
+        if showtime_dt - now < timedelta(days=1):
+            flash("❌ Refunds can only be processed at least 1 day in advance.", "danger")
+            return redirect(url_for('booking.refund_page', ref=booking_reference))
+
+        original_total = sum(b["total_price"] for b in bookings)
+        refund_amount = round(original_total * 0.5, 2)
+
+        for b in bookings:
+            cursor.execute("DELETE FROM bookings WHERE id = ?", (b["id"],))
+            cursor.execute("UPDATE seats SET is_booked = 0 WHERE id = ?", (b["seat_id"],))
+
+        conn.commit()
+
+        # ✅ Send refund confirmation email
+        try:
+            customer_name = bookings[0]["customer_name"]
+            customer_email = bookings[0]["customer_email"]
+            film_title = bookings[0]["film_title"]
+            seat_numbers = [str(b["seat_number"]) for b in bookings]
+
+            msg = Message(
+                subject="💸 Horizon Cinemas Refund Confirmation",
+                sender=current_app.config["MAIL_USERNAME"],
+                recipients=[customer_email]
+            )
+
+            msg.body = f"""
+Hi {customer_name},
+
+This is a confirmation that your refund has been successfully processed for the following booking:
+
+📌 Booking Reference: {booking_reference}
+🎬 Film: {film_title}
+📅 Showtime: {showtime_str}
+💺 Seats: {', '.join(str(s) for s in seat_numbers)}
+💰 Refunded Amount: £{refund_amount}
+
+We're sorry you couldn't make it! We hope to see you again soon at Horizon Cinemas 🎥
+
+- Horizon Cinemas Team
+"""
+            current_app.extensions['mail'].send(msg)
+            print(f"✅ Refund email sent to {customer_email}")
+
+        except Exception as e:
+            print(f"❌ Failed to send refund email: {e}")
+
+    flash(f"✅ Refund processed! £{refund_amount} will be returned to the customer.", "success")
+    return redirect(url_for('booking.refund_page', ref=booking_reference))
+
+# ===============================
+#  Receipt
+# ===============================
+
+@booking_routes.route('/receipt/<booking_ref>')
+@jwt_required()
+def receipt(booking_ref):
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+
+        # Get all booking rows with the same reference
+        cursor.execute("""
+            SELECT b.booking_reference, b.booking_date, b.customer_name,
+                   b.customer_email, b.customer_phone, b.total_price,
+                   f.title AS film_title, s.show_time, s.screen_number,
+                   c.city, c.location, u.username AS staff_name, seats.seat_number
+            FROM bookings b
+            JOIN showtimes s ON b.showtime_id = s.id
+            JOIN films f ON s.film_id = f.id
+            JOIN cinemas c ON s.cinema_id = c.id
+            JOIN users u ON b.booking_staff_id = u.id
+            JOIN seats ON b.seat_id = seats.id
+            WHERE b.booking_reference = ?
+        """, (booking_ref,))
+        rows = cursor.fetchall()
+
+        if not rows:
+            return "Booking not found", 404
+
+        # Group info
+        seat_numbers = [r["seat_number"] for r in rows]
+        total_price = sum(r["total_price"] for r in rows)
+
+        # Take shared info from first row
+        details = dict(rows[0])
+        details["seat_numbers"] = seat_numbers
+        details["total_price"] = round(total_price, 2)
+
+    return render_template("receipt.html", booking=details)
+
+# ===============================
+#  Logout
+# ===============================
+
+@booking_routes.route('/refund', methods=['GET', 'POST'])
+@jwt_required()
+def refund_page():
+    booking = None
+    search_query = request.args.get('ref')  # booking reference or email
+
+    if search_query:
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT b.id AS booking_id, b.booking_reference, b.customer_name, b.customer_email,
+                       b.customer_phone, b.total_price, b.booking_date,
+                       f.title AS film_title, s.show_time, seats.seat_number
+                FROM bookings b
+                JOIN showtimes s ON b.showtime_id = s.id
+                JOIN films f ON s.film_id = f.id
+                JOIN seats ON b.seat_id = seats.id
+                WHERE b.booking_reference = ? OR b.customer_email = ?
+            """, (search_query, search_query))
+            rows = cursor.fetchall()
+
+            if rows:
+                seat_numbers = [row["seat_number"] for row in rows]
+                total_price = sum(row["total_price"] for row in rows)
+
+                booking = dict(rows[0])
+                booking["seat_numbers"] = seat_numbers
+                booking["total_price"] = round(total_price, 2)
+                booking["booking_id"] = rows[0]["booking_id"]
+
+    return render_template("refund.html", booking=booking, request=request)
+
+
+# ===============================
+#  Report bookings per film
 # ===============================
 
 @booking_routes.route('/report/bookings_per_film')
@@ -438,6 +686,9 @@ def bookings_per_film():
         report = cursor.fetchall()
     return render_template("report.html", report=report, title="Bookings Per Film")
 
+# ===============================
+#  Report Monthly Revenue
+# ===============================
 
 @booking_routes.route('/report/monthly_revenue')
 @jwt_required()
@@ -470,6 +721,9 @@ def monthly_revenue():
         title="Monthly Revenue Report"
     )
 
+# ===============================
+#  Report  For Top Film
+# ===============================
 
 @booking_routes.route('/report/top_film')
 @jwt_required()
@@ -509,6 +763,9 @@ def top_film():
         title="Top Revenue-Generating Films"
     )
 
+# ===============================
+#  Report Per Staff Bookings
+# ===============================
 
 @booking_routes.route('/report/staff_bookings')
 @jwt_required()
@@ -544,224 +801,12 @@ def staff_bookings():
         columns=columns,
         title="Monthly Staff Booking Performance"
     )
-# ===============================
-# 🔹 Predict Bookings
-# ===============================
 
-def get_db_connection():
-    conn = sqlite3.connect("database/horizon_cinemas.db")
-    conn.row_factory = sqlite3.Row
-    return conn
-
-def predict_future_bookings():
-    with get_db_connection() as conn:
-        cursor = conn.cursor()
-
-        # Fetch historical booking data
-        cursor.execute("""
-            SELECT strftime('%Y-%m-%d', booking_date) AS date, COUNT(*) AS total_bookings
-            FROM bookings
-            GROUP BY date
-        """)
-        df = pd.DataFrame(cursor.fetchall(), columns=["date", "total_bookings"])
-
-        if df.empty:  # Check if there is no booking data
-            return "No booking data available for predictions."
-
-        df["date"] = pd.to_datetime(df["date"])
-        df["days_since_start"] = (df["date"] - df["date"].min()).dt.days
-
-        # Train Linear Regression Model
-        X = df["days_since_start"].values.reshape(-1, 1)
-        y = df["total_bookings"].values
-        model = LinearRegression()
-        model.fit(X, y)
-
-        # Predict for the next 7 days
-        future_days = np.array([df["days_since_start"].max() + i for i in range(1, 8)]).reshape(-1, 1)
-        predictions = model.predict(future_days)
-
-        # Plot Predictions
-        plt.figure(figsize=(8, 4))
-        plt.plot(df["date"], df["total_bookings"], label="Actual Bookings", marker="o")
-        future_dates = pd.date_range(df["date"].max() + pd.Timedelta(days=1), periods=7)
-        plt.plot(future_dates, predictions, label="Predicted Bookings", linestyle="dashed")
-        plt.xlabel("Date")
-        plt.ylabel("Bookings")
-        plt.title("AI-Predicted Future Bookings")
-        plt.legend()
-        plt.savefig("static/charts/predicted_bookings.png")  # Save in static folder
-        plt.close()
-
-        return "Prediction completed and saved."
-
-# ===============================
-# 🔹 Pedict Bookings
-# ===============================   
-
-@booking_routes.route('/predict_bookings', methods=['GET'])
-def predict_bookings():
-    time_slots = np.array([10, 14, 18, 21]).reshape(-1, 1)
-    bookings = np.array([50, 80, 120, 100])
-
-    model = LinearRegression()
-    model.fit(time_slots, bookings)
-
-    predicted_bookings = model.predict(np.array([[20]]))
-    return jsonify({"predicted_bookings_for_8PM": int(predicted_bookings[0])})
-
-# ===============================
-# 🔹 Route to Trigger AI Predictions
-# ===============================
-
-@booking_routes.route('/predict_bookings', methods=['GET'])
-@jwt_required()
-def get_predicted_bookings():
-    """Generate AI-based future booking predictions and display the chart."""
-    prediction_status = predict_future_bookings()
     return render_template("report.html", report=None, title="AI-Predicted Bookings", chart="static/charts/predicted_bookings.png")
 
-# ===============================
-# 🔹 Logout
-# ===============================
-
-@booking_routes.route('/refund', methods=['GET', 'POST'])
-@jwt_required()
-def refund_page():
-    booking = None
-    search_query = request.args.get('ref')  # booking reference or email
-
-    if search_query:
-        with get_db_connection() as conn:
-            cursor = conn.cursor()
-            cursor.execute("""
-                SELECT b.id AS booking_id, b.booking_reference, b.customer_name, b.customer_email,
-                       b.customer_phone, b.total_price, b.booking_date,
-                       f.title AS film_title, s.show_time, seats.seat_number
-                FROM bookings b
-                JOIN showtimes s ON b.showtime_id = s.id
-                JOIN films f ON s.film_id = f.id
-                JOIN seats ON b.seat_id = seats.id
-                WHERE b.booking_reference = ? OR b.customer_email = ?
-            """, (search_query, search_query))
-            rows = cursor.fetchall()
-
-            if rows:
-                seat_numbers = [row["seat_number"] for row in rows]
-                total_price = sum(row["total_price"] for row in rows)
-
-                booking = dict(rows[0])
-                booking["seat_numbers"] = seat_numbers
-                booking["total_price"] = round(total_price, 2)
-                booking["booking_id"] = rows[0]["booking_id"]
-
-    return render_template("refund.html", booking=booking, request=request)
 
 # ===============================
-# 🔹 Process Refund
-# ===============================
-
-@booking_routes.route('/process_refund', methods=['POST'])
-@jwt_required()
-def process_refund():
-    booking_id = request.form.get("booking_id")
-
-    if not booking_id:
-        flash("❌ Booking ID is missing!", "danger")
-        return redirect(url_for('booking.refund_page'))
-
-    with get_db_connection() as conn:
-        cursor = conn.cursor()
-
-        # Get booking reference from any one booking
-        cursor.execute("""
-            SELECT booking_reference FROM bookings WHERE id = ?
-        """, (booking_id,))
-        ref_row = cursor.fetchone()
-
-        if not ref_row:
-            flash("❌ Booking not found!", "danger")
-            return redirect(url_for('booking.refund_page'))
-
-        booking_reference = ref_row["booking_reference"]
-
-        # Fetch all bookings with this reference
-        cursor.execute("""
-            SELECT b.id, b.total_price, s.show_time, b.seat_id
-            FROM bookings b
-            JOIN showtimes s ON b.showtime_id = s.id
-            WHERE b.booking_reference = ?
-        """, (booking_reference,))
-        bookings = cursor.fetchall()
-
-        if not bookings:
-            flash("❌ No bookings found for refund!", "danger")
-            return redirect(url_for('booking.refund_page'))
-
-        showtime_str = bookings[0]["show_time"]
-        from datetime import datetime, timedelta
-        showtime_dt = datetime.strptime(showtime_str, "%Y-%m-%d %H:%M:%S")
-        now = datetime.now()
-
-        if showtime_dt - now < timedelta(days=1):
-            flash("❌ Refunds can only be processed at least 1 day in advance.", "danger")
-            return redirect(url_for('booking.refund_page', ref=booking_reference))
-
-        original_total = sum(b["total_price"] for b in bookings)
-        refund_amount = round(original_total * 0.5, 2)
-
-        for b in bookings:
-            cursor.execute("DELETE FROM bookings WHERE id = ?", (b["id"],))
-            cursor.execute("UPDATE seats SET is_booked = 0 WHERE id = ?", (b["seat_id"],))
-
-        conn.commit()
-
-    flash(f"✅ Refund processed! £{refund_amount} will be returned to the customer.", "success")
-    return redirect(url_for('booking.refund_page', ref=booking_reference))
-
-# ===============================
-# 🔹 Receipt
-# ===============================
-
-@booking_routes.route('/receipt/<booking_ref>')
-@jwt_required()
-def receipt(booking_ref):
-    with get_db_connection() as conn:
-        cursor = conn.cursor()
-
-        # Get all booking rows with the same reference
-        cursor.execute("""
-            SELECT b.booking_reference, b.booking_date, b.customer_name,
-                   b.customer_email, b.customer_phone, b.total_price,
-                   f.title AS film_title, s.show_time, s.screen_number,
-                   c.city, c.location, u.username AS staff_name, seats.seat_number
-            FROM bookings b
-            JOIN showtimes s ON b.showtime_id = s.id
-            JOIN films f ON s.film_id = f.id
-            JOIN cinemas c ON s.cinema_id = c.id
-            JOIN users u ON b.booking_staff_id = u.id
-            JOIN seats ON b.seat_id = seats.id
-            WHERE b.booking_reference = ?
-        """, (booking_ref,))
-        rows = cursor.fetchall()
-
-        if not rows:
-            return "Booking not found", 404
-
-        # Group info
-        seat_numbers = [r["seat_number"] for r in rows]
-        total_price = sum(r["total_price"] for r in rows)
-
-        # Take shared info from first row
-        details = dict(rows[0])
-        details["seat_numbers"] = seat_numbers
-        details["total_price"] = round(total_price, 2)
-
-    return render_template("receipt.html", booking=details)
-
-
-# ===============================
-# 🔹 Run Flask App
+#  Run Flask App
 # ===============================
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

@@ -28,6 +28,9 @@
 
   <div class="mb-3 text-end">
     <a href="/booking" class="btn btn-primary">➕ Add Booking</a>
+    <a href="/refund?from_manager=true" class="btn btn-secondary ms-2">💸 Refund Ticket</a>
+    <a href="{{ url_for('admin.add_film') }}" class="btn btn-primary">➕ Add Film</a>
+    <a href="{{ url_for('admin.manage_film') }}" class="btn btn-primary ms-2">🎬 Manage Films</a>
   </div>
 
   <!-- 🎬 Film List -->
@@ -74,54 +77,6 @@
       {% endfor %}
     </tbody>
   </table>
-
- <!-- ➕ Add New Film Quick -->
-<h4 class="mt-5">➕ Add New Film (Quick)</h4>
-<form action="{{ url_for('admin.add_film') }}" method="post">
-  <div class="row g-2">
-    <div class="col-md-3">
-      <input type="text" name="title" placeholder="Title" class="form-control" required>
-    </div>
-    <div class="col-md-3">
-      <input type="text" name="genre" placeholder="Genre" class="form-control" required>
-    </div>
-    <div class="col-md-2">
-      <input type="text" name="age_rating" placeholder="Rating" class="form-control" required>
-    </div>
-    <div class="col-md-4">
-      <input type="text" name="description" placeholder="Short Description" class="form-control" required>
-    </div>
-  </div>
-
-  <div class="row g-2 mt-2">
-    <div class="col-md-4">
-      <select name="cinema_id" class="form-select" required>
-        <option value="">-- Select Cinema --</option>
-        {% for c in cinema_dropdown %}
-          <option value="{{ c.id }}">{{ c.city }} - {{ c.location }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div class="col-md-2">
-      <input type="number" name="screen_number" placeholder="Screen #" class="form-control" required>
-    </div>
-    <div class="col-md-3">
-      <input type="date" name="date" class="form-control" required>
-    </div>
-    <div class="col-md-3">
-      <input type="time" name="time_slot" class="form-control" required>
-    </div>
-  </div>
-
-  <div class="row mt-2">
-    <div class="col-md-3">
-      <input type="number" step="0.01" name="price" class="form-control" placeholder="Ticket Price (£)" required>
-    </div>
-    <div class="col-md-9 text-end">
-      <button type="submit" class="btn btn-success px-4">✅ Add Film with Showtime</button>
-    </div>
-  </div>
-</form>
   <!-- 📊 Admin Reports -->
   <h4 class="mt-5">📊 Reports</h4>
   <table class="table table-bordered">

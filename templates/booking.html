@@ -36,7 +36,7 @@
       </div>
   {% endif %}
 
-  <form method="get" action="/select_cinema" class="row justify-content-center mb-5">
+  <form method="get" action="/select_cinema" class="row justify-content-center mb-3">
     <div class="col-md-6">
       <select name="cinema_id" id="cinema_id" class="form-select" required>
         <option value="">-- Choose a Cinema --</option>
@@ -49,6 +49,9 @@
       <button type="submit" class="btn btn-primary">Continue</button>
     </div>
   </form>
+  <div class="text-center mt-3">
+    <a href="/refund?from_manager=true" class="btn btn-secondary">💸 Refund Ticket</a>
+  </div>
 </main>
 
 <footer class="text-center bg-dark text-white py-3 mt-auto">
