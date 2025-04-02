@@ -37,7 +37,7 @@ def admin_login():
 
 
 # admin manage cinemas
-@app.route('/admin_manage_film')
+@admin_routes.route('/admin_manage_film')
 @jwt_required()
 def admin_manage_film():
     user_id = get_jwt_identity()
