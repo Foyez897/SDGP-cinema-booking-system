@@ -2,6 +2,7 @@ from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 from flask_mail import Mail
+from flask_sqlalchemy import SQLAlchemy
 import sys
 import os
 
@@ -14,7 +15,8 @@ from blueprints.manager_routes import manager_routes
 from blueprints.booking_routes import booking_routes
 
 bcrypt = Bcrypt()
-mail = Mail()  # ✅ Only declare once
+mail = Mail()
+db = SQLAlchemy()  # ✅ NEW: Define db
 
 def create_app(testing=False):
     app = Flask(
@@ -43,12 +45,17 @@ def create_app(testing=False):
     if testing:
         app.config['TESTING'] = True
         app.config['WTF_CSRF_ENABLED'] = False
-        app.config['MAIL_SUPPRESS_SEND'] = True  # Prevents real emails during tests
+        app.config['MAIL_SUPPRESS_SEND'] = True
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/horizon_cinemas_test.db'
+    else:
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/horizon_cinemas.db'
+
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     # Initialize extensions
     bcrypt.init_app(app)
     mail.init_app(app)
-    JWTManager(app)
+    db.init_app(app)  # ✅ NEW
 
     # Register Blueprints
     app.register_blueprint(admin_routes)
@@ -56,3 +63,6 @@ def create_app(testing=False):
     app.register_blueprint(booking_routes)
 
     return app
+
+# ✅ Expose both for pytest to import
+__all__ = ['create_app', 'db']
