@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Showtime - {{ cinema.city }} ({{ cinema.location }})</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <style>
+    td, th { text-align: center; vertical-align: middle; }
+    .cell-clickable { cursor: pointer; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="/">🎬 Horizon Cinemas</a>
+    <a href="/manage_film/{{ cinema_id }}" class="btn btn-outline-light">Back</a>
+  </div>
+</nav>
+
+<div class="container mt-4">
+  <h2 class="text-center mb-4">➕ Add Showtime - {{ cinema.city }} ({{ cinema.location }})</h2>
+
+  <!-- Film Picker -->
+  <form method="GET" action="">
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">Select Film</label>
+        <select id="film_id" name="film_id" class="form-select" required>
+          <option value="">-- Choose Film --</option>
+          {% for film in films %}
+            <option value="{{ film.id }}">{{ film.title }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Date Picker -->
+      <div class="col-md-6">
+        <label class="form-label">Select Date</label>
+        <input type="date" name="date" class="form-control" value="{{ selected_date }}" onchange="this.form.submit()">
+      </div>
+    </div>
+  </form>
+
+  <!-- Timetable Grid -->
+  <table class="table table-bordered">
+    <thead class="table-dark">
+      <tr>
+        <th>Screen</th>
+        {% for time in time_slots %}
+          <th>{{ time }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for screen in screens %}
+      <tr>
+        <td><strong>Screen {{ screen }}</strong></td>
+        {% for time in time_slots %}
+          {% set key = (screen, time) %}
+          <td class="cell-clickable"
+              {% if not showtime_map.get(key) %}
+                data-screen="{{ screen }}"
+                data-time="{{ time }}"
+                data-bs-toggle="modal"
+                data-bs-target="#addModal"
+              {% endif %}
+          >
+            {% if showtime_map.get(key) %}
+              🎬 {{ showtime_map[key] }}
+            {% else %}
+              <span class="text-muted">➕ Add</span>
+            {% endif %}
+          </td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Add Showtime Modal -->
+<div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="showtimeForm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirm Showtime</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="cinema_id" value="{{ cinema_id }}">
+          <input type="hidden" name="screen_number" id="modal_screen">
+          <input type="hidden" name="time_slot" id="modal_time">
+          <input type="hidden" name="date" value="{{ selected_date }}">
+
+          <div class="mb-3">
+            <label class="form-label">Confirm Film</label>
+            <select name="film_id" class="form-select" required id="modal_film_select">
+              <option value="">-- Choose Film --</option>
+              {% for film in films %}
+                <option value="{{ film.id }}">{{ film.title }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Add Showtime</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const modal = document.getElementById('addModal');
+  modal.addEventListener('show.bs.modal', function (event) {
+    const cell = event.relatedTarget;
+    document.getElementById('modal_screen').value = cell.dataset.screen;
+    document.getElementById('modal_time').value = cell.dataset.time;
+    modal.dataset.cellId = `${cell.dataset.screen}-${cell.dataset.time}`;
+
+    const topFilmSelect = document.getElementById('film_id');
+    const modalFilmSelect = document.getElementById('modal_film_select');
+    modalFilmSelect.value = topFilmSelect.value;
+  });
+
+  document.getElementById("showtimeForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+    const response = await fetch("/add_showtime_ajax", {
+      method: "POST",
+      body: formData
+    });
+
+    const result = await response.json();
+    if (result.success) {
+      const cellId = modal.dataset.cellId;
+      const [screen, time] = cellId.split("-");
+      const cell = [...document.querySelectorAll(`[data-screen="${screen}"][data-time="${time}"]`)].find(c => c);
+      if (cell) {
+        cell.innerHTML = `🎬 ${result.title}`;
+        cell.removeAttribute("data-bs-toggle");
+        cell.removeAttribute("data-bs-target");
+      }
+
+      const modalInstance = bootstrap.Modal.getInstance(modal);
+      modalInstance.hide();
+
+      setTimeout(() => alert("✅ Showtime added successfully!"), 200);
+    } else {
+      alert("❌ Failed to add showtime.");
+    }
+  });
+</script>
+</body>
+</html>

@@ -272,10 +272,21 @@ def view_showtime(showtime_id):
         seat_list = []
         for seat in seats:
             seat_dict = dict(seat)
+
+            # ✅ Normalize seat type to match logic in get_dynamic_price
+            raw_type = seat_dict["seat_type"].strip().lower()
+            if raw_type == "vip":
+                clean_type = "VIP"
+            elif raw_type == "upper gallery":
+                clean_type = "Upper Gallery"
+            else:
+                clean_type = "Lower Hall"
+
+            # ✅ Get correct price based on normalized type
             seat_dict["price"] = get_dynamic_price(
                 city=city,
                 show_time=showtime["show_time"],
-                seat_type=seat_dict["seat_type"].replace("_", " ").title()
+                seat_type=clean_type
             )
             seat_list.append(seat_dict)
 
@@ -306,15 +317,16 @@ def view_showtime(showtime_id):
     )
 
 # ===============================
-#  Dynamic Pricing Function
+#  Dynamic Pricing 
 # ===============================
-
 def get_dynamic_price(city, show_time, seat_type):
+    from datetime import datetime
+    
     # Parse time from show_time string
     show_time_obj = datetime.strptime(show_time, "%Y-%m-%d %H:%M:%S")
     hour = show_time_obj.hour
 
-    # Define price grid
+    # Define price grid for lower hall (base prices)
     base_prices = {
         "Birmingham": [5, 6, 7],
         "Bristol": [6, 7, 8],
@@ -322,7 +334,7 @@ def get_dynamic_price(city, show_time, seat_type):
         "London": [10, 11, 12]
     }
 
-    # Determine time slot
+    # Determine time slot index
     if 8 <= hour < 12:
         time_slot = 0  # Morning
     elif 12 <= hour < 17:
@@ -335,9 +347,11 @@ def get_dynamic_price(city, show_time, seat_type):
     if seat_type == "Upper Gallery":
         return round(base_price * 1.2, 2)
     elif seat_type == "VIP":
-        return round((base_price * 1.2) * 1.2, 2)
+        # Apply two 20% increases: Lower → Gallery → VIP
+        return round(base_price * 1.2 * 1.2, 2)
     else:
         return round(base_price, 2)
+
 
 # ===============================
 #  Book Ticket API (Protected)

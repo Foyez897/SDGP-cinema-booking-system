@@ -1,4 +1,4 @@
-#!/Users/foyezahammed/Desktop/SDGP-1/.venv/bin/python3
+#!/Users/sergiosalas/Desktop/SDGP-cinema-booking-system/.venv/bin/python3.13
 # -*- coding: utf-8 -*-
 import re
 import sys

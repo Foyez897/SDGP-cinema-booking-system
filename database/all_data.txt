@@ -8,14 +8,14 @@ seq ()
 
 name	seq
 --------------------------------------------------
-showtimes	846
-cinemas	15
-users	4
-films	17
-screens	72
+showtimes	1002
+cinemas	1000
+users	9999
+films	1000
+screens	1000
 pricing	12
-seats	10814
-bookings	93
+seats	10815
+bookings	138
 
 
 -- Table: cinemas
@@ -37,6 +37,7 @@ id	city	location	num_of_screens
 7	Cardiff	Bay Area	3
 9	London	West End	5
 10	Bristol	Frenchay Campus	5
+1000	Test City	Test Location	1
 
 
 -- Table: films
@@ -51,6 +52,7 @@ actors (TEXT)
 
 id	title	genre	age_rating	description	actors
 --------------------------------------------------
+1	Test Film	Action	PG	A test film	None
 2	Titanic	Romance	PG-13	A love story set on the doomed Titanic ship	None
 5	Operation London Bridge 	Suspension	20-50	None	None
 6	Squid Game 	Thriller	20-50	None	None
@@ -61,6 +63,9 @@ id	title	genre	age_rating	description	actors
 14	Avatar	Action, Adventure, Sci-Fi	PG-13	A paraplegic Marine is sent to the moon Pandora on a unique mission but becomes torn between following orders and protecting an alien civilization.	Sam Worthington, Zoe Saldana
 15	Frozen	Animation, Adventure, Comedy	PG	When the newly crowned Queen Elsa accidentally uses her power to turn things into ice, her sister Anna teams up to change it.	Kristen Bell, Idina Menzel
 16	The Avengers	Action, Sci-Fi	PG-13	Earth’s mightiest heroes must come together to stop Loki and his alien army from enslaving humanity.	Robert Downey Jr., Chris Evans
+18	Sisu1	Action/war	PG	WW2 	None
+999	Test Film	Action	PG	None	None
+1000	Test Film	Action	PG	Some description	Actor A, Actor B
 
 
 -- Table: cancellations
@@ -923,6 +928,10 @@ id	film_id	cinema_id	screen_number	show_time	price
 844	5	15	3	2025-04-01 15:00:00	7
 845	6	15	4	2025-04-01 12:00:00	6
 846	8	15	4	2025-04-01 15:00:00	7
+999	999	999	1	2025-04-01 10:59:46	10
+1000	1000	1000	1	2025-04-02 18:00:00	10
+1001	8	3	1	2025-04-02 13:00:00	10
+1002	14	3	1	2025-04-03 13:00:00	10
 
 
 -- Table: screens
@@ -988,6 +997,7 @@ id	cinema_id	screen_number	total_seats
 69	10	4	100
 70	10	5	80
 72	1	6	120
+1000	1000	1	100
 
 
 -- Table: users
@@ -1004,6 +1014,8 @@ id	username	password	role
 2	manager1	$2b$12$lZ5kp2L7Q4H/G71GIZcz6.z2UbGGiFTHdgY.1tEZQKOoQBsUpLMWG	manager
 3	staff1	$2b$12$Hm36/Xlxo6tTUIoNwTISEuV2Ih5Zg3HYHGrXvTvJQv27jIgLdQR9.	booking_staff
 4	admin	$2b$12$WUAIvIc1J.d64ejJn.WxZux5l6F2WVhpUjRlQTu8aWwTByQv2EhA.	admin
+8888	testadmin	fakehashed	admin
+9999	testuser	fakehashed	admin
 
 
 -- Table: pricing
@@ -1041,6 +1053,8 @@ is_booked (INTEGER)
 
 id	screen_id	seat_number	seat_type	is_booked
 --------------------------------------------------
+1	1	A1	Lower Hall	0
+999	999	A1	Lower Hall	0
 1471	19	1	Lower Hall	0
 1472	19	2	Lower Hall	0
 1473	19	3	Lower Hall	0
@@ -1274,8 +1288,8 @@ id	screen_id	seat_number	seat_type	is_booked
 2561	25	11	Lower Hall	0
 2562	25	12	Lower Hall	0
 2563	25	13	Lower Hall	0
-2564	25	14	Lower Hall	0
-2565	25	15	Lower Hall	0
+2564	25	14	Lower Hall	1
+2565	25	15	Lower Hall	1
 2566	25	16	Lower Hall	0
 2567	25	17	Lower Hall	0
 2568	25	18	Lower Hall	0
@@ -1339,8 +1353,8 @@ id	screen_id	seat_number	seat_type	is_booked
 2626	25	76	VIP	0
 2627	25	77	VIP	0
 2628	25	78	VIP	0
-2629	25	79	VIP	0
-2630	25	80	VIP	0
+2629	25	79	VIP	1
+2630	25	80	VIP	1
 3705	35	1	Lower Hall	0
 3706	35	2	Lower Hall	0
 3707	35	3	Lower Hall	0
@@ -1419,8 +1433,8 @@ id	screen_id	seat_number	seat_type	is_booked
 3780	35	76	Upper Gallery	0
 3781	35	77	Upper Gallery	0
 3782	35	78	Upper Gallery	0
-3783	35	79	Upper Gallery	0
-3784	35	80	Upper Gallery	0
+3783	35	79	Upper Gallery	1
+3784	35	80	Upper Gallery	1
 3785	35	81	Upper Gallery	0
 3786	35	82	Upper Gallery	0
 3787	35	83	Upper Gallery	0
@@ -2672,10 +2686,10 @@ id	screen_id	seat_number	seat_type	is_booked
 5711	52	54	Upper Gallery	0
 5712	52	55	Upper Gallery	0
 5713	52	56	Upper Gallery	0
-5714	52	57	Upper Gallery	0
-5715	52	58	Upper Gallery	0
-5716	52	59	Upper Gallery	0
-5717	52	60	Upper Gallery	0
+5714	52	57	Upper Gallery	1
+5715	52	58	Upper Gallery	1
+5716	52	59	Upper Gallery	1
+5717	52	60	Upper Gallery	1
 5718	52	61	Upper Gallery	0
 5719	52	62	Upper Gallery	0
 5720	52	63	Upper Gallery	0
@@ -2707,14 +2721,14 @@ id	screen_id	seat_number	seat_type	is_booked
 5746	52	89	Upper Gallery	0
 5747	52	90	Upper Gallery	0
 5748	52	91	VIP	0
-5749	52	92	VIP	0
-5750	52	93	VIP	0
+5749	52	92	VIP	1
+5750	52	93	VIP	1
 5751	52	94	VIP	0
-5752	52	95	VIP	0
-5753	52	96	VIP	0
-5754	52	97	VIP	0
-5755	52	98	VIP	0
-5756	52	99	VIP	0
+5752	52	95	VIP	1
+5753	52	96	VIP	1
+5754	52	97	VIP	1
+5755	52	98	VIP	1
+5756	52	99	VIP	1
 5757	52	100	VIP	0
 5758	46	1	Lower Hall	0
 5759	46	2	Lower Hall	0
@@ -2746,8 +2760,8 @@ id	screen_id	seat_number	seat_type	is_booked
 5785	46	28	Lower Hall	0
 5786	46	29	Lower Hall	0
 5787	46	30	Upper Gallery	0
-5788	46	31	Upper Gallery	0
-5789	46	32	Upper Gallery	0
+5788	46	31	Upper Gallery	1
+5789	46	32	Upper Gallery	1
 5790	46	33	Upper Gallery	0
 5791	46	34	Upper Gallery	0
 5792	46	35	Upper Gallery	0
@@ -3812,8 +3826,8 @@ id	screen_id	seat_number	seat_type	is_booked
 8081	57	28	Lower Hall	0
 8082	57	29	Lower Hall	0
 8083	57	30	Lower Hall	0
-8084	57	31	Upper Gallery	0
-8085	57	32	Upper Gallery	0
+8084	57	31	Upper Gallery	1
+8085	57	32	Upper Gallery	1
 8086	57	33	Upper Gallery	0
 8087	57	34	Upper Gallery	0
 8088	57	35	Upper Gallery	0
@@ -4901,8 +4915,8 @@ id	screen_id	seat_number	seat_type	is_booked
 9750	29	47	Upper Gallery	0
 9751	29	48	Upper Gallery	0
 9752	29	49	Upper Gallery	0
-9753	29	50	Upper Gallery	0
-9754	29	51	Upper Gallery	0
+9753	29	50	Upper Gallery	1
+9754	29	51	Upper Gallery	1
 9755	29	52	VIP	0
 9756	29	53	VIP	0
 9757	29	54	VIP	0
@@ -4910,8 +4924,8 @@ id	screen_id	seat_number	seat_type	is_booked
 9759	29	56	VIP	0
 9760	29	57	VIP	0
 9761	29	58	VIP	0
-9762	29	59	VIP	0
-9763	29	60	VIP	0
+9762	29	59	VIP	1
+9763	29	60	VIP	1
 9764	29	61	VIP	0
 9765	67	1	Lower Hall	0
 9766	67	2	Lower Hall	0
@@ -5725,10 +5739,10 @@ id	screen_id	seat_number	seat_type	is_booked
 10574	34	110	Upper Gallery	0
 10575	34	111	VIP	0
 10576	34	112	VIP	0
-10577	34	113	VIP	0
-10578	34	114	VIP	0
-10579	34	115	VIP	0
-10580	34	116	VIP	0
+10577	34	113	VIP	1
+10578	34	114	VIP	1
+10579	34	115	VIP	1
+10580	34	116	VIP	1
 10581	34	117	VIP	0
 10582	34	118	VIP	0
 10583	34	119	VIP	0
@@ -5963,6 +5977,7 @@ id	screen_id	seat_number	seat_type	is_booked
 10812	32	118	VIP	0
 10813	32	119	VIP	0
 10814	32	120	VIP	0
+10815	1000	1	Lower Hall	0
 
 
 -- Table: bookings
@@ -6053,3 +6068,34 @@ id	customer_name	customer_email	customer_phone	showtime_id	seat_id	booking_refer
 91	Foyez Ahammed	foyezah897@gmail.com	07440316631	787	4980	22010cf6	8.064	2	2025-04-01 07:46:11
 92	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	768	5876	3036f7a6	6.0	3	2025-04-01 07:54:14
 93	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	768	5877	3036f7a6	6.0	3	2025-04-01 07:54:14
+94	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	765	5788	9ba1561e	7.2	2	2025-04-01 09:21:45
+95	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	765	5789	9ba1561e	7.2	2	2025-04-01 09:21:45
+96	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	31	3783	f9ac9dab	13.2	3	2025-04-01 18:18:33
+97	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	31	3784	f9ac9dab	13.2	3	2025-04-01 18:18:33
+98	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	139	10577	d127e941	8.064	3	2025-04-02 21:33:43
+99	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	139	10578	d127e941	8.064	3	2025-04-02 21:33:43
+100	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	139	10579	d127e941	8.064	3	2025-04-02 21:33:43
+101	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	139	10580	d127e941	8.064	3	2025-04-02 21:33:43
+102	Foyez Ahammed	foyezmed897@gmail.com	07440316630	88	5749	b234c423	10.08	3	2025-04-02 22:36:02
+103	Foyez Ahammed	foyezmed897@gmail.com	07440316630	88	5750	b234c423	10.08	3	2025-04-02 22:36:02
+104	Foyez Ahammed	foyezahed897@gmail.com	07440316630	88	5715	1b77a448	6.720000000000001	3	2025-04-02 22:36:25
+105	Foyez Ahammed	foyezahed897@gmail.com	07440316630	88	5714	1b77a448	6.720000000000001	3	2025-04-02 22:36:25
+106	Foyez Ahammed	foyezahed897@gmail.com	07440316630	88	5716	1b77a448	6.720000000000001	3	2025-04-02 22:36:25
+107	Foyez Ahammed	foyezahed897@gmail.com	07440316630	88	5717	1b77a448	6.720000000000001	3	2025-04-02 22:36:25
+108	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	88	5756	f3bb86ce	8.064	3	2025-04-02 23:06:27
+109	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	88	5755	f3bb86ce	8.064	3	2025-04-02 23:06:27
+110	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	88	5754	f3bb86ce	8.064	3	2025-04-02 23:06:27
+111	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	88	5753	f3bb86ce	8.064	3	2025-04-02 23:06:27
+112	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	88	5752	f3bb86ce	8.064	3	2025-04-02 23:06:27
+121	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	37	2629	3a8f833b	10.08	3	2025-04-02 23:39:24
+122	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	37	2630	3a8f833b	10.08	3	2025-04-02 23:39:24
+123	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	37	2629	1f9e4d34	10.08	3	2025-04-02 23:39:25
+124	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	37	2630	1f9e4d34	10.08	3	2025-04-02 23:39:25
+131	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	157	8084	5e2d9341	8.4	3	2025-04-03 00:15:20
+132	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	157	8085	5e2d9341	8.4	3	2025-04-03 00:15:20
+133	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	161	9754	f490c6ab	5.760000000000001	3	2025-04-03 00:16:54
+134	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	161	9753	f490c6ab	5.760000000000001	3	2025-04-03 00:16:54
+135	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	161	9763	f490c6ab	6.912000000000001	3	2025-04-03 00:16:54
+136	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	161	9762	f490c6ab	6.912000000000001	3	2025-04-03 00:16:54
+137	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	37	2564	d593ed1c	7.0	3	2025-04-03 06:52:47
+138	Foyez Ahammed	foyezahammed897@gmail.com	07440316630	37	2565	d593ed1c	7.0	3	2025-04-03 06:52:47

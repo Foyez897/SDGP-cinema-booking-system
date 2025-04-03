@@ -25,18 +25,23 @@ def manager_login():
 
     with get_db_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT id, password FROM users WHERE LOWER(username) = LOWER(?)", (username,))
+        # ✅ Fetch id, password, and role
+        cursor.execute("SELECT id, password, role FROM users WHERE LOWER(username) = LOWER(?)", (username,))
         user = cursor.fetchone()
 
+    # ✅ Check user exists and password matches
     if not user or not bcrypt.check_password_hash(user[1], password):
         flash("Invalid username or password", "danger")
         return redirect(url_for('manager.manager_login'))
 
-    access_token = create_access_token(identity=str(user[0]))
+    # ✅ Role-based check
+    if user[2] != "manager":
+        flash("❌ Access denied: Not a manager account", "danger")
+        return redirect(url_for('manager.manager_login'))
 
-    # ✅ Ensure JWT is set in cookies
+    access_token = create_access_token(identity=str(user[0]))
     response = make_response(redirect(url_for('manager.manager_dashboard')))
-    set_access_cookies(response, access_token)  # 🔥 This line is critical!
+    set_access_cookies(response, access_token)
 
     flash("✅ Manager Login successful!", "success")
     return response

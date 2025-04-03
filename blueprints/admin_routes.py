@@ -36,27 +36,6 @@ def admin_login():
     return render_template("admin_login.html")
 
 
-# admin manage cinemas
-@admin_routes.route('/admin_manage_film')
-@jwt_required()
-def admin_manage_film():
-    user_id = get_jwt_identity()
-    with get_db_connection() as conn:
-        cursor = conn.cursor()
-        
-        # Check access - only admin can access this page
-        cursor.execute("SELECT role FROM users WHERE id = ?", (user_id,))
-        user = cursor.fetchone()
-        if not user or user["role"] != "admin":
-            flash("❌ Unauthorized access!", "danger")
-            return redirect(url_for("home"))
-        
-        # Get all cinemas
-        cursor.execute("SELECT id, city, location, num_of_screens FROM cinemas")
-        cinemas = cursor.fetchall()
-        
-    return render_template("admin_manage_cinemas.html", cinemas=cinemas)
-
 # ===============================
 #  Admin Dashboard
 # ===============================
@@ -64,8 +43,11 @@ def admin_manage_film():
 @jwt_required(locations=["cookies"])
 def admin_dashboard():
     user_id = get_jwt_identity()
+
     with get_db_connection() as conn:
         cursor = conn.cursor()
+
+        # Fetch user role
         cursor.execute("SELECT role FROM users WHERE id = ?", (user_id,))
         user = cursor.fetchone()
 
@@ -73,6 +55,7 @@ def admin_dashboard():
             flash("❌ Unauthorized access!", "danger")
             return redirect(url_for('admin.admin_login'))
 
+        # Fetch films and related showtimes
         cursor.execute("""
             SELECT films.id AS film_id, films.title, films.genre, films.age_rating,
                    showtimes.cinema_id, GROUP_CONCAT(DISTINCT showtimes.show_time) AS showtimes
@@ -96,17 +79,29 @@ def admin_dashboard():
             if row["cinema_id"]:
                 cursor.execute("SELECT id, city, location FROM cinemas WHERE id = ?", (row["cinema_id"],))
                 cinema = cursor.fetchone()
-                film_cinemas.setdefault(fid, []).append(cinema)
-                    
-    # Pass a single flat cinema list for dropdown
+                if cinema:
+                    film_cinemas.setdefault(fid, []).append(cinema)
+
+        # ✅ Build dropdown with all unique cinemas
         cinema_dropdown = []
+        seen_ids = set()
         for clist in film_cinemas.values():
-             cinema_dropdown = clist
-             break  # take the first one only
-        
-    
-    return render_template("admin_dashboard.html", admin_id=user_id, films=films,
-                       film_cinemas=film_cinemas, cinema_dropdown=cinema_dropdown)
+            for cinema in clist:
+                if cinema["id"] not in seen_ids:
+                    seen_ids.add(cinema["id"])
+                    cinema_dropdown.append(cinema)
+
+        # ✅ Optional fallback: If no showtime-based cinemas, grab all cinemas
+        if not cinema_dropdown:
+            cursor.execute("SELECT id, city, location FROM cinemas")
+            cinema_dropdown = cursor.fetchall()
+
+    return render_template("admin_dashboard.html",
+                           admin_id=user_id,
+                           films=films,
+                           film_cinemas=film_cinemas,
+                           cinema_dropdown=cinema_dropdown)
+
 
 # ===============================
 #  Add Redirect for /admin
@@ -233,60 +228,92 @@ def manage_film():
                            selected_cinema_info=selected_cinema_info,
                            selected_date=selected_date,
                            selected_screen=selected_screen,
-                           showtime_map=showtime_map)
+                           showtime_map=showtime_map,
+                           cinema=selected_cinema_info,
+                           cinema_id=selected_cinema)
 # ===============================
-#  Add film
+#  Add Showtime Grid View
 # ===============================
-
-@admin_routes.route('/quick_add_film', methods=['POST'])
+@admin_routes.route('/add_showtime/<int:cinema_id>', methods=['GET'])
 @jwt_required()
-def quick_add_film():
-    title = request.form.get("title")
-    genre = request.form.get("genre")
-    age_rating = request.form.get("age_rating")
-    description = request.form.get("description")
-    showtimes_raw = request.form.get("showtimes")
-
-    if not all([title, genre, age_rating, description, showtimes_raw]):
-        flash("❌ All fields are required!", "danger")
-        return redirect(url_for('admin.admin_dashboard'))
-
-    # Parse showtimes
-    showtimes = [s.strip() for s in showtimes_raw.split(',') if s.strip()]
+def add_showtime(cinema_id):
+    selected_date = request.args.get("date", datetime.now().strftime('%Y-%m-%d'))
+    selected_film_id = request.args.get("film_id", type=int)
 
     with get_db_connection() as conn:
         cursor = conn.cursor()
 
-        # Get first cinema and first screen
-        cursor.execute("SELECT id FROM cinemas LIMIT 1")
+        cursor.execute("SELECT id, city, location FROM cinemas WHERE id = ?", (cinema_id,))
         cinema = cursor.fetchone()
         if not cinema:
-            flash("⚠️ No cinemas found. Please add one first.", "warning")
-            return redirect(url_for('admin.admin_dashboard'))
+            flash("❌ Cinema not found.", "danger")
+            return redirect(url_for('admin.manage_film', cinema_id=cinema_id))
 
-        cursor.execute("SELECT screen_number FROM screens WHERE cinema_id = ? LIMIT 1", (cinema["id"],))
-        screen = cursor.fetchone()
-        if not screen:
-            flash("⚠️ No screens found for the selected cinema.", "warning")
-            return redirect(url_for('admin.admin_dashboard'))
+        cursor.execute("SELECT id, title FROM films")
+        films = cursor.fetchall()
 
-        # Insert film
-        cursor.execute("INSERT INTO films (title, genre, age_rating, description) VALUES (?, ?, ?, ?)",
-                       (title, genre, age_rating, description))
-        film_id = cursor.lastrowid
+        cursor.execute("SELECT screen_number FROM screens WHERE cinema_id = ?", (cinema_id,))
+        screens = [row["screen_number"] for row in cursor.fetchall()]
 
-        # Insert showtimes
-        for time in showtimes:
-            full_time = f"{datetime.now().date()} {time}:00"
-            cursor.execute("""
-                INSERT INTO showtimes (film_id, cinema_id, screen_number, show_time, price)
-                VALUES (?, ?, ?, ?, ?)
-            """, (film_id, cinema["id"], screen["screen_number"], full_time, 10.0))  # Default price
+        cursor.execute("""
+            SELECT s.screen_number, s.show_time, f.title
+            FROM showtimes s
+            JOIN films f ON s.film_id = f.id
+            WHERE s.cinema_id = ? AND DATE(s.show_time) = ?
+        """, (cinema_id, selected_date))
 
+        showtime_map = {}
+        for row in cursor.fetchall():
+            time_slot = row["show_time"][11:16]  # "HH:MM"
+            key = (row["screen_number"], time_slot)
+            showtime_map[key] = row["title"]
+
+        time_slots = [f"{hour:02}:00" for hour in range(10, 24)]
+
+    return render_template("add_showtime.html",
+                           cinema=cinema,
+                           cinema_id=cinema_id,
+                           films=films,
+                           screens=screens,
+                           selected_date=selected_date,
+                           showtime_map=showtime_map,
+                           time_slots=time_slots)
+
+# ===============================
+#  Add Showtime Ajax
+# ===============================
+
+@admin_routes.route('/add_showtime_ajax', methods=['POST'])
+@jwt_required()
+def add_showtime_ajax():
+    data = request.form
+    film_id = int(data.get("film_id"))
+    cinema_id = int(data.get("cinema_id"))
+    screen_number = int(data.get("screen_number"))
+    time_slot = data.get("time_slot")
+    date = data.get("date")
+
+    show_time = f"{date} {time_slot}:00"
+
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT title FROM films WHERE id = ?", (film_id,))
+        film = cursor.fetchone()
+
+        if not film:
+            return {"success": False}, 400
+
+        # You can customize pricing logic if needed
+        price = 10.0
+
+        cursor.execute("""
+            INSERT INTO showtimes (film_id, cinema_id, screen_number, show_time, price)
+            VALUES (?, ?, ?, ?, ?)
+        """, (film_id, cinema_id, screen_number, show_time, price))
         conn.commit()
 
-    flash("✅ Film added with showtimes!", "success")
-    return redirect(url_for("admin.manage_film", cinema_id=cinema["id"]))
+    return {"success": True, "title": film["title"]}
+
 
 # ✅ This should be in admin_routes.py
 

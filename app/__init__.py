@@ -16,7 +16,8 @@ from blueprints.booking_routes import booking_routes
 
 bcrypt = Bcrypt()
 mail = Mail()
-db = SQLAlchemy()  # ✅ NEW: Define db
+db = SQLAlchemy()
+jwt = JWTManager()  # ✅ Initialize JWTManager here
 
 def create_app(testing=False):
     app = Flask(
@@ -28,6 +29,7 @@ def create_app(testing=False):
     app.secret_key = "supersecretkey"
 
     # JWT configuration
+    app.config["JWT_SECRET_KEY"] = "your-very-secret-key"  # ✅ Add this if not already there
     app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
     app.config["JWT_COOKIE_SECURE"] = False
     app.config["JWT_COOKIE_HTTPONLY"] = True
@@ -55,7 +57,8 @@ def create_app(testing=False):
     # Initialize extensions
     bcrypt.init_app(app)
     mail.init_app(app)
-    db.init_app(app)  # ✅ NEW
+    db.init_app(app)
+    jwt.init_app(app)  # ✅ This is the fix!
 
     # Register Blueprints
     app.register_blueprint(admin_routes)
@@ -64,5 +67,4 @@ def create_app(testing=False):
 
     return app
 
-# ✅ Expose both for pytest to import
 __all__ = ['create_app', 'db']
